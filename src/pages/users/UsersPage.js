@@ -1,9 +1,17 @@
 import React, { Component } from 'react';
 import './users.css'
 import PortalNavbar from '../../components/navbar/PortalNavbar';
+import { connect } from "react-redux";
+import { Redirect } from 'react-router-dom'
+
 
 class UsersPage extends Component {
     render() {
+
+        if (!this.props.activeUser) {
+            return <Redirect to='/' />
+        }
+
         return (
             <div>
                 <PortalNavbar/>
@@ -13,4 +21,11 @@ class UsersPage extends Component {
     }
 }
 
-export default UsersPage;
+const mapStateToProps = state => ({
+    activeUser: state.activeUser
+});
+
+
+export default connect(
+    mapStateToProps
+)(UsersPage);

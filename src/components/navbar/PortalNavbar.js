@@ -10,7 +10,7 @@ class PortalNavbar extends Component {
                     <Navbar.Brand href="/">פורטל תפוח</Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
-                        <Nav className="mr-auto">
+                        <Nav>
                             <Nav.Link href="#/courses">קורסים</Nav.Link>
                             <Nav.Link href="#/users">משתמשים</Nav.Link>
                             <Nav.Link href="#/hours-report">דיווח שעות</Nav.Link>

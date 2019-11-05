@@ -1,26 +1,48 @@
 import React from 'react';
 import logo from './logo.svg';
+import { Switch, Route } from 'react-router-dom'
+import LoginPage from './pages/login/LoginPage'
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      activeUser: null
+    };
+  }
+
+  render() {
+    const {activeUser} = this.state;
+
+    return (
+      <Switch>
+        <Route exact path="/">
+          <LoginPage activeUser={activeUser} />
+        </Route>
+        {/* <Route path="/courses">
+        <CoursesPage activeUser={activeUser} />
+      </Route>
+      <Route path="/courses/:id">
+        <CourseDetailsPage activeUser={activeUser} />
+      </Route>
+      <Route path="/users">
+        <UsersPage activeUser={activeUser} />
+      </Route>
+      <Route path="/users/:id">
+        <UserDetailsPage activeUser={activeUser} />
+      </Route>
+      <Route path="/hours-report">
+        <HoursReportPage activeUser={activeUser} />
+      </Route>
+      <Route path="/hours-approve">
+        <HoursApprovePage activeUser={activeUser} />
+      </Route> */}
+      </Switch>
+    );
+  }
 }
 
 export default App;

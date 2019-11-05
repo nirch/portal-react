@@ -2,6 +2,9 @@ import React from 'react';
 import logo from './logo.svg';
 import { Switch, Route } from 'react-router-dom'
 import LoginPage from './pages/login/LoginPage'
+import CoursesPage from './pages/courses/CoursesPage' 
+import CourseDetailsPage from './pages/courses/CourseDetailsPage' 
+
 import './App.css';
 
 class App extends React.Component {
@@ -22,13 +25,13 @@ class App extends React.Component {
         <Route exact path="/">
           <LoginPage activeUser={activeUser} />
         </Route>
-        {/* <Route path="/courses">
+        <Route exact path="/courses">
         <CoursesPage activeUser={activeUser} />
       </Route>
       <Route path="/courses/:id">
         <CourseDetailsPage activeUser={activeUser} />
       </Route>
-      <Route path="/users">
+      {/* <Route path="/users">
         <UsersPage activeUser={activeUser} />
       </Route>
       <Route path="/users/:id">

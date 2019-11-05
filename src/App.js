@@ -19,15 +19,22 @@ class App extends React.Component {
     this.state = {
       activeUser: null
     };
+
+    this.handleLogin = this.handleLogin.bind(this);
+  }
+
+  handleLogin(activeUser) {
+    this.setState({activeUser});
   }
 
   render() {
     const { activeUser } = this.state;
 
+    debugger;
     return (
       <Switch>
         <Route exact path="/">
-          <LoginPage activeUser={activeUser} />
+          <LoginPage activeUser={activeUser} handleLogin={this.handleLogin}/>
         </Route>
         <Route exact path="/courses">
           <CoursesPage activeUser={activeUser} />

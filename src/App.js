@@ -4,6 +4,8 @@ import { Switch, Route } from 'react-router-dom'
 import LoginPage from './pages/login/LoginPage'
 import CoursesPage from './pages/courses/CoursesPage' 
 import CourseDetailsPage from './pages/courses/CourseDetailsPage' 
+import UsersPage from './pages/users/UsersPage' 
+import UserDetailsPage from './pages/users/UserDetailsPage' 
 
 import './App.css';
 
@@ -31,13 +33,13 @@ class App extends React.Component {
       <Route path="/courses/:id">
         <CourseDetailsPage activeUser={activeUser} />
       </Route>
-      {/* <Route path="/users">
+      <Route exact path="/users">
         <UsersPage activeUser={activeUser} />
       </Route>
       <Route path="/users/:id">
         <UserDetailsPage activeUser={activeUser} />
       </Route>
-      <Route path="/hours-report">
+      {/* <Route path="/hours-report">
         <HoursReportPage activeUser={activeUser} />
       </Route>
       <Route path="/hours-approve">

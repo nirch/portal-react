@@ -3,13 +3,16 @@ import { Container, Form, Button } from 'react-bootstrap'
 import './login.css'
 import server from '../../shared/server'
 import { Redirect } from 'react-router-dom'
+import { loginAction } from "../../store/reducers/ActiveUser/actions";
+import { connect } from "react-redux";
+
 
 
 class LoginPage extends Component {
 
     constructor(props) {
         super(props);
-        
+
         this.state = {
             email: "",
             pwd: ""
@@ -18,7 +21,7 @@ class LoginPage extends Component {
         this.handleInputChange = this.handleInputChange.bind(this);
         this.login = this.login.bind(this);
     }
-    
+
     handleInputChange(ev) {
         const name = ev.target.name;
         const value = ev.target.value;
@@ -31,21 +34,19 @@ class LoginPage extends Component {
     login() {
         const { email, pwd } = this.state;
 
-        if(!email||!pwd)
-		{
-			alert("נא להזין פרטי משתמש");
-			return;
+        if (!email || !pwd) {
+            alert("נא להזין פרטי משתמש");
+            return;
         }
-        
-        const data = {email, pass: pwd};
+
+        const data = { email, pass: pwd };
 
         server(null, data, "login").then(res => {
             console.log(res);
-            debugger;
             if (res.data.error) {
                 alert("error in login");
             } else {
-                this.props.handleLogin(res.data);
+                this.props.loginAction(res.data);
             }
         }, err => {
             console.error(err);
@@ -56,7 +57,6 @@ class LoginPage extends Component {
         const { email, pwd } = this.state;
         const { activeUser } = this.props;
 
-        debugger;
         if (activeUser) {
             return <Redirect to='/courses' />
         }
@@ -69,12 +69,12 @@ class LoginPage extends Component {
                 <Form>
                     <Form.Group controlId="formBasicEmail">
                         <Form.Label></Form.Label>
-                        <Form.Control value={email} name="email" type="email" placeholder="אימייל" onChange={this.handleInputChange}/>
+                        <Form.Control value={email} name="email" type="email" placeholder="אימייל" onChange={this.handleInputChange} />
                     </Form.Group>
 
                     <Form.Group controlId="formBasicPassword">
                         <Form.Label></Form.Label>
-                        <Form.Control value={pwd} name="pwd" type="password" placeholder="סיסמה" onChange={this.handleInputChange}/>
+                        <Form.Control value={pwd} name="pwd" type="password" placeholder="סיסמה" onChange={this.handleInputChange} />
                     </Form.Group>
 
                     <Button variant="primary" type="button" onClick={this.login}>
@@ -86,4 +86,15 @@ class LoginPage extends Component {
     }
 }
 
-export default LoginPage;
+const mapStateToProps = state => ({
+    activeUser: state.activeUser
+});
+
+const mapDispatchToProps = {
+    loginAction
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(LoginPage);

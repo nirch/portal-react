@@ -15,44 +15,31 @@ class App extends React.Component {
 
   constructor(props) {
     super(props);
-
-    this.state = {
-      activeUser: null
-    };
-
-    this.handleLogin = this.handleLogin.bind(this);
-  }
-
-  handleLogin(activeUser) {
-    this.setState({activeUser});
   }
 
   render() {
-    const { activeUser } = this.state;
-
-    debugger;
     return (
       <Switch>
         <Route exact path="/">
-          <LoginPage activeUser={activeUser} handleLogin={this.handleLogin}/>
+          <LoginPage/>
         </Route>
         <Route exact path="/courses">
-          <CoursesPage activeUser={activeUser} />
+          <CoursesPage/>
         </Route>
         <Route path="/courses/:id">
-          <CourseDetailsPage activeUser={activeUser} />
+          <CourseDetailsPage/>
         </Route>
         <Route exact path="/users">
-          <UsersPage activeUser={activeUser} />
+          <UsersPage/>
         </Route>
         <Route path="/users/:id">
-          <UserDetailsPage activeUser={activeUser} />
+          <UserDetailsPage/>
         </Route>
         <Route path="/hours-report">
-          <HoursReportPage activeUser={activeUser} />
+          <HoursReportPage/>
         </Route>
         <Route path="/hours-approve">
-          <HoursApprovePage activeUser={activeUser} />
+          <HoursApprovePage/>
         </Route>
       </Switch>
     );

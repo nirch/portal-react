@@ -41,7 +41,7 @@ class LoginPage extends Component {
 
         const data = { email, pass: pwd };
 
-        server(null, data, "login").then(res => {
+        server(data, "login").then(res => {
             console.log(res);
             if (res.data.error) {
                 alert("error in login");

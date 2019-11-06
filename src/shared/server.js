@@ -1,12 +1,14 @@
 import axios from "axios";
+import store from "../store";
 
-async function server(activeUser, data, type) {
+async function server(data, type) {
 
     const version = 2.3;
     const phpDomain = 'https://pil1.appleseeds.org.il/dcnir/server/';
     const imgsDomain = 'https://pil1.appleseeds.org.il/dcnir/';
 
     // Adding the user's token to the payload
+    const { activeUser } = store.getState();
     data.token = activeUser ? activeUser.token : undefined;
 
     // Adding the version to the payload

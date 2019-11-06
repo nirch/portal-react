@@ -8,6 +8,8 @@ import UsersPage from './pages/users/UsersPage'
 import UserDetailsPage from './pages/users/UserDetailsPage'
 import HoursReportPage from './pages/hours/HoursReportPage'
 import HoursApprovePage from './pages/hours/HoursApprovePage'
+import { loginAction } from "../src/store/reducers/ActiveUser/actions";
+import { connect } from "react-redux";
 
 import './App.css';
 
@@ -15,6 +17,11 @@ class App extends React.Component {
 
   constructor(props) {
     super(props);
+   if (localStorage.activeUser){
+     console.log(JSON.parse(localStorage.activeUser))
+    this.props.loginAction(JSON.parse(localStorage.activeUser))
+   }
+    
   }
 
   render() {
@@ -46,4 +53,16 @@ class App extends React.Component {
   }
 }
 
-export default App;
+const mapStateToProps = state => ({
+  activeUser: state.activeUser
+});
+
+const mapDispatchToProps = {
+  loginAction
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App);
+

@@ -3,8 +3,11 @@
     height:25px;
     margin-top: 10px;
 }
+.arrowleftright:hover{
+    cursor: pointer;
+}
 .monthTag{
-    width:250px;
+    width:150px;
     font-size: 30px;
 text-align:center ;
 }

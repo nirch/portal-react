@@ -6,6 +6,7 @@ import { Redirect } from 'react-router-dom'
 
 
 class CoursesPage extends Component {
+    
     render() {
 
         if (!this.props.activeUser) {
@@ -15,7 +16,9 @@ class CoursesPage extends Component {
         return (
             <div>
                 <PortalNavbar/>
+
                 <h1>קורסים</h1>
+
             </div>
         );
     }

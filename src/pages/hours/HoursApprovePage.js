@@ -29,7 +29,7 @@ class HoursApprovePage extends Component {
         return (
             <div>
                 <PortalNavbar/>
-                <SelectMonth month={parseInt(this.state.month)} changeMonthYear={this.changeMonthYear}/>
+                <SelectMonth changeMonthYear={this.changeMonthYear}/>
                 <div>
                     חיפוש עובדים
                 </div>

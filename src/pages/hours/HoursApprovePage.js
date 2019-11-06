@@ -6,6 +6,9 @@ import { Redirect } from 'react-router-dom'
 
 
 class HoursApprovePage extends Component {
+ 
+      
+ 
     render() {
 
         if (!this.props.activeUser) {

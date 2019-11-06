@@ -47,6 +47,7 @@ class LoginPage extends Component {
                 alert("error in login");
             } else {
                 this.props.loginAction(res.data);
+                localStorage.activeUser = JSON.stringify(res.data);
             }
         }, err => {
             console.error(err);

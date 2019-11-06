@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import './hours.css'
+import '../hours/hoursApprove.css'
 import PortalNavbar from '../../components/navbar/PortalNavbar';
 import { connect } from "react-redux";
 import { Redirect } from 'react-router-dom'
-
+import SelectMonth from '../../components/hoursApprove/selectMonth'
 
 class HoursApprovePage extends Component {
     render() {
@@ -15,7 +15,16 @@ class HoursApprovePage extends Component {
         return (
             <div>
                 <PortalNavbar/>
-                <h1>אישור שעות</h1>
+                <SelectMonth month="פברואר"/>
+                <div>
+                    חיפוש עובדים
+                </div>
+                <div>
+                    רשימת עובדים
+                </div>
+                <div>
+                    footer with actions
+                </div>
             </div>
         );
     }

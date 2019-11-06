@@ -8,9 +8,44 @@ import '../../pages/hours/hoursApprove.css'
 export default class SelectMonth extends React.Component {
     constructor(props) {
         super(props);
+        this.state={
+            year:new Date().getFullYear(),
+            month:new Date().getMonth()+1
+        }
+    }
+    monthBack=()=>{
+        const {changeMonthYear}=this.props;
+        let {month,year}=this.state;
+        const curYear=new Date().getFullYear();
+        const curMonth=new Date().getMonth()+1;
+        if (month===1) 
+                    {month=12;year--;}
+        else 
+                    {month--}
+        if ((year===curYear&& month<=curMonth) || (year<curYear && month>curMonth)) 
+                                {
+                                    this.setState({month,year});
+                                    changeMonthYear(month,year)
+                                }
+    }
+    monthForward=()=>{
+        const {changeMonthYear}=this.props;
+        let {month,year}=this.state;
+        const curYear=new Date().getFullYear();
+        const curMonth=new Date().getMonth()+1;
+        if (month===12) 
+                    {month=1;year++;}
+        else 
+                    {month++}
+        if ((year===curYear&& month<=curMonth) || (year<curYear && month>curMonth)) 
+                    {
+                        this.setState({month,year});
+                        changeMonthYear(month,year)
+                    }
     }
     render() {
-        const { month,monthBack,monthForward } = this.props;
+        const {month} = this.state;
+
         let monthText = "";
         switch (month) {
             case 1: monthText = "ינואר"
@@ -51,9 +86,9 @@ export default class SelectMonth extends React.Component {
         }
         return (
             <div className="chooseMonth">
-                <img className="arrowleftright" src="/images/ArrowRight/drawable-xxhdpi/arrow_down.png" onClick={()=>{monthBack()}}/>
+                <img className="arrowleftright" src="/images/ArrowRight/drawable-xxhdpi/arrow_down.png" onClick={this.monthBack}/>
                 <span className="monthTag">   {monthText}  </span>
-                <img className="arrowleftright" src="/images/ArrowLeft/drawable-xxhdpi/arrow_down.png"  onClick={monthForward}/>
+                <img className="arrowleftright" src="/images/ArrowLeft/drawable-xxhdpi/arrow_down.png"  onClick={this.monthForward}/>
             </div>
         );
     }

@@ -14,26 +14,12 @@ class HoursApprovePage extends Component {
             }
         
     }
-    monthBack=()=>{
-        let {month,year}=this.state;
-        const curYear=new Date().getFullYear();
-        const curMonth=new Date().getMonth()+1;
-        if (month===1) 
-                    {month=12;year--;}
-        else 
-                    {month--}
-        if ((year===curYear&& month<=curMonth) || (year<curYear && month>curMonth)) this.setState({month,year})
+
+    changeMonthYear=(month,year)=>{
+        this.setState({month,year})
+
     }
-    monthForward=()=>{
-        let {month,year}=this.state;
-        const curYear=new Date().getFullYear();
-        const curMonth=new Date().getMonth()+1;
-        if (month===12) 
-                    {month=1;year++;}
-        else 
-                    {month++}
-        if ((year===curYear&& month<=curMonth) || (year<curYear && month>curMonth)) this.setState({month,year})   
-    }
+
     render() {
   
         if (!this.props.activeUser) {
@@ -43,7 +29,7 @@ class HoursApprovePage extends Component {
         return (
             <div>
                 <PortalNavbar/>
-                <SelectMonth month={parseInt(this.state.month)} monthBack={this.monthBack} monthForward={this.monthForward}/>
+                <SelectMonth month={parseInt(this.state.month)} changeMonthYear={this.changeMonthYear}/>
                 <div>
                     חיפוש עובדים
                 </div>

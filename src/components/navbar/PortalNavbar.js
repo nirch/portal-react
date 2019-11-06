@@ -13,6 +13,7 @@ class PortalNavbar extends Component {
     }
     logout() {
         this.props.logoutAction();
+        localStorage.removeItem("activeUser");
     }
     render() {
         return (

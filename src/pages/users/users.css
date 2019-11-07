@@ -3,5 +3,8 @@
 }
 .users-searchBox {
     height: 45px;
-    margin-top: 25px;
+    margin: 25px 0;
+}
+.users-activeFilter {
+    margin-top:16px;
 }

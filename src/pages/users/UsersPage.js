@@ -4,13 +4,13 @@ import PortalNavbar from '../../components/navbar/PortalNavbar';
 import { connect } from "react-redux";
 import { Redirect } from 'react-router-dom';
 import ItemsTable from '../../components/itemsTable/itemsTable';
+import ButtonSet from '../../components/ButtonSet';
 
 class UsersPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
             users:
-            
             {
                 "639": ["סימה", "סויסה", "sima@gmail.com"],
                 "718": ["גל", "שני", "galshani76@gmail.com"],
@@ -24,19 +24,37 @@ class UsersPage extends Component {
         }
         this.titles = ["שם", "שם משפחה", "אימייל"];
     }
+
+    getFilteredData = (key) => {
+        if (key == 1) {
+            console.log("shalom" + key)
+        }
+        if (key == 2) {
+            console.log("by" + key)
+        }
+    }
+
     render() {
 
         if (!this.props.activeUser) {
             return <Redirect to='/' />
         }
 
+        const buttonsData = [
+            { key: 1, title: "עובדים פעילים" },
+            { key: 2, title: "לא פעילים" }
+        ]
+
         return (
             <div>
-                <PortalNavbar className="users-Navbar"/>
+                <PortalNavbar className="users-Navbar" />
                 <h1 className="users-searchBox">Search component</h1>
 
                 <ItemsTable items={this.state.users} titles={this.titles} />
 
+                <div className="users-activeFilter">
+                    <ButtonSet makeChoice={this.getFilteredData} buttons={buttonsData} />
+                </div>
             </div>
         );
     }

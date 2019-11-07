@@ -1,21 +1,44 @@
 import React, { Component } from 'react';
-import './hours.css'
+import '../hours/hoursApprove.css'
 import PortalNavbar from '../../components/navbar/PortalNavbar';
 import { connect } from "react-redux";
 import { Redirect } from 'react-router-dom'
-
+import SelectMonth from '../../components/hoursApprove/selectMonth'
 
 class HoursApprovePage extends Component {
-    render() {
+    constructor(props){
+        super(props);
+        this.state={
+                year:new Date().getFullYear(),
+                month:new Date().getMonth()+1
+            }
+        
+    }
 
+    changeMonthYear=(month,year)=>{
+        this.setState({month,year})
+
+    }
+
+    render() {
+  
         if (!this.props.activeUser) {
             return <Redirect to='/' />
         }
-
+        const {year,month}=this.state;
         return (
             <div>
                 <PortalNavbar/>
-                <h1>אישור שעות</h1>
+                <SelectMonth changeMonthYear={this.changeMonthYear}/>
+                <div>
+                    חיפוש עובדים
+                </div>
+                <div>
+                    רשימת עובדים
+                </div>
+                <div>
+                    footer with actions
+                </div>
             </div>
         );
     }

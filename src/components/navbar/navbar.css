@@ -180,9 +180,9 @@
 }
 
 header{
-	height: 50px;
-	display: flex;
-	margin: 10px;;
+	height: 30px;
+	position: relative;
+	margin: 10px;
 }
 
 .header-title{
@@ -192,8 +192,20 @@ header{
 }
 
 .hamburger-menu{
+	position: absolute;
+}
+
+.hamburger-menu > div{
 	width: 25px;
 	height: 4px;
 	background-color: #5d5d5d;
-	margin: 6px 0;
+	margin: 3px 0;
+}
+
+.x{
+	color: white;
+	font-size: 40px;
+	position: absolute;
+	left: 15px;
+	top: 0;
 }

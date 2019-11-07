@@ -9,8 +9,7 @@ class PortalNavbar extends Component {
         super(props);
         this.state = {
             redirectTo: "",
-            header: "",
-            isMenuOpen: true
+            isMenuOpen: false
         }
 
         this.logout = this.logout.bind(this);
@@ -40,42 +39,34 @@ class PortalNavbar extends Component {
 
     goToCoursesPage() {
         let { redirectTo } = this.state;
-        let { header } = this.state;
         redirectTo = "/courses";
-        header = "קורסים";
-        this.setState({ redirectTo, header })
+        this.setState({ redirectTo })
         this.closeSidebar();
     }
 
     goToUsersPage() {
         let { redirectTo } = this.state;
-        let { header } = this.state;
         redirectTo = "/users";
-        header = "משתמשים";
-        this.setState({ redirectTo, header })
+        this.setState({ redirectTo })
         this.closeSidebar();
     }
 
 
     goToHoursApprovePage() {
         let { redirectTo } = this.state;
-        let { header } = this.state;
         redirectTo = "/hours-approve";
-        header = "אישור שעות";
-        this.setState({ redirectTo, header })
+        this.setState({ redirectTo })
         this.closeSidebar();
     }
 
     goToHoursReportPage() {
         let { redirectTo } = this.state;
-        let { header } = this.state;
         redirectTo = "/hours-report";
-        header = "דיווח שעות";
-        this.setState({ redirectTo, header })
+        this.setState({ redirectTo })
         this.closeSidebar();
     }
     componentDidUpdate() {
-        let redirectTo = this.state.redirectTo;
+        let {redirectTo} = this.state;
         if (redirectTo != "") {
             redirectTo = "";
             this.setState({ redirectTo });
@@ -84,22 +75,28 @@ class PortalNavbar extends Component {
     }
 
     render() {
-        let { header } = this.state;
-        let { isMenuOpen } = this.state;
-        let sidebarOpen
-        if (isMenuOpen)
+        let { header } = this.props;
+        let { redirectTo, isMenuOpen } = this.state;
+        let sidebarOpen;
+
+        if (isMenuOpen) {
             sidebarOpen = "sidebar-open";
-        else
+        }
+        else {
             sidebarOpen = "";
-        if (this.state.redirectTo == "courses")
-            return <Redirect to='/courses' />;
+        }
+
+        if (redirectTo) {
+            return <Redirect to={redirectTo} />;
+        }
+
         return (
             <div>
                 <header>
-                    <div onClick={this.openSidebar}>
-                        <div className="hamburger-menu"></div>
-                        <div className="hamburger-menu"></div>
-                        <div className="hamburger-menu"></div>
+                    <div className="hamburger-menu" onClick={this.openSidebar}>
+                        <div></div>
+                        <div></div>
+                        <div></div>
                     </div>
                     <div className="header-title">
                         {header}
@@ -111,6 +108,7 @@ class PortalNavbar extends Component {
                         <div className="sidebar">
                             <div className="sidebar-header">
                                 <img className="appleseeds-logo" src="images/appleseeds-logo.png"></img>
+                                <div className="x" onClick={this.closeSidebar}>&times;</div>
                             </div>
                             <div className="profile-preview">
                                 <img className="profile-image" onClick={this.profileClick} src="images/profile-icon.png"></img>

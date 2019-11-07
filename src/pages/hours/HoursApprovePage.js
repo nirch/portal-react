@@ -339,7 +339,11 @@ class HoursApprovePage extends Component {
             <div>
                 <PortalNavbar />
                 <SelectMonth changeMonthYear={this.changeMonthYear} />
-                <input type="text" placeholder="חיפוש עובד" />
+                <input type="text" placeholder="חיפוש עובד"   onChange={(e)=>{
+                    let {search}=this.state;
+                    search=e.target.value;
+                    this.setState({search});
+                }} />
                 <input type="number" placeholder="page"  onChange={(e)=>{
                     let {page}=this.state;
                     page=e.target.value;

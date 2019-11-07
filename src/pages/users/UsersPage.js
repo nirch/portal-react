@@ -3,7 +3,7 @@ import './users.css'
 import PortalNavbar from '../../components/navbar/PortalNavbar';
 import { connect } from "react-redux";
 import { Redirect } from 'react-router-dom';
-import ItemsTable from '../../components/itemsTable';
+import ItemsTable from '../../components/itemsTable/itemsTable';
 
 
 class UsersPage extends Component {
@@ -11,17 +11,7 @@ class UsersPage extends Component {
         super(props);
         this.state = {
             users:
-            // [
-            // {userid:639, firstname: "סימה", lastname: "סויסה", email: "sima@gmail.com"},
-            // {userid:718, firstname: "גל", lastname: "שני", email: "galshani76@gmail.com"},
-            // {userid:719, firstname: "אורי", lastname: "רז", email: "URI.RAZ@GMAIL.COM"},
-            // {userid:893, firstname: "איתמר", lastname: "פרידמן", email: "xxfridmanxx@gmail.com"},
-            // {userid:897, firstname: "איתן", lastname: "אדרי", email: "eytane@neta-project.org"},
-            // {userid:904, firstname: "אמאל", lastname: "באדר", email: "amalb@appleseeds.org.il"},
-            // {userid:886, firstname: "אורית", lastname: "בש", email: "oritbash@neta-project.org"},
-            // {userid:944, firstname: "חאלדיה", lastname: "נמארנה", email: "khaldiyan@appleseeds.org.il"},
-            // ]
-
+            
             {
                 "639": ["סימה", "סויסה", "sima@gmail.com"],
                 "718": ["גל", "שני", "galshani76@gmail.com"],
@@ -43,8 +33,8 @@ class UsersPage extends Component {
 
         return (
             <div>
-                <PortalNavbar />
-                <h1>משתמשים</h1>
+                <PortalNavbar className="users-Navbar"/>
+                <h1 className="users-searchBox">Search component</h1>
 
                 <ItemsTable items={this.state.users} titles={this.titles} />
 

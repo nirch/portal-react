@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table } from 'react-bootstrap'
+import './itemsTable.css'
 
 
 class ItemsTable extends Component {
@@ -11,36 +11,31 @@ class ItemsTable extends Component {
         );
 
         const tableData = [];
-       
              
         for (var id in items) {
-            const tableRow = items[id].map(item=>
-                <td>
+            const tableRow = items[id].map((item, index)=>
+                <td key={index} className="itemsTable-data">
                     {item}
                 </td>
             );
-            console.log(tableRow)
-
+            
             tableData.push(
-            <tr key={id}>
+            <tr key={id} className="itemsTable-row">
                {tableRow}
             </tr>)
         }
 
-        return (
-            
-                <Table responsive="sm">
-                    <thead>
+        return (           
+                <table  className="itemsTable-table">
+                    <thead className="itemsTable-title">
                         <tr>
                             {tableTitles}
                         </tr>
                     </thead>
-                    <tbody>
-                        
-                            {tableData}
-                       
+                    <tbody >                     
+                            {tableData}                   
                     </tbody>
-                </Table>
+                </table>
             
         );
     }

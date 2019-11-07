@@ -1,3 +1,7 @@
 .report-font-size {
     font-size: 10px;
 }
+
+.report-font-bold {
+    font-weight: bold;
+}

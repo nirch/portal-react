@@ -1,0 +1,22 @@
+ .btn-set {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+.btn-set button {
+    border: none;
+    outline: none;
+    background: transparent;
+    color: #5d5d5d;
+    font-size: 15px;
+    opacity: 70%
+}
+
+.btn-set > .selected{
+    border: none;
+    outline: none;
+    background: transparent;
+    color: #5d5d5d;
+    font-size: 15px;
+    opacity: 100%;
+}

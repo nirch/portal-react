@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import { Redirect } from 'react-router-dom'
 import { Container, Button , Table, Modal, Row, Col} from 'react-bootstrap';
 import server from '../../shared/server'
+import  SelectMonth from '../../components/hoursApprove/selectMonth'
 
 class HoursReportPage extends Component {
   
@@ -12,15 +13,20 @@ class HoursReportPage extends Component {
         super(props);
         this.state = {
             GetReports: [],
-            month: 11,
-            year: 2019,
+            year:new Date().getFullYear(),
+            month:new Date().getMonth()+1
         }
+        this.getMonthYear = this.getMonthYear.bind(this);
         }
     
     componentDidMount(){
+        this.getDataFromServer(this.state.month,this.state.year);
+        
+    }
+    getDataFromServer(month,year){
         var data = {
-            month : this.state.month,
-            year : this.state.year
+            month : month,
+            year : year
         };
         server(data, "GetReports").then(res => {
             console.log(res);
@@ -33,10 +39,14 @@ class HoursReportPage extends Component {
         }, err => {
             console.error(err);
         })
-        
+    }
+    getMonthYear(month,year){
+        this.setState({month:month,year:year})
+        this.getDataFromServer(month,year);
+        console.log(month,year)
     }
     
-     diff(start, end) {
+    diff(start, end) {
         start = start.split(":");
         end = end.split(":");
         var startDate = new Date(0, 0, 0, start[0], start[1], 0);
@@ -49,9 +59,11 @@ class HoursReportPage extends Component {
         // If using time pickers with 24 hours format, add the below line get exact hours
         if (hours < 0)
            hours = hours + 24;
-        console.log((hours <= 9 ? "0" : "") + hours + ":" + (minutes <= 9 ? "0" : "") + minutes)
+        //console.log((hours <= 9 ? "0" : "") + hours + ":" + (minutes <= 9 ? "0" : "") + minutes)
         return (hours <= 9 ? "0" : "") + hours + ":" + (minutes <= 9 ? "0" : "") + minutes;
     }
+    
+    
     //https://pil1.appleseeds.org.il/dcnir/server/datagate.php?type=GetNetaCandidatesViewers
     //https://pil1.appleseeds.org.il/dcnir/server/datagate.php?type=GetReports
     //https://pil1.appleseeds.org.il/dcnir/server/datagate.php?type=GetMyReportingPerimeter
@@ -73,7 +85,7 @@ class HoursReportPage extends Component {
                      default:  
                          bgStyle = " bg-success "   
                  }
-                 let style = " report-status mt-2 py-3 " + bgStyle
+                 let style = " report-status mt-2 py-2 " + bgStyle
                  let hoursDiff = this.diff(item.starthour,item.finishhour)
                  return  <Row className={style}>
                       <Col className="px-1 text-center">
@@ -93,32 +105,45 @@ class HoursReportPage extends Component {
         )
      
         return (
-            <Container className="report-font-size" >
+            <Container className=" report-font-size " >
              <PortalNavbar/>
-              <Row className="justify-content-md-center report-font-bold">
-              <Col xs  className="px-1 text-center" >
+             <SelectMonth changeMonthYear={this.getMonthYear}/>
+              <Row className=" justify-content-md-center report-font-bold  py-2">
+              <Col xs  className=" px-1 text-center " >
                     <span>תאריך</span>
                   </Col>
-                  <Col xs  className="px-1 text-center">
+                  <Col xs  className=" px-1 text-center ">
                     <span>פרויקט</span>
                   </Col>
-                   <Col xs className="px-1 text-center">
+                   <Col xs className=" px-1 text-center ">
                     <span>נושא פעילות</span>
                   </Col>
-                  <Col xs  className="px-1 text-center" >
+                  <Col xs  className=" px-1 text-center " >
                     <span>סהייכ שעות</span>
                   </Col>
-                  
-
-              </Row>
+                </Row>
               <Row>
                   <Col>
                   {rows}
                   </Col>
               </Row>
-              <Row>
-                  <Col>
-                   <span></span>
+              <Row className=" fixed-bottom align-items-center justify-content-md-center px-3" >
+              <Col className=" px-1 text-center "> 
+                  <img src="images\CourseControls\Save\drawable-mdpi\noun_save_2429243.png" alt="save"></img>
+                  </Col>
+                  <Col className=" px-1 text-center ">
+                  <img src="images\CourseControls\Copy\drawable-mdpi\noun_copy_573715.png" alt="copy"></img>
+                  </Col>
+                 
+                  <Col className=" plus text-center mx-auto ">
+                   <div className="plus-cyrcle"><span >+</span></div>
+                  </Col>
+                  
+                  <Col className=" px-1 text-center ">
+                  <img src="images\CourseControls\Delete\drawable-mdpi\noun_delete_1610851.png" alt="delete"></img>
+                  </Col>
+                  <Col className=" px-1 text-center ">
+                   <img src="images\CourseControls\Back\drawable-mdpi\noun_back_arrow_2690272.png" alt="back"></img>
                   </Col>
               </Row>
           </Container>

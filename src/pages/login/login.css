@@ -1,0 +1,80 @@
+.LogIn .imgLOGO {
+    height:70px ;
+    width:245px ;
+    margin:39px 57px 0px 58px;
+}
+
+.LogIn {
+    background-color: #1b166e;
+}
+
+.emailInput{
+    margin-top: 110px;
+    margin-bottom: 32px;
+}
+
+
+.LogIn .loginInput{
+    display: block;
+    background-color:transparent;
+    border-radius: 50px;
+    width: 100%;
+    height: 50px;
+    color: #ffffff;
+    border: 1px,#ffffff;
+}
+
+.loginInput::placeholder {
+    font-size:25px;
+    text-align: center;
+}
+.LogIn .loginBtn {
+    display: block;
+    font-weight: bold;
+    background-color: #ffffff;
+    border: 1px,#ffffff;
+    border-radius: 50px;
+    width: 100%;
+    font-size:30px;
+    color: #1b166e;
+    height: 50px;
+    margin-top: 140px;
+
+}
+.LogIn .logInpwd {
+    text-align: center;
+    color: #ffffff;
+    margin-top:66px;
+    padding-bottom: 35px;
+    position: relative;
+    
+    
+}
+.loginWrongPWD {
+    background-color: #ffffff;
+    position: absolute;
+    
+
+}
+.loginInline {
+    display: inline-block;
+}
+.loginWrongPWD P{
+    font-size: 20px;
+    color: #ffa1a1;
+    margin-right:33.5px;
+    margin-left:106px;
+}
+
+.loginWrongPWD>div:first-child{
+padding: 40px 0px 33px 0px;
+}
+.loginClose {
+    font-size:24px;
+    font-weight: bold;
+}
+.loginSpan {
+    height: 35px;
+    width: 35px;
+    
+}

@@ -65,9 +65,29 @@ class LoginPage extends Component {
 
         return (
 
-            <Container>
-                <h1>התחברות</h1>
-                <Form>
+            <Container className="LogIn">
+                <img className="imgLOGO"
+                src={require ('./01.png')}
+                alt="tapuach logo"
+                 />
+                
+                <form className="loginForm">
+                    <input className="loginInput emailInput" type="email" name="email" placeholder="אימייל"/>
+                    <input className="loginInput" type="password" name="pwd" placeholder="סיסמה"/>
+                    <button className="loginBtn" type="button" onClick={this.login}>התחברות</button>
+                    <div className="logInpwd">
+                    <h5>שכחתי סיסמא</h5>
+                    </div>
+                    <div className="loginWrongPWD">
+                        <div className="loginInline">
+                        <img  src={require('./danger.svg')} alt="danger"/>
+                        <p className="loginInline" > סיסמא שגויה</p>
+                        </div>
+                        <div className="loginInline loginSpan"><a href="#"><span className="loginClose">X</span></a></div>
+                    </div>
+                </form>
+                
+                {/* <Form>
                     <Form.Group controlId="formBasicEmail">
                         <Form.Label></Form.Label>
                         <Form.Control value={email} name="email" type="email" placeholder="אימייל" onChange={this.handleInputChange} />
@@ -81,7 +101,7 @@ class LoginPage extends Component {
                     <Button variant="primary" type="button" onClick={this.login}>
                         התחבר
                     </Button>
-                </Form>
+                </Form> */}
             </Container>
         );
     }

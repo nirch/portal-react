@@ -6,11 +6,12 @@ import { Redirect } from 'react-router-dom';
 import ButtonSet from '../../components/ButtonSet';
 import server from '../../shared/server';
 import { Container } from 'react-bootstrap'
-
+import SearchBar from '../../components/SearchBar'
 
 class CoursesPage extends Component {
     constructor(props) {
         super(props);
+        this.state = {searchPages: null}
 
     }
     getFilteredData = (key) => {
@@ -21,7 +22,9 @@ class CoursesPage extends Component {
             console.log("by" + key)
         }
     }
-
+handleSearch = (val) => {
+alert(val);
+}
     render() {
 
         if (!this.props.activeUser) {
@@ -39,7 +42,7 @@ class CoursesPage extends Component {
                 <PortalNavbar />
 
                 <h1>קורסים</h1>
-
+                <SearchBar searchLabel="חיפוש קורס" handleSearch = {this.handleSearch} pages = {this.state.searchPages} />
                 <ButtonSet makeChoice={this.getFilteredData} buttons={buttonsData} />
             </div>
         );

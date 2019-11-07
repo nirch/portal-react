@@ -180,11 +180,13 @@ class HoursApprovePage extends Component {
         console.log(page);
         console.log("search");
         console.log(search);
+        console.log("rowsperpage");
+        console.log(rowsPerPage);       
         let blockColor;
         let checkAproved,checkDecline,checkWaiting;
         let timeLeg=0;
         let approvedTime,declineTime,waitingTime,totalTime;
-        for (var index=page*rowsPerPage;index<searchedReporters.length&&index<(page+1)*rowsPerPage;index++){
+        for (var index=page*rowsPerPage;(index<searchedReporters.length&&index<(parseInt(page)+1)*rowsPerPage);index++){
             reporterReportsRows=[];
             approvedTime="00:00";declineTime="00:00";waitingTime="00:00"; totalTime="00:00"
             for (var secondIndex=0;secondIndex<searchedReporters[index].reports.length;secondIndex++ ){
@@ -338,6 +340,11 @@ class HoursApprovePage extends Component {
                 <PortalNavbar />
                 <SelectMonth changeMonthYear={this.changeMonthYear} />
                 <input type="text" placeholder="חיפוש עובד" />
+                <input type="number" placeholder="page"  onChange={(e)=>{
+                    let {page}=this.state;
+                    page=e.target.value;
+                    this.setState({page});
+                }}/>
                 <Accordion>
                     {accordionRows}
                 </Accordion>

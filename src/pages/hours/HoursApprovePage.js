@@ -13,8 +13,8 @@ class HoursApprovePage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            year: new Date().getFullYear(),
-            month: new Date().getMonth() + 1,
+            year:new Date().getFullYear(),
+            month:new Date().getMonth()+1,
             isLoading:true,
             allReporters:[],
             search:"",
@@ -25,14 +25,18 @@ class HoursApprovePage extends Component {
        
     }
    componentDidMount(){
-        this.getReporters();
+    // const year=new Date().getFullYear();
+    // const month=new Date().getMonth()+1;
+    // this.setState({month,year});
+    this.getReporters();
    }
 
     getReporters = ()=> {
         let {isLoading,month,year,allReporters,search,pages,rowsPerPage}=this.state;
         let usefulReporters = [];
         var data={month,year};
-
+        // console.log('retriving month:');
+        // console.log(month+" "+year);
         server(data, 'GetAllReporters').then((res)=> {
             let reporters=res.data
             for(var i=0;i<reporters.length; i++)
@@ -102,6 +106,25 @@ class HoursApprovePage extends Component {
             this.setState({isLoading,allReporters,pages})
         });
     }
+    addTime=(time2,time1)=>{
+      
+        var hours2=time2.substring(0, 2);
+        var hours1=time1.substring(0, 2);
+      
+        var min2=time2.substring(3, 5);
+        var min1=time1.substring(3, 5);
+  
+     
+        var hours=parseInt(hours2)+parseInt(hours1);
+        var minutes=parseInt(min2)+parseInt(min1);
+
+        if (minutes>=60) {minutes-=60;hours++;}
+
+        if (hours.toString().length===1) {hours="0"+hours};
+        if (minutes.toString().length===1) {minutes="0"+minutes};
+ 
+        return ({hours,minutes})
+    }
     calculatTime=(time2,time1)=>{
       
         var hours2=time2.substring(0, 2);
@@ -115,14 +138,20 @@ class HoursApprovePage extends Component {
         var minutes=parseInt(min2)-parseInt(min1);
 
         if (minutes<0) {minutes+=60;hours--;}
-        
+
         if (hours.toString().length===1) {hours="0"+hours};
         if (minutes.toString().length===1) {minutes="0"+minutes};
  
         return ({hours,minutes})
     }
     changeMonthYear = (month, year) => {
-        this.setState({ month, year })
+        // console.log('changing month:');
+        // console.log(month+" "+year);
+        this.setState({ month, year });
+       
+        // console.log('month changed to:');
+        // console.log(this.state.month+" "+this.state.year);       
+        this.getReporters();
 
     }
     toggleImage = (e) => {
@@ -130,11 +159,6 @@ class HoursApprovePage extends Component {
         else { e.target.src = "/images/ArrowDown/drawable-xxhdpi/arrow_down.png" }
     }
     render() {
-        const tempDate = "12/12/2010";
-        const tempHours = 9;
-        const tempProject="שם הפרויקט המלא";
-        const tempName="שם נושא הפעילות המלא";
-        const tempActivity="שם הקורס המלא";
 
         if (!this.props.activeUser) {
             return <Redirect to='/' />
@@ -159,27 +183,41 @@ class HoursApprovePage extends Component {
         let blockColor;
         let checkAproved,checkDecline,checkWaiting;
         let timeLeg=0;
+        let approvedTime,declineTime,waitingTime,totalTime;
         for (var index=page*rowsPerPage;index<searchedReporters.length&&index<(page+1)*rowsPerPage;index++){
             reporterReportsRows=[];
+            approvedTime="00:00";declineTime="00:00";waitingTime="00:00"; totalTime="00:00"
             for (var secondIndex=0;secondIndex<searchedReporters[index].reports.length;secondIndex++ ){
                 timeLeg=this.calculatTime(searchedReporters[index].reports[secondIndex].finishhour,searchedReporters[index].reports[secondIndex].starthour)
                 switch(searchedReporters[index].reports[secondIndex].approval) {
                     case -1: blockColor="#ffa1a1";
+                    declineTime=this.addTime(declineTime,timeLeg.hours+":"+timeLeg.minutes);
+                    declineTime=declineTime.hours+":"+declineTime.minutes;
+                    totalTime=this.addTime(totalTime,timeLeg.hours+":"+timeLeg.minutes);
+                    totalTime=totalTime.hours+":"+totalTime.minutes;
                     checkAproved=  <input className="Radio" type="radio" name={index+" "+ secondIndex} value="aproved" />;
-                    checkDecline= <input className="Radio" type="radio" name={index+" "+ secondIndex} value="decline" checked/>;
+                    checkDecline= <input className="Radio" type="radio" name={index+" "+ secondIndex} value="decline" defaultChecked/>;
                     checkWaiting=  <input className="Radio" type="radio" name={index+" "+ secondIndex} value="wait" />;
                       // Decline
                       break;
                     case 1: blockColor="#a1d47f";
-                                checkAproved=  <input className="Radio" type="radio" name={index+" "+ secondIndex} value="aproved" checked/>;
+                    approvedTime=this.addTime(approvedTime,timeLeg.hours+":"+timeLeg.minutes);
+                    approvedTime=approvedTime.hours+":"+approvedTime.minutes;
+                    totalTime=this.addTime(totalTime,timeLeg.hours+":"+timeLeg.minutes);
+                    totalTime=totalTime.hours+":"+totalTime.minutes;
+                                checkAproved=  <input className="Radio" type="radio" name={index+" "+ secondIndex} value="aproved" defaultChecked/>;
                                 checkDecline= <input className="Radio" type="radio" name={index+" "+ secondIndex} value="decline" />;
                                 checkWaiting=  <input className="Radio" type="radio" name={index+" "+ secondIndex} value="wait" />;
                       // aproved
                       break;
                     default: blockColor="#ffd300";
+                    waitingTime=this.addTime(waitingTime,timeLeg.hours+":"+timeLeg.minutes);
+                    waitingTime=waitingTime.hours+":"+waitingTime.minutes; 
+                    totalTime=this.addTime(totalTime,timeLeg.hours+":"+timeLeg.minutes);
+                    totalTime=totalTime.hours+":"+totalTime.minutes;
                     checkAproved=  <input className="Radio" type="radio" name={index+" "+ secondIndex} value="aproved" />;
                     checkDecline= <input className="Radio" type="radio" name={index+" "+ secondIndex} value="decline" />;
-                    checkWaiting=  <input className="Radio" type="radio" name={index+" "+ secondIndex} value="wait" checked/>;
+                    checkWaiting=  <input className="Radio" type="radio" name={index+" "+ secondIndex} value="wait" defaultChecked/>;
                       // waiting
                   }
   
@@ -234,15 +272,15 @@ class HoursApprovePage extends Component {
                             <Row>
                                 <Col xs="4">
                                     <p className="textInHoursHead"> פרויקט</p>
-                                    <p className="textInHours">{tempProject}</p>
+                                    <p className="textInHours">{searchedReporters[index].reports[secondIndex].projectid}</p>
                                 </Col>
                                 <Col xs="4">
                                 <p className="textInHoursHead"> מס/שם קורס</p>
-                                    <p className="textInHours">{tempName}</p>
+                                    <p className="textInHours">{searchedReporters[index].reports[secondIndex].courseid}</p>
                                 </Col>
                                 <Col xs="4">
                                 <p className="textInHoursHead"> נושא פעילות</p>
-                                    <p className="textInHours">{tempActivity}</p>
+                                    <p className="textInHours">{searchedReporters[index].reports[secondIndex].actionid}</p>
                                 </Col>
                             </Row>
                             <Row>
@@ -255,11 +293,11 @@ class HoursApprovePage extends Component {
              <Card key={index}>
                 <Card.Header>
                     <Row>
-                        <Col xs="5">
-                            <h4>{searchedReporters[index].lastname} {searchedReporters[index].firstname}</h4>
+                        <Col xs="4">
+                            <h5>{searchedReporters[index].lastname} {searchedReporters[index].firstname}</h5>
                         </Col>
-                        <Col xs="5">
-                            <p><span style={{ color: "#f5cc0c", marginRight: "2px" }}>50  </span><span style={{ color: "#338d12", marginRight: "2px" }}>50  </span><span style={{ color: "#ff0000", marginRight: "2px" }}>50  </span><span style={{ color: "#5d5d5d", marginRight: "7px" }}>150</span></p>
+                        <Col xs="6">
+                            <p><span style={{ color: "#f5cc0c", marginRight: "2px",fontSize:"12px" }}>{waitingTime}  </span><span style={{ color: "#338d12", marginRight: "2px",fontSize:"12px" }}>{approvedTime}  </span><span style={{ color: "#ff0000", marginRight: "2px",fontSize:"12px" }}>{declineTime}  </span><span style={{ color: "#5d5d5d", marginRight: "7px",fontSize:"14px",fontWeight:"bold" }}>{totalTime}</span></p>
                         </Col>
                         <Col xs="2">
                             <Accordion.Toggle as={Button} variant="link" eventKey={index}>

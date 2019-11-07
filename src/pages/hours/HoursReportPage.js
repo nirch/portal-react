@@ -13,6 +13,8 @@ class HoursReportPage extends Component {
         super(props);
         this.state = {
             GetReports: [],
+            GetCourses:[],
+            GetProjects:[],
             year:new Date().getFullYear(),
             month:new Date().getMonth()+1
         }
@@ -20,7 +22,21 @@ class HoursReportPage extends Component {
         }
     
     componentDidMount(){
+        let data = {};
+        server(data, "GetProjects").then(res => {
+            console.log(res);
+            if (res.data.error) {
+                alert("error in login");
+            } else {
+                data = res.data;
+                this.setState({GetProjects:data})
+            }
+        }, err => {
+            console.error(err);
+        }) 
         this.getDataFromServer(this.state.month,this.state.year);
+        this.getCourses();
+        
         
     }
     getDataFromServer(month,year){
@@ -63,36 +79,61 @@ class HoursReportPage extends Component {
         return (hours <= 9 ? "0" : "") + hours + ":" + (minutes <= 9 ? "0" : "") + minutes;
     }
     
-    
-    //https://pil1.appleseeds.org.il/dcnir/server/datagate.php?type=GetNetaCandidatesViewers
-    //https://pil1.appleseeds.org.il/dcnir/server/datagate.php?type=GetReports
-    //https://pil1.appleseeds.org.il/dcnir/server/datagate.php?type=GetMyReportingPerimeter
+    getCourses(){
+        var data = {
+            coursestatus: 1,
+            desc: false,
+            page: 0,
+            search: "",
+            sorting: "courseid"
+        };
+        server(data, "SearchCourses").then(res => {
+            console.log(res);
+            if (res.data.error) {
+                alert("error in login");
+            } else {
+                data = res.data.courses;
+                this.setState({GetCourses:data})
+            }
+        }, err => {
+            console.error(err);
+        }) 
+    }
+   
     render() {
 
-         const { GetReports } = this.state;
+         const { GetReports, GetCourses, GetProjects } = this.state;
 
         if (!this.props.activeUser) {
             return <Redirect to='/' />
         }
         console.log(GetReports)
+        console.log(GetCourses)
+        console.log(GetProjects)
+        
         
         let rows =  GetReports.map((item) => {  // generate table with customers
                 let bgStyle; 
-                switch (item.checkdate) {
-                     case null: 
+                switch (item.approval) {
+                     case "0": 
                         bgStyle =  " bg-warning "  
+                        break;
+                        case "1":    
+                        bgStyle = " bg-success " 
                         break;
                      default:  
                          bgStyle = " bg-success "   
                  }
                  let style = " report-status mt-2 py-2 " + bgStyle
                  let hoursDiff = this.diff(item.starthour,item.finishhour)
-                 return  <Row className={style}>
+                 let project = GetProjects.find((proj) => {if(proj.projectid===item.projectid) return proj})
+                console.log(project)
+                return  <Row className={style}>
                       <Col className="px-1 text-center">
                        {item.date}
                       </Col >
                       <Col className="px-1 text-center">
-                      {item.projectid}
+                      {project.projectname}
                       </Col>
                       <Col className="px-1 text-center">
                       {item.courseid}
@@ -100,14 +141,23 @@ class HoursReportPage extends Component {
                       <Col className="px-1 text-center">
                       {hoursDiff}
                       </Col>
+                     
                    </Row>
          }
         )
      
         return (
             <Container className=" report-font-size " >
-             <PortalNavbar/>
-             <SelectMonth changeMonthYear={this.getMonthYear}/>
+           
+           <Row className="sticky-top bg-white">
+             <Col>
+             
+              <PortalNavbar />
+              <SelectMonth changeMonthYear={this.getMonthYear}/>
+             
+             </Col>
+           </Row>
+                  
               <Row className=" justify-content-md-center report-font-bold  py-2">
               <Col xs  className=" px-1 text-center " >
                     <span>תאריך</span>
@@ -127,7 +177,7 @@ class HoursReportPage extends Component {
                   {rows}
                   </Col>
               </Row>
-              <Row className=" fixed-bottom align-items-center justify-content-md-center px-3" >
+              <Row className=" fixed-bottom bg-white align-items-center justify-content-md-center px-3" >
               <Col className=" px-1 text-center "> 
                   <img src="images\CourseControls\Save\drawable-mdpi\noun_save_2429243.png" alt="save"></img>
                   </Col>

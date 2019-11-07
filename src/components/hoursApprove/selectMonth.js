@@ -44,8 +44,13 @@ export default class SelectMonth extends React.Component {
                     }
     }
     render() {
-        const {month} = this.state;
-
+        
+        const {month,year} = this.state;
+        const curYear=new Date().getFullYear();
+        const curMonth=new Date().getMonth()+1;
+        let backwardOpacity,forwardOpacity;
+        if ((year===curYear&& month<curMonth) || (year<curYear)) {forwardOpacity=1} else {forwardOpacity=0.3};
+        if ((year===curYear&& curMonth-month<11) || (year<curYear && month-curMonth>1))  {backwardOpacity=1} else {backwardOpacity=0.3};
         let monthText = "";
         switch (month) {
             case 1: monthText = "ינואר"
@@ -86,9 +91,9 @@ export default class SelectMonth extends React.Component {
         }
         return (
             <div className="chooseMonth">
-                <img className="arrowleftright" src="/images/ArrowRight/drawable-xxhdpi/arrow_down.png" onClick={this.monthBack}/>
+                <img style={{opacity:backwardOpacity}} className="arrowleftright" src="/images/ArrowRight/drawable-xxhdpi/arrow_down.png" onClick={this.monthBack}/>
                 <span className="monthTag">   {monthText}  </span>
-                <img className="arrowleftright" src="/images/ArrowLeft/drawable-xxhdpi/arrow_down.png"  onClick={this.monthForward}/>
+                <img style={{opacity:forwardOpacity}}  className="arrowleftright" src="/images/ArrowLeft/drawable-xxhdpi/arrow_down.png"  onClick={this.monthForward}/>
             </div>
         );
     }

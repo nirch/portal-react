@@ -3,7 +3,7 @@ import './courses.css'
 import PortalNavbar from '../../components/navbar/PortalNavbar';
 import { connect } from "react-redux";
 import { Redirect } from 'react-router-dom';
-import ActivityFilter from '../../components/ActivityFilter';
+import ButtonSet from '../../components/ButtonSet';
 import server from '../../shared/server';
 import { Container } from 'react-bootstrap'
 
@@ -22,28 +22,28 @@ class CoursesPage extends Component {
         }
     }
 
-render() {
+    render() {
 
-    if (!this.props.activeUser) {
-        return <Redirect to='/' />
+        if (!this.props.activeUser) {
+            return <Redirect to='/' />
+        }
+
+
+        const buttonsData = [
+            { key: 1, title: "קורסים פעילים" },
+            { key: 2, title: "לא פעילים" }
+        ]
+
+        return (
+            <div>
+                <PortalNavbar />
+
+                <h1>קורסים</h1>
+
+                <ButtonSet makeChoice={this.getFilteredData} buttons={buttonsData} />
+            </div>
+        );
     }
-
-
-    const buttonsData = [
-        { key: 1, title: "קורסים פעילים" },
-        { key: 2, title: "לא פעילים" }
-    ]
-
-    return (
-        <Container>
-            <PortalNavbar />
-
-            <h1>קורסים</h1>
-           
-            <ActivityFilter makeChoice = {this.getFilteredData} buttons={buttonsData} />
-        </Container>
-    );
-}
 }
 
 const mapStateToProps = state => ({

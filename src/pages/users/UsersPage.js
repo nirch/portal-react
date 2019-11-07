@@ -3,7 +3,6 @@ import './users.css'
 import PortalNavbar from '../../components/navbar/PortalNavbar';
 import { connect } from "react-redux";
 import { Redirect } from 'react-router-dom'
-import ActivityFilter from '../../components/ActivityFilter';
 
 class UsersPage extends Component {
     render() {
@@ -16,7 +15,6 @@ class UsersPage extends Component {
             <div>
                 <PortalNavbar/>
                 <h1>משתמשים</h1>
-                <ActivityFilter activeButton = "עובדים פעילים" nonactiveButton = "לא פעילים"/>
             </div>
         );
     }

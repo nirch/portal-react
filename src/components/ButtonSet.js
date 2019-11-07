@@ -2,13 +2,14 @@ import React, { Component } from 'react';
 import { } from 'react-bootstrap';
 import '../pages/courses/courses.css';
 import server from '../shared/server'
+import './ButtonSet.css'
 
-class ActivityFilter extends React.Component {
+class ButtonSet extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            selectedKey: this.props.buttons[0].key
+            selectedKey: props.buttons[0].key
         }
        
     }
@@ -37,4 +38,4 @@ class ActivityFilter extends React.Component {
     }
 }
 
-export default ActivityFilter;
+export default ButtonSet;

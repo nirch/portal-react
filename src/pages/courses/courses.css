@@ -2,6 +2,8 @@
     display: flex;
     justify-content: space-around;
     align-items: center;
+    box-shadow: 0px -2px 8px 0px #5d5d5d;
+    /* box-sizing: content-box; */
 }
 .btn-set button {
     border: none;
@@ -9,7 +11,12 @@
     background: transparent;
     color: #5d5d5d;
     font-size: 15px;
-    opacity: 70%
+    opacity: 70%;
+    font-family: Assistant-Light;
+    line-height: 19px;
+    padding: 38% 7% 37% 15%;
+    height: 76px;
+    width: 179px;
 }
 
 .btn-set > .selected{
@@ -19,4 +26,9 @@
     color: #5d5d5d;
     font-size: 15px;
     opacity: 100%;
+    font-family: Assistant-SemiBold;
+    line-height: 19px;
+    padding: 38% 7% 37% 15%;
+    height: 76px;
+    width: 179px;
 }

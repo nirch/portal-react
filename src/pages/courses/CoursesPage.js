@@ -15,10 +15,10 @@ class CoursesPage extends Component {
     }
     getFilteredData = (key) => {
         if (key == 1) {
-            alert("shalom" + key)
+            console.log("shalom" + key)
         }
         if (key == 2) {
-            alert("by" + key)
+            console.log("by" + key)
         }
     }
 

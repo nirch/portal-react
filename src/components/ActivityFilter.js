@@ -21,7 +21,6 @@ class ActivityFilter extends React.Component {
 
     render() {
 
-// onClick={() => {this.props.getFilteredData(button.key); this.setState({selectedKey : button.key})}}>{button.title}
 
         const buttonsDisplay = this.props.buttons.map(button => 
             <button className = {this.state.selectedKey == button.key ? "selected" : ""} type="button" onClick = {() => this.handleClick(button)}>

@@ -53,6 +53,7 @@
 .loginWrongPWD {
     background-color: #ffffff;
     position: absolute;
+    border:1px;
     
 
 }
@@ -64,6 +65,7 @@
     color: #ffa1a1;
     margin-right:33.5px;
     margin-left:106px;
+    
 }
 
 .loginWrongPWD>div:first-child{
@@ -77,4 +79,7 @@ padding: 40px 0px 33px 0px;
     height: 35px;
     width: 35px;
     
+}
+.hidden {
+    display: none;
 }

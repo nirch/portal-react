@@ -15,13 +15,18 @@ class LoginPage extends Component {
 
         this.state = {
             email: "",
-            pwd: ""
+            pwd: "",
+            showDiv:false
+        
         }
 
         this.handleInputChange = this.handleInputChange.bind(this);
         this.login = this.login.bind(this);
+        this.closeErrorHandler = this.closeErrorHandler.bind(this)
     }
-
+    closeErrorHandler (){
+        this.setState({showDiv:false})
+    }
     handleInputChange(ev) {
         const name = ev.target.name;
         const value = ev.target.value;
@@ -44,12 +49,16 @@ class LoginPage extends Component {
         server(data, "login").then(res => {
             console.log(res);
             if (res.data.error) {
-                alert("error in login");
+                this.setState({
+                    showDiv:true
+                })
             } else {
                 this.props.loginAction(res.data);
                 localStorage.activeUser = JSON.stringify(res.data);
             }
         }, err => {
+            
+            
             console.error(err);
         })
     }
@@ -61,8 +70,7 @@ class LoginPage extends Component {
         if (activeUser) {
             return <Redirect to='/courses' />
         }
-
-
+        
         return (
 
             <Container className="LogIn">
@@ -72,18 +80,18 @@ class LoginPage extends Component {
                  />
                 
                 <form className="loginForm">
-                    <input className="loginInput emailInput" type="email" name="email" placeholder="אימייל"/>
-                    <input className="loginInput" type="password" name="pwd" placeholder="סיסמה"/>
+                    <input className="loginInput emailInput" type="email" name="email" onChange={this.handleInputChange} placeholder="אימייל"/>
+                    <input className="loginInput" type="password" name="pwd" onChange={this.handleInputChange} placeholder="סיסמה"/>
                     <button className="loginBtn" type="button" onClick={this.login}>התחברות</button>
-                    <div className="logInpwd">
+                    <div className={(this.state.showDiv)?"logInpwd hidden":"logInpwd"}>
                     <h5>שכחתי סיסמא</h5>
                     </div>
-                    <div className="loginWrongPWD">
+                    <div className={(this.state.showDiv)?"loginWrongPWD":"loginWrongPWD  hidden"}>
                         <div className="loginInline">
                         <img  src={require('./danger.svg')} alt="danger"/>
                         <p className="loginInline" > סיסמא שגויה</p>
                         </div>
-                        <div className="loginInline loginSpan"><a href="#"><span className="loginClose">X</span></a></div>
+                        <div className="loginInline loginSpan"><button onClick={this.closeErrorHandler} className="loginClose">X</button></div>
                     </div>
                 </form>
                 

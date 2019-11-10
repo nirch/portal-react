@@ -1,0 +1,17 @@
+.search-bar {
+    display:  flex;
+    background-color: whitesmoke;
+    
+    font-size: 20px;
+    height: 45px;
+    border-radius: 23px;
+    margin: 22px 12px 20px 12px
+}
+.search-bar > form > input {
+    background-color: inherit;
+    outline: none;
+    border: none;
+    margin-right: 26px;
+    margin-top: 7px;
+    color: #707070;
+}

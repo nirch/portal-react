@@ -16,6 +16,16 @@ class SearchBar extends React.Component {
         this.setState({ inputvalue: e.target.value })
         console.log(this.state.inputvalue)
     }
+    increment = () => {
+        this.setState({ 
+            page: +this.state.page + 1 }, () => {this.props.updateSearch(this.state.page)});
+        // this.props.updateSearch(this.state.page);
+    }
+    decrement = () => {
+        this.setState({ 
+            page: this.state.page - 1 }, () => {this.props.updateSearch(this.state.page)});
+        }
+
     render() {
         const searchValue = this.state.inputvalue
         return (
@@ -26,9 +36,9 @@ class SearchBar extends React.Component {
                 </form>
                 <div>
 
-                    <span>  <img src="images/ArrowRight/drawable-mdpi/arrow_down.png" alt="" /> </span>
+                    <span className={this.state.page == this.props.pages ? "disactive" : ""} onClick={this.increment}>  <img src="images/ArrowRight/drawable-mdpi/arrow_down.png" alt="" /> </span>
                     <span>{this.state.page}</span>
-                    <span>    <img src="images/ArrowLeft/drawable-mdpi/arrow_down.png" alt="" /> </span>
+                    <span className={this.state.page == 1 ? "disactive" : ""} onClick={this.decrement}>    <img src="images/ArrowLeft/drawable-mdpi/arrow_down.png" alt="" /> </span>
                 </div>
 
             </div>

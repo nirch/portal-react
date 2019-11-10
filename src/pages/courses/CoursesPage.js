@@ -28,6 +28,9 @@ class CoursesPage extends Component {
 handleSearch = (val) => {
 alert(val);
 }
+updateSearch = (page) => {
+    console.log(page);
+}
     render() {
 
         if (!this.props.activeUser) {
@@ -45,7 +48,7 @@ alert(val);
                 <PortalNavbar />
 
                 <h1>קורסים</h1>
-                <SearchBar searchLabel="חיפוש קורס" handleSearch = {this.handleSearch} pages = {this.state.searchPages} />
+                <SearchBar searchLabel="חיפוש קורס" handleSearch = {this.handleSearch}  updateSearch = {this.updateSearch} pages = {this.state.searchPages} />
                 <ButtonSet makeChoice={this.getFilteredData} buttons={buttonsData} />
             </div>
         );

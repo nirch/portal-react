@@ -21,3 +21,6 @@
     margin-top: 7px;
     color: #808080;
 }
+.search-bar .disactive {
+    opacity: 0.2;
+}

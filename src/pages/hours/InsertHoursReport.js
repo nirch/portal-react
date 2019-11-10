@@ -18,7 +18,8 @@ class InsertHoursReport extends Component {
             year:new Date().getFullYear(),
             month:new Date().getMonth()+1,
             date: new Date().getDate(),
-            status: "0" // waiting 
+            status: "0", // waiting by default 0 - new report (for change 1 - success, -1 - decline)
+            totalHours: 0  // total hours for report - for new report defaut is 0
         }
         this.getDate = this.getDate.bind(this);
         }
@@ -58,10 +59,10 @@ class InsertHoursReport extends Component {
             console.error(err);
         })
     }
-    getDate(month,year,date){
+    getDate(month,year,date){   // get values from selectDate component . month and year for server call, date for new report 
         this.setState({month:month,year:year,date:date})
         this.getDataFromServer(month,year);
-        console.log(month,year)
+        console.log(month,year, date)
     }
     
     diff(start, end) {
@@ -104,7 +105,7 @@ class InsertHoursReport extends Component {
    
     render() {
 
-         const { GetReports, GetCourses, GetProjects,status } = this.state;
+         const { GetReports, GetCourses, GetProjects,status , totalHours} = this.state;
 
         if (!this.props.activeUser) {
             return <Redirect to='/' />
@@ -124,7 +125,7 @@ class InsertHoursReport extends Component {
              <Col>
              
               <PortalNavbar />
-              <SelectDate changeDate={this.getDate} status={status}/>
+              <SelectDate changeDate={this.getDate} status={status} totalHours={totalHours}/>
              
              </Col>
            </Row>

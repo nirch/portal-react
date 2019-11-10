@@ -28,46 +28,55 @@ export default class SelectDate extends React.Component {
  
      
     plusDate=()=>{
-       const{newDate} = this.state;
+       const{newDate, year, month } = this.state;
+       const{changeDate} = this.props;
        // let newDate = new Date();
        let numberOfDaysToAdd = 1; // const of shiping dates from suppliers
        newDate.setDate(newDate.getDate() + numberOfDaysToAdd); 
        //let showDate = newDate.getFullYear() + "-" + (newDate.getMonth()+1) + "-" + newDate.getDate()
        this.setState({newDate});
+       changeDate(month, year,  newDate)
        return newDate;
     }
   
     minusDate=()=>{
-        const{newDate} = this.state;
+        const{newDate, year, month } = this.state;
+        const{changeDate} = this.props;
        //let newDate = new Date();
         let numberOfDaysToAdd = -1; // const of shiping dates from suppliers
         newDate.setDate(newDate.getDate() + numberOfDaysToAdd); 
        // newDate = newDate.getFullYear() + "-" + (newDate.getMonth()+1) + "-" + newDate.getDate()
         this.setState({newDate});
+        changeDate(month, year,  newDate)
         return newDate;
      }
   
     render() {
         
         const {newDate} = this.state;
-        const {status} = this.props;
+        let {status, totalHours} = this.props;
         let date = newDate.getDate()
         if(newDate.getDate()>0 && newDate.getDate()<10)
             date = "0"+ newDate.getDate()
         let month = (newDate.getMonth()+1)
         if((newDate.getMonth()+1)>0 && (newDate.getMonth()+1)<10)
             month = "0"+ (newDate.getMonth()+1)
-        let year = newDate.getFullYear() % 100;   
+        let year = newDate.getFullYear() % 100;  
+        let hour = newDate.getHours();
+        let minute =  newDate.getMinutes();
         let bgColor;
         switch (status) {
              case "-1": 
                bgColor =  " bg-danger "  
+               status = "נדחה"
                break;
              case "1":    
                bgColor = " bg-success " 
+               status = "אושר"
                break;
              default:  
                bgColor = " bg-warning "   
+               status = "ממתין"
         }
         let style = "px-0 showDateHeader " + bgColor
         return (
@@ -83,11 +92,15 @@ export default class SelectDate extends React.Component {
             </Row>
             <Row>
                 <Col className=" text-center hours-header-text ">
-                <span>סהייכ שעות:</span><span className="mr-3">9</span>
+                <span>סהייכ שעות:</span><span className="mr-3">{totalHours}</span>
                 </Col>
             </Row>
-            <Row>
-                <Col>
+            <Row className=" hours-header-small-text  text-center ">
+                <Col >
+               <span className="mr-1"> זמן שינוי סטטוס:</span><span className="mr-2">{hour + ":" + minute  + " | " + date + "." + month + "." + year  }</span>
+                </Col>
+                <Col >
+                <span className="mr-5">  סטטוס: </span><span className="mr-3">{status}</span>
                 </Col>
             </Row>
             

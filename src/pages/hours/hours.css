@@ -51,6 +51,13 @@
     font-size: 12px;
 }
 
+.hours-header-small-text {
+    color: #5d5d5d;
+    padding-top: 10px;
+    font-size: 10px;
+    font-weight: bold;
+}
+
 
 /***************************************************************************************************/
 

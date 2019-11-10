@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import './hours.css'
 import PortalNavbar from '../../components/navbar/PortalNavbar';
 import { connect } from "react-redux";
-import { Redirect } from 'react-router-dom'
-import { Container, Button , Table, Modal, Row, Col} from 'react-bootstrap';
+import { Redirect,Link } from 'react-router-dom'
+import { Container, Button , Table, Row, Col} from 'react-bootstrap';
 import server from '../../shared/server'
 import  SelectMonth from '../../components/hoursApprove/selectMonth'
 
@@ -115,14 +115,14 @@ class HoursReportPage extends Component {
         let rows =  GetReports.map((item) => {  // generate table with customers
                 let bgStyle; 
                 switch (item.approval) {
-                     case "0": 
-                        bgStyle =  " bg-warning "  
+                     case "-1": 
+                        bgStyle =  " bg-danger "  
                         break;
                         case "1":    
                         bgStyle = " bg-success " 
                         break;
                      default:  
-                         bgStyle = " bg-success "   
+                         bgStyle = " bg-warning "   
                  }
                  let style = " report-status mt-2 py-2 " + bgStyle
                  let hoursDiff = this.diff(item.starthour,item.finishhour)
@@ -147,13 +147,13 @@ class HoursReportPage extends Component {
         )
      
         return (
-            <Container className=" report-font-size " >
+            <Container className=" report-container " >
            
            <Row className="sticky-top bg-white">
              <Col>
              
               <PortalNavbar />
-              <SelectMonth changeMonthYear={this.getMonthYear}/>
+                 <SelectMonth changeMonthYear={this.getMonthYear}/>
              
              </Col>
            </Row>
@@ -186,7 +186,8 @@ class HoursReportPage extends Component {
                   </Col>
                  
                   <Col className=" plus text-center mx-auto ">
-                   <div className="plus-cyrcle"><span >+</span></div>
+                   {/* <div className="plus-cyrcle"><span >+</span></div> */}
+                  <Link to="/add-hours-report"><img src="images\CourseControls\Plus\plus.png" alt="copy" ></img></Link>
                   </Col>
                   
                   <Col className=" px-1 text-center ">

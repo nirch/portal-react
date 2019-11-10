@@ -11,7 +11,10 @@ import SearchBar from '../../components/SearchBar'
 class CoursesPage extends Component {
     constructor(props) {
         super(props);
-        this.state = {searchPages: null}
+        this.state = {
+            searchPages: null,
+            currentPage: 1,
+            isActive: 1}
 
     }
     getFilteredData = (key) => {

@@ -20,8 +20,11 @@ class UsersPage extends Component {
                 "904": ["אמאל", "באדר", "amalb@appleseeds.org.il"],
                 "886": ["אורית", "בש", "oritbash@neta-project.org"],
                 "944": ["חאלדיה", "נמארנה", "khaldiyan@appleseeds.org.il"]
-            }
+            },
+
+            showUserDetails: null
         }
+
         this.titles = ["שם", "שם משפחה", "אימייל"];
     }
 
@@ -34,10 +37,18 @@ class UsersPage extends Component {
         }
     }
 
+    handleClick = (id) => {
+        this.setState({ showUserDetails: id });
+    }
+
     render() {
 
         if (!this.props.activeUser) {
             return <Redirect to='/' />
+        }
+
+        if (this.state.showUserDetails != null) {
+            return <Redirect to={'/users/' + this.state.showUserDetails} />   
         }
 
         const buttonsData = [
@@ -50,7 +61,7 @@ class UsersPage extends Component {
                 <PortalNavbar className="users-Navbar" />
                 <h1 className="users-searchBox">Search component</h1>
 
-                <ItemsTable items={this.state.users} titles={this.titles} />
+                <ItemsTable items={this.state.users} titles={this.titles} handleClick={this.handleClick} />
 
                 <div className="users-activeFilter">
                     <ButtonSet makeChoice={this.getFilteredData} buttons={buttonsData} />

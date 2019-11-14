@@ -34,7 +34,8 @@ function getDetails(field,reportersArray,index1,index2){
                     if (actions[i].reportsubjectid===reportersArray[index1].reports[index2].actionid) return actions[i].subject;
                 }
                 return "";
-           }       
+           }  
+    return ""     
     }
 }
 
@@ -65,7 +66,20 @@ class HoursApprovePage extends Component {
         this.getReporters();
       };
     }
-  
+   changeSearch=(e)=>{
+    let {search}=this.state;
+    search=e.target.value;
+    this.setState({search});
+   }
+   changePage=(e)=>{
+    let {page}=this.state;
+    page=e.target.value;
+    this.setState({page});
+   }
+    aproveReport=(e)=>{
+        alert(e.target["data-key"]);
+    }
+
     getReporters = ()=> {
         let {isLoading,month,year,allReporters,search,pages,rowsPerPage}=this.state;
         let usefulReporters = [];
@@ -191,6 +205,7 @@ class HoursApprovePage extends Component {
         if (e.target.src.includes("ArrowDown")) { e.target.src = "/images/ArrowUp/drawable-xxhdpi/arrow_down.png" }
         else { e.target.src = "/images/ArrowDown/drawable-xxhdpi/arrow_down.png" }
     }
+ 
     render() {
 
         if (!this.props.activeUser) {
@@ -203,16 +218,8 @@ class HoursApprovePage extends Component {
                     <div>
                          <PortalNavbar  header="אישור שעות"/>
                             <SelectMonth changeMonthYear={this.changeMonthYear} />
-                            <input type="text" placeholder="חיפוש עובד"   onChange={(e)=>{
-                                let {search}=this.state;
-                                search=e.target.value;
-                                this.setState({search});
-                            }} />
-                            <input type="number" placeholder="page"  onChange={(e)=>{
-                                    let {page}=this.state;
-                                    page=e.target.value;
-                                    this.setState({page});
-                            }}/>
+                            <input type="text" placeholder="חיפוש עובד"   onChange={this.changeSearch} />
+                            <input type="number" placeholder="page"   onChange={this.changePage} />
                             <div className="spinner">טוען נתונים, אנא המתן  <Spinner animation="border" variant="primary" /></div>;
 
                     </div>)
@@ -254,9 +261,9 @@ class HoursApprovePage extends Component {
                     declineTime=declineTime.hours+":"+declineTime.minutes;
                     totalTime=this.addTime(totalTime,timeLeg.hours+":"+timeLeg.minutes);
                     totalTime=totalTime.hours+":"+totalTime.minutes;
-                    checkAproved=  <input className="Radio" type="radio" name={index+" "+ secondIndex} value="aproved" />;
-                    checkDecline= <input className="Radio" type="radio" name={index+" "+ secondIndex} value="decline" defaultChecked/>;
-                    checkWaiting=  <input className="Radio" type="radio" name={index+" "+ secondIndex} value="wait" />;
+                    checkAproved=  <input onClick={this.aproveReport} data-key={ searchedReporters[index].reports[secondIndex].reportid}  className="Radio" type="radio" name={index+" "+ secondIndex} value="aproved" />;
+                    checkDecline= <input key={ searchedReporters[index].reports[secondIndex].reportid}   className="Radio" type="radio" name={index+" "+ secondIndex} value="decline" defaultChecked/>;
+                    checkWaiting=  <input key={ searchedReporters[index].reports[secondIndex].reportid}   className="Radio" type="radio" name={index+" "+ secondIndex} value="wait" />;
                       // Decline
                       break;
                     case 1: blockColor="#a1d47f";
@@ -264,9 +271,9 @@ class HoursApprovePage extends Component {
                     approvedTime=approvedTime.hours+":"+approvedTime.minutes;
                     totalTime=this.addTime(totalTime,timeLeg.hours+":"+timeLeg.minutes);
                     totalTime=totalTime.hours+":"+totalTime.minutes;
-                                checkAproved=  <input className="Radio" type="radio" name={index+" "+ secondIndex} value="aproved" defaultChecked/>;
-                                checkDecline= <input className="Radio" type="radio" name={index+" "+ secondIndex} value="decline" />;
-                                checkWaiting=  <input className="Radio" type="radio" name={index+" "+ secondIndex} value="wait" />;
+                                checkAproved=  <input onClick={this.aproveReport} data-key={ searchedReporters[index].reports[secondIndex].reportid}  className="Radio" type="radio" name={index+" "+ secondIndex} value="aproved" defaultChecked/>;
+                                checkDecline= <input key={ searchedReporters[index].reports[secondIndex].reportid}   className="Radio" type="radio" name={index+" "+ secondIndex} value="decline" />;
+                                checkWaiting=  <input key={ searchedReporters[index].reports[secondIndex].reportid}   className="Radio" type="radio" name={index+" "+ secondIndex} value="wait" />;
                       // aproved
                       break;
                     default: blockColor="#ffd300";
@@ -274,14 +281,14 @@ class HoursApprovePage extends Component {
                     waitingTime=waitingTime.hours+":"+waitingTime.minutes; 
                     totalTime=this.addTime(totalTime,timeLeg.hours+":"+timeLeg.minutes);
                     totalTime=totalTime.hours+":"+totalTime.minutes;
-                    checkAproved=  <input className="Radio" type="radio" name={index+" "+ secondIndex} value="aproved" />;
-                    checkDecline= <input className="Radio" type="radio" name={index+" "+ secondIndex} value="decline" />;
-                    checkWaiting=  <input className="Radio" type="radio" name={index+" "+ secondIndex} value="wait" defaultChecked/>;
+                    checkAproved=  <input onClick={this.aproveReport} data-key={ searchedReporters[index].reports[secondIndex].reportid} className="Radio" type="radio" name={index+" "+ secondIndex} value="aproved" />;
+                    checkDecline= <input key={ searchedReporters[index].reports[secondIndex].reportid}  className="Radio" type="radio" name={index+" "+ secondIndex} value="decline" />;
+                    checkWaiting=  <input key={ searchedReporters[index].reports[secondIndex].reportid}  className="Radio" type="radio" name={index+" "+ secondIndex} value="wait" defaultChecked/>;
                       // waiting
-                  }
+                  } 
   
                 reporterReportsRows.push(
-                    <div key={secondIndex} className="hoursLeg">
+                    <div key={ searchedReporters[index].reports[secondIndex].reportid} className="hoursLeg">
                         <Row>
                             <Col xs="6"></Col>
                             <Col xs="2">
@@ -394,18 +401,10 @@ class HoursApprovePage extends Component {
 
         return (
             <div>
-                <PortalNavbar />
+                <PortalNavbar  header="אישור שעות" />
                 <SelectMonth changeMonthYear={this.changeMonthYear} />
-                <input type="text" placeholder="חיפוש עובד"   onChange={(e)=>{
-                    let {search}=this.state;
-                    search=e.target.value;
-                    this.setState({search});
-                }} />
-                <input type="number" placeholder="page"  onChange={(e)=>{
-                    let {page}=this.state;
-                    page=e.target.value;
-                    this.setState({page});
-                }}/>
+                <input type="text" placeholder="חיפוש עובד"   onChange={this.changeSearch} />
+                <input type="number" placeholder="page"   onChange={this.changePage} />
                 <Accordion>
                     {accordionRows}
                 </Accordion>

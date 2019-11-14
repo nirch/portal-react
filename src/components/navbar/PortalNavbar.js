@@ -9,14 +9,18 @@ class PortalNavbar extends Component {
         super(props);
         this.state = {
             redirectTo: "",
-            isMenuOpen: false
+            isMenuOpen: false,
+            isDropDown: false
         }
 
         this.logout = this.logout.bind(this);
         this.closeSidebar = this.closeSidebar.bind(this);
         this.openSidebar = this.openSidebar.bind(this);
         this.goToCoursesPage = this.goToCoursesPage.bind(this);
-        this.goToUsersPage = this.goToUsersPage.bind(this);
+        this.goToStaffPage = this.goToStaffPage.bind(this);
+        this.goToStudentsPage = this.goToStudentsPage.bind(this);
+        this.goToNewUsersPage = this.goToNewUsersPage.bind(this);
+        this.openDropDown=this.openDropDown.bind(this);
         this.goToHoursApprovePage = this.goToHoursApprovePage.bind(this);
         this.goToHoursReportPage = this.goToHoursReportPage.bind(this);
     }
@@ -44,9 +48,32 @@ class PortalNavbar extends Component {
         this.closeSidebar();
     }
 
-    goToUsersPage() {
+    openDropDown() {
+        let{isDropDown}=this.state;
+        if (isDropDown)
+        isDropDown=false;
+        else
+        isDropDown=true;
+        this.setState({isDropDown})
+    }
+
+    goToStaffPage(){
         let { redirectTo } = this.state;
-        redirectTo = "/users";
+        redirectTo = "/users?type=staff";
+        this.setState({ redirectTo })
+        this.closeSidebar();
+    }
+
+    goToStudentsPage(){
+        let { redirectTo } = this.state;
+        redirectTo = "/users?type=students";
+        this.setState({ redirectTo })
+        this.closeSidebar();
+    }
+
+    goToNewUsersPage(){
+        let { redirectTo } = this.state;
+        redirectTo = "/users?type=new";
         this.setState({ redirectTo })
         this.closeSidebar();
     }
@@ -66,7 +93,7 @@ class PortalNavbar extends Component {
         this.closeSidebar();
     }
     componentDidUpdate() {
-        let {redirectTo} = this.state;
+        let { redirectTo } = this.state;
         if (redirectTo != "") {
             redirectTo = "";
             this.setState({ redirectTo });
@@ -76,14 +103,24 @@ class PortalNavbar extends Component {
 
     render() {
         let { header } = this.props;
-        let { redirectTo, isMenuOpen } = this.state;
+        let { redirectTo, isMenuOpen, isDropDown } = this.state;
         let sidebarOpen;
+        let dropDown, arrow;
 
         if (isMenuOpen) {
             sidebarOpen = "sidebar-open";
         }
         else {
             sidebarOpen = "";
+        }
+
+        if (isDropDown) {
+            arrow = "sidebar-icons push-left revert";
+            dropDown="show-dropdown";
+        }
+        else {
+            arrow = "sidebar-icons push-left";
+            dropDown="hide-dropdown";
         }
 
         if (redirectTo) {
@@ -120,19 +157,24 @@ class PortalNavbar extends Component {
                                 </div>
                             </div>
                             <div className="sidebar-options">
-                                <div className="menu-information" onClick={this.goToUsersPage}>
+                                <div className="menu-information dropdown" onClick={this.openDropDown}>
                                     <span className="sidebar-icons">
                                         <img src="images/users.png"></img>
                                     </span>
                                     משתמשים
-                                    <div className="menu-information dropdown" onClick={this.goToUsersPage}>
-                                        עובדים
-                                    </div>
-                                    <div className="menu-information dropdown" onClick={this.goToUsersPage}>
-                                        חניכים
-                                    </div>
-                                    <div className="menu-information dropdown" onClick={this.goToUsersPage}>
-                                        משתמשים חדשים
+                                    <span className={arrow}>
+                                        <img src="images/arrow_down.png"></img>
+                                    </span>
+                                    <div className={dropDown}>
+                                        <div className="menu-information" onClick={this.goToStaffPage}>
+                                            עובדים
+                                        </div>
+                                        <div className="menu-information" onClick={this.goToStudentsPage}>
+                                            חניכים
+                                        </div>
+                                        <div className="menu-information" onClick={this.goToNewUsersPage}>
+                                            משתמשים חדשים
+                                        </div>
                                     </div>
                                 </div>
                                 <div className="menu-information" onClick={this.goToCoursesPage}>
@@ -153,7 +195,7 @@ class PortalNavbar extends Component {
                                     </span>
                                     אישור שעות
                                 </div>
-                                <div className="menu-information" onClick={this.logout}>
+                                <div className="menu-information disconnect" onClick={this.logout}>
                                     <span className="sidebar-icons">
                                         <img src="images/disconnect-icon.png"></img>
                                     </span>

@@ -8,7 +8,6 @@ class SearchBar extends React.Component {
         super(props);
         this.state = {
             inputvalue: '',
-            // pages: this.props.pages,
             page: 1
         }
     }
@@ -16,10 +15,9 @@ class SearchBar extends React.Component {
         this.setState({ inputvalue: e.target.value })
     }
     increment = () => {
-        if(this.state.page < this.state.pages) {
+        if(this.state.page < this.props.pages) {
         this.setState({ 
             page: this.state.page + 1 }, () => {this.props.updateSearch(this.state.page)});
-        // this.props.updateSearch(this.state.page);
         }
     }
     decrement = () => {

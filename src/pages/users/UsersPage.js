@@ -5,7 +5,8 @@ import { connect } from "react-redux";
 import { Redirect } from 'react-router-dom';
 import ItemsTable from '../../components/itemsTable/itemsTable';
 import ButtonSet from '../../components/ButtonSet';
-import server from '../../shared/server'
+import server from '../../shared/server';
+import SearchBar from '../../components/SearchBar';
 
 class UsersPage extends Component {
     constructor(props) {
@@ -18,11 +19,14 @@ class UsersPage extends Component {
             userstatus: 1,
 
             users: [],
+            numberOfPages: 1,
+
             showUserDetails: null
         }
 
         this.titles = ["שם", "שם משפחה", "אימייל"];
     }
+
     componentDidMount() {
         const { desc, page, search, sorting, userstatus } = this.state;
         const data = { desc, page, search, sorting, userstatus };
@@ -30,23 +34,30 @@ class UsersPage extends Component {
             if (res.data.error) {
                 console.error(res.data.error);
             } else {
-                console.log(res.data);
-                this.setState({ users: res.data.users });
+                this.setState({
+                    users: res.data.users,
+                    numberOfPages: res.data.pages
+                });
             }
         }, err => {
             console.error(err);
         })
     }
+
     componentDidUpdate(prevState) {
-        if (this.state.userstatus !== prevState.userstatus) {
+        if (this.state.userstatus !== prevState.userstatus || this.state.page !== prevState.page ||
+            this.state.search !== prevState.search || this.state.userstatus !== prevState.userstatus) {
             const { desc, page, search, sorting, userstatus } = this.state;
+
             const data = { desc, page, search, sorting, userstatus };
             server(data, "SearchStaffUnderMe").then(res => {
                 if (res.data.error) {
                     console.error(res.data.error);
                 } else {
-                    console.log(res.data);
-                    this.setState({ users: res.data.users });
+                    this.setState({
+                        users: res.data.users,
+                        numberOfPages: res.data.pages
+                    });
                 }
             }, err => {
                 console.error(err);
@@ -54,27 +65,24 @@ class UsersPage extends Component {
         }
     }
 
-
-
-    getFilteredData = (key) => {
-        this.setState({ userstatus: key });
+    userIsActive = (key) => {
+        this.setState({ userstatus: key, page: 0 });
     }
 
     userDetails = (id) => {
         this.setState({ showUserDetails: id });
     }
-    // userSearch() {
-    //     const { users } = this.state;
-    //     const text = "search ref value";
-    //     // access all data in array???
-    //     const foundUser = users.filter(text);
-    //     this.setState({ users: foundUser })
-    // }
 
+    userSearch = (val) => {
+        this.setState({search: val});
+    }
 
+    userCurrentPage = (page) => {
+        this.setState({ page });
+    }
 
     render() {
-        const { users } = this.state;
+        const { users, numberOfPages } = this.state;
 
         if (!this.props.activeUser) {
             return <Redirect to='/' />
@@ -100,12 +108,13 @@ class UsersPage extends Component {
         return (
             <div>
                 <PortalNavbar className="users-Navbar" header="עובדים" />
-                <h1 className="users-searchBox" onClick={this.userSearch}>Search component</h1>
+                <SearchBar searchLabel="חיפוש עובד" handleSearch={this.userSearch} updateSearch={this.userCurrentPage}
+                 pages={numberOfPages} />
                 <div className="users-table">
                     <ItemsTable items={userDisplay} titles={this.titles} handleClick={this.userDetails} />
                 </div>
                 <div className="users-activeFilter">
-                    <ButtonSet makeChoice={this.getFilteredData} buttons={buttonsData} />
+                    <ButtonSet makeChoice={this.userIsActive} buttons={buttonsData} />
                 </div>
             </div>
         );

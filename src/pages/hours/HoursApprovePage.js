@@ -4,10 +4,39 @@ import PortalNavbar from '../../components/navbar/PortalNavbar';
 import { connect } from "react-redux";
 import { Redirect } from 'react-router-dom'
 import SelectMonth from '../../components/hoursApprove/selectMonth'
-import { Accordion, Card, Button, Row, Col } from 'react-bootstrap'
+import { Accordion, Card, Button, Row, Col,Spinner } from 'react-bootstrap'
 import server from '../../shared/server'
 
-
+function getDetails(field,reportersArray,index1,index2){
+    switch (field) {
+    case "projectName":
+            {
+                if (!reportersArray[index1].reportingPerimeter[reportersArray[index1].reports[index2].projectid])
+                    return "";
+                return reportersArray[index1].reportingPerimeter[reportersArray[index1].reports[index2].projectid].projectName;
+            }
+    case "courseName":
+           {
+                if (!reportersArray[index1].reportingPerimeter[reportersArray[index1].reports[index2].projectid])
+                    return "";
+                let courses=reportersArray[index1].reportingPerimeter[reportersArray[index1].reports[index2].projectid].courses;
+                for (var i=0;i<courses.length;i++){ 
+                    if (courses[i].courseid===reportersArray[index1].reports[index2].courseid) return courses[i].courseName;
+                }
+                return "";
+           }
+    case "actionName":
+            {
+                if (!reportersArray[index1].reports[index2].actionid)
+                    return "";
+                let actions=reportersArray[index1].reportingPerimeter[reportersArray[index1].reports[index2].projectid].subjects;
+                for (var i=0;i<actions.length;i++){ 
+                    if (actions[i].reportsubjectid===reportersArray[index1].reports[index2].actionid) return actions[i].subject;
+                }
+                return "";
+           }       
+    }
+}
 
 class HoursApprovePage extends Component {
     constructor(props) {
@@ -30,13 +59,19 @@ class HoursApprovePage extends Component {
     // this.setState({month,year});
     this.getReporters();
    }
-
+   componentDidUpdate(prevProps, prevState) {
+    // only update chart if the data has changed
+    if (prevState.month !== this.state.month) {
+        this.getReporters();
+      };
+    }
+  
     getReporters = ()=> {
         let {isLoading,month,year,allReporters,search,pages,rowsPerPage}=this.state;
         let usefulReporters = [];
         var data={month,year};
-        // console.log('retriving month:');
-        // console.log(month+" "+year);
+         console.log('retriving month:');
+         console.log(month+" "+year);
         server(data, 'GetAllReporters').then((res)=> {
             let reporters=res.data
             for(var i=0;i<reporters.length; i++)
@@ -126,7 +161,7 @@ class HoursApprovePage extends Component {
         return ({hours,minutes})
     }
     calculatTime=(time2,time1)=>{
-      
+        if (!time1||!time2) return ({hours:"00",minutes:"00"});
         var hours2=time2.substring(0, 2);
         var hours1=time1.substring(0, 2);
       
@@ -147,11 +182,9 @@ class HoursApprovePage extends Component {
     changeMonthYear = (month, year) => {
         // console.log('changing month:');
         // console.log(month+" "+year);
-        this.setState({ month, year });
-       
-        // console.log('month changed to:');
-        // console.log(this.state.month+" "+this.state.year);       
-        this.getReporters();
+        const isLoading=true;
+        this.setState({ month, year,isLoading });
+    
 
     }
     toggleImage = (e) => {
@@ -164,12 +197,35 @@ class HoursApprovePage extends Component {
             return <Redirect to='/' />
         }
  //extracting from state
-        const { year, month,search,allReporters,page,pages,rowsPerPage,isLoading } = this.state;
-        if (isLoading) return <div>Loading</div>;
+        const { year, month,search,allReporters,pages,rowsPerPage,isLoading } = this.state;
+        let {page}=this.state;
+        if (isLoading) return(
+                    <div>
+                         <PortalNavbar  header="אישור שעות"/>
+                            <SelectMonth changeMonthYear={this.changeMonthYear} />
+                            <input type="text" placeholder="חיפוש עובד"   onChange={(e)=>{
+                                let {search}=this.state;
+                                search=e.target.value;
+                                this.setState({search});
+                            }} />
+                            <input type="number" placeholder="page"  onChange={(e)=>{
+                                    let {page}=this.state;
+                                    page=e.target.value;
+                                    this.setState({page});
+                            }}/>
+                            <div className="spinner">טוען נתונים, אנא המתן  <Spinner animation="border" variant="primary" /></div>;
+
+                    </div>)
+        
+        
+       
         var accordionRows=[];
         var reporterReportsRows=[];
         var searchedReporters = allReporters.filter(function (el) {
-            return el.firstname.includes(search) || el.lastname.includes(search)
+            return  el.firstname.includes(search) || 
+                    el.lastname.includes(search) || 
+                    (el.firstname+" "+el.lastname).includes(search) ||  
+                    (el.lastname+" "+el.firstname).includes(search)
           });
 
         console.log("searchedreporters");
@@ -186,6 +242,7 @@ class HoursApprovePage extends Component {
         let checkAproved,checkDecline,checkWaiting;
         let timeLeg=0;
         let approvedTime,declineTime,waitingTime,totalTime;
+        if (page==="") page="0";
         for (var index=page*rowsPerPage;(index<searchedReporters.length&&index<(parseInt(page)+1)*rowsPerPage);index++){
             reporterReportsRows=[];
             approvedTime="00:00";declineTime="00:00";waitingTime="00:00"; totalTime="00:00"
@@ -274,15 +331,15 @@ class HoursApprovePage extends Component {
                             <Row>
                                 <Col xs="4">
                                     <p className="textInHoursHead"> פרויקט</p>
-                                    <p className="textInHours">{searchedReporters[index].reports[secondIndex].projectid}</p>
+                                    <p className="textInHours">{getDetails("projectName",searchedReporters,index,secondIndex)}</p>
                                 </Col>
                                 <Col xs="4">
                                 <p className="textInHoursHead"> מס/שם קורס</p>
-                                    <p className="textInHours">{searchedReporters[index].reports[secondIndex].courseid}</p>
+                                    <p className="textInHours">{getDetails("courseName",searchedReporters,index,secondIndex)}</p>
                                 </Col>
                                 <Col xs="4">
                                 <p className="textInHoursHead"> נושא פעילות</p>
-                                    <p className="textInHours">{searchedReporters[index].reports[secondIndex].actionid}</p>
+                                    <p className="textInHours">{getDetails("actionName",searchedReporters,index,secondIndex)}</p>
                                 </Col>
                             </Row>
                             <Row>

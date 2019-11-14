@@ -14,17 +14,20 @@ class SearchBar extends React.Component {
     }
     handleChange = (e) => {
         this.setState({ inputvalue: e.target.value })
-        console.log(this.state.inputvalue)
     }
     increment = () => {
+        if(this.state.page < this.state.pages) {
         this.setState({ 
-            page: +this.state.page + 1 }, () => {this.props.updateSearch(this.state.page)});
+            page: this.state.page + 1 }, () => {this.props.updateSearch(this.state.page)});
         // this.props.updateSearch(this.state.page);
+        }
     }
     decrement = () => {
+        if(this.state.page > 1) {
         this.setState({ 
             page: this.state.page - 1 }, () => {this.props.updateSearch(this.state.page)});
         }
+    }
 
     render() {
         const searchValue = this.state.inputvalue
@@ -32,13 +35,17 @@ class SearchBar extends React.Component {
             <div className="search-bar">
 
                 <form onSubmit={() => { this.props.handleSearch(searchValue) }}>
-                    <input type="text" placeholder={this.props.searchLabel} value={this.state.inputvalue} onChange={this.handleChange} />
+                    <input type="text" placeholder={this.props.searchLabel} value={searchValue} onChange={this.handleChange} />
                 </form>
-                <div>
+                <div className={this.state.pages < 1 ? "invis": ""}>
 
-                    <span className={this.state.page == this.props.pages ? "disactive" : ""} onClick={this.increment}>  <img src="images/ArrowRight/drawable-mdpi/arrow_down.png" alt="" /> </span>
-                    <span>{this.state.page}</span>
-                    <span className={this.state.page == 1 ? "disactive" : ""} onClick={this.decrement}>    <img src="images/ArrowLeft/drawable-mdpi/arrow_down.png" alt="" /> </span>
+                    <span className={this.state.page == this.props.pages ? "disactive" : "active"} onClick={this.increment}> 
+                     <img src = "images/arrow_down.svg"  alt=""/>
+                      </span>
+                    <span className= "page-num">{this.state.page}</span>
+                    <span className={this.state.page == 1 ? "disactive" : "active"} onClick={this.decrement}> 
+                      <img src = "images/arrow_down_left.svg"  alt=""/>
+                        </span>
                 </div>
 
             </div>

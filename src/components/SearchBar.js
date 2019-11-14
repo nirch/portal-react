@@ -8,7 +8,7 @@ class SearchBar extends React.Component {
         super(props);
         this.state = {
             inputvalue: '',
-            pages: this.props.pages,
+            // pages: this.props.pages,
             page: 1
         }
     }
@@ -37,7 +37,7 @@ class SearchBar extends React.Component {
                 <form onSubmit={() => { this.props.handleSearch(searchValue) }}>
                     <input type="text" placeholder={this.props.searchLabel} value={searchValue} onChange={this.handleChange} />
                 </form>
-                <div className={this.state.pages < 1 ? "invis": ""}>
+                <div className={this.props.pages < 1 ? "invis": ""}>
 
                     <span className={this.state.page == this.props.pages ? "disactive" : "active"} onClick={this.increment}> 
                      <img src = "images/arrow_down.svg"  alt=""/>

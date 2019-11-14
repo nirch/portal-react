@@ -23,8 +23,8 @@ class ButtonSet extends React.Component {
     render() {
 
 
-        const buttonsDisplay = this.props.buttons.map(button => 
-            <button className = {this.state.selectedKey == button.key ? "selected" : ""} type="button" onClick = {() => this.handleClick(button)}>
+        const buttonsDisplay = this.props.buttons.map((button, i) => 
+            <button key = {i} className = {this.state.selectedKey == button.key ? "selected" : ""} type="button" onClick = {() => this.handleClick(button)}>
             {button.title}
             </button>
         )

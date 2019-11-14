@@ -11,62 +11,94 @@ class UsersPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            users:
-            {
-                "639": ["סימה", "סויסה", "sima@gmail.com"],
-                "718": ["גל", "שני", "galshani76@gmail.com"],
-                "719": ["אורי", "רז", "URI.RAZ@GMAIL.COM"],
-                "893": ["איתמר", "פרידמן", "xxfridmanxx@gmail.com"],
-                "897": ["איתן", "אדרי", "eytane@neta-project.org"],
-                "904": ["אמאל", "באדר", "amalb@appleseeds.org.il"],
-                "886": ["אורית", "בש", "oritbash@neta-project.org"],
-                "944": ["חאלדיה", "נמארנה", "khaldiyan@appleseeds.org.il"]
-            },
+            decs: false,
+            page: 0,
+            search: "",
+            sorting: "userid",
+            userstatus: 1,
 
+            users: {},
             showUserDetails: null
         }
 
         this.titles = ["שם", "שם משפחה", "אימייל"];
     }
-    // componentDidMount() {
+    componentDidMount() {
+        const data = { desc: false, page: 0, search: "", sorting: "userid", userstatus: 1 };
+        server(data, "SearchStaffUnderMe").then(res => {
+            console.log(res);
+            if (res.data.error) {
+                alert("error in loading");
+            } else {
+                console.log(res.data);
+                this.setState({ users: res.data.users });
+            }
+        }, err => {
+            console.error(err);
+        })
+    }
+    componentDidUpdate(prevState) {
+        if (this.state.userstatus !== prevState.userstatus) {
+            const { userstatus } = this.state;
+           
+            const data = { desc: false, page: 0, search: "", sorting: "userid", userstatus };
+            server(data, "SearchStaffUnderMe").then(res => {
+                console.log(res);
+                if (res.data.error) {
+                    alert("error in loading");
+                } else {
+                    console.log(res.data);
+                    this.setState({ users: res.data.users });
+                }
+            }, err => {
+                console.error(err);
+            })
+        }
+    }
 
-    //     const data = { userid, firstname, lastname, email };
 
-    //     server(data, "SearchStaffUnderMe").then(res => {
-    //         console.log(res);
-    //         if (res.data.error) {
-    //             alert("error in loading");
-    //         } else {  
-    //             alert("ok");  
-    //         //    users= {"res.data.userid": [res.data.firstname, res.data.lastname, res.data.email] }       
-    //         //    this.setState({users});
-    //         }
-    //     }, err => {
-    //         console.error(err);
-    //     })
-    // }
 
     getFilteredData = (key) => {
         if (key == 1) {
             console.log("shalom" + key)
+            this.setState({ userstatus: 1 });
         }
         if (key == 2) {
             console.log("by" + key)
+            this.setState({ userstatus: 0 });
         }
     }
 
-    handleClick = (id) => {
+    userDetails = (id) => {
         this.setState({ showUserDetails: id });
     }
+    userSearch() {
+        const { users } = this.state;
+        const text = "search ref value";
+        // access all data in array???
+        const foundUser = users.filter(text);
+        this.setState({ users: foundUser })
+    }
+
+
 
     render() {
+        const { users } = this.state;
 
         if (!this.props.activeUser) {
             return <Redirect to='/' />
         }
 
         if (this.state.showUserDetails != null) {
-            return <Redirect to={'/users/' + this.state.showUserDetails} />   
+            return <Redirect to={'/users/' + this.state.showUserDetails} />
+        }
+
+        const userDisplay = {}
+        for (var i = 0; i < users.length; i++) {
+            userDisplay[users[i].userid] = [];
+            userDisplay[users[i].userid].push(users[i].firstname);
+            userDisplay[users[i].userid].push(users[i].lastname);
+            userDisplay[users[i].userid].push(users[i].email);
         }
 
         const buttonsData = [
@@ -76,10 +108,10 @@ class UsersPage extends Component {
 
         return (
             <div>
-                <PortalNavbar className="users-Navbar" header="עובדים"/>
-                <h1 className="users-searchBox">Search component</h1>
+                <PortalNavbar className="users-Navbar" header="עובדים" />
+                <h1 className="users-searchBox" onClick={this.userSearch}>Search component</h1>
 
-                <ItemsTable items={this.state.users} titles={this.titles} handleClick={this.handleClick} />
+                <ItemsTable items={userDisplay} titles={this.titles} handleClick={this.userDetails} className="users-table"/>
 
                 <div className="users-activeFilter">
                     <ButtonSet makeChoice={this.getFilteredData} buttons={buttonsData} />

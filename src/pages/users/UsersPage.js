@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import { Redirect } from 'react-router-dom';
 import ItemsTable from '../../components/itemsTable/itemsTable';
 import ButtonSet from '../../components/ButtonSet';
+import server from '../../shared/server'
 
 class UsersPage extends Component {
     constructor(props) {
@@ -27,6 +28,23 @@ class UsersPage extends Component {
 
         this.titles = ["שם", "שם משפחה", "אימייל"];
     }
+    // componentDidMount() {
+
+    //     const data = { userid, firstname, lastname, email };
+
+    //     server(data, "SearchStaffUnderMe").then(res => {
+    //         console.log(res);
+    //         if (res.data.error) {
+    //             alert("error in loading");
+    //         } else {  
+    //             alert("ok");  
+    //         //    users= {"res.data.userid": [res.data.firstname, res.data.lastname, res.data.email] }       
+    //         //    this.setState({users});
+    //         }
+    //     }, err => {
+    //         console.error(err);
+    //     })
+    // }
 
     getFilteredData = (key) => {
         if (key == 1) {
@@ -58,7 +76,7 @@ class UsersPage extends Component {
 
         return (
             <div>
-                <PortalNavbar className="users-Navbar" />
+                <PortalNavbar className="users-Navbar" header="עובדים"/>
                 <h1 className="users-searchBox">Search component</h1>
 
                 <ItemsTable items={this.state.users} titles={this.titles} handleClick={this.handleClick} />

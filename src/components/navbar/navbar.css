@@ -175,10 +175,6 @@
 	text-align: center;
 }
 
-.sidebar .dropdown{
-	display: none;
-}
-
 header{
 	height: 30px;
 	position: relative;
@@ -209,3 +205,34 @@ header{
 	left: 15px;
 	top: 0;
 }
+
+.menu-information .dropdown{
+	
+}
+
+.menu-information .hide-dropdown{
+display: none;
+}
+
+.menu-information .show-dropdown{
+	display: initial;
+	top:0;
+	margin-right: 30px;
+}
+
+.sidebar-options .menu-information .dropdown-content .menu-information{
+padding-top: 25px;
+}
+
+.sidebar-options .menu-information:first-child{
+	height: initial;
+}
+
+.sidebar-options .revert{
+	transform: rotate(180deg);
+}
+
+.sidebar-options .push-left{
+float: left;
+}
+

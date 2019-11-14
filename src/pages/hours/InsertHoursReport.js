@@ -30,7 +30,12 @@ class InsertHoursReport extends Component {
             startHourVisibility: "d-none",
             selectedEndHour: "שעת סיום",
             endHourVisibility: "d-none",
-           
+            visibleKmInput: false,
+            visibleNisInput: false,
+            visibleRemark: false,
+            insertedKm: ' רכב פרטי (ק"מ) ',
+            insertedNis:'  תחבורה ציבורית (ש"ח) ',
+            insertedRemark: ' הערות ',
             openProjectsListStyle: "",
             year:new Date().getFullYear(),
             month:new Date().getMonth()+1,
@@ -59,7 +64,7 @@ class InsertHoursReport extends Component {
             console.error(err);
         }) 
         this.getDataFromServer(this.state.month,this.state.year);
-        this.getCourses();
+        //this.getCourses();
       
         
         
@@ -104,29 +109,7 @@ class InsertHoursReport extends Component {
         //console.log((hours <= 9 ? "0" : "") + hours + ":" + (minutes <= 9 ? "0" : "") + minutes)
         return (hours <= 9 ? "0" : "") + hours + ":" + (minutes <= 9 ? "0" : "") + minutes;
     }
-    
-    getCourses(){
-        var data = {
-            coursestatus: 1,
-            desc: false,
-            page: 0,
-            search: "",
-            sorting: "courseid"
-        };
-        server(data, "SearchCourses").then(res => {
-            console.log(res);
-            if (res.data.error) {
-                alert("error in login");
-            } else {
-                data = res.data.courses;
-                this.setState({GetCourses:data})
-            }
-        }, err => {
-            console.error(err);
-        }) 
-       
-    }
-   
+      
     openProjectsList =  (e) => {
         const{GetProjects,projectsVisibility} = this.state;
         console.log("openProjectsList")
@@ -316,14 +299,63 @@ class InsertHoursReport extends Component {
        console.log(selectedStartHour)
        console.log(selectedEndHour)
     }
-componentDidUpdate(){
-    const{selectedStartHour,selectedEndHour} = this.state 
-    //console.log("diff: " + diff )
-}
+
+   
+    changeView = (e) =>{
+        this.setState({visibleKmInput:false, visibleRemarkInput:false,visibleNisInput:false })
+        // switch (e.currentTarget.id) {
+        //     case "km": 
+        //          this.setState({visibleKmInput:false})
+        //          break;
+        //     case "nis" :
+        //         this.setState({visibleNisInput:false})
+        //         break;
+        //     case "remark" :
+        //         this.setState({visibleRemarkInput:false})
+        //         break;  
+        //     default:        
+        // } 
+     }
+
+     viewInput = (e) => {
+        console.log(e.currentTarget.id)
+        switch (e.currentTarget.id) {
+            case "km": 
+                 this.setState({visibleKmInput:true, visibleRemarkInput:false,visibleNisInput:false })
+                 console.log(" case km ")
+                 break;
+            case "nis" :
+                this.setState({visibleNisInput:true, visibleKmInput:false , visibleRemarkInput:false})
+                console.log(" case nis ")
+                break;
+            case "remark" :
+                this.setState({visibleRemarkInput:true, visibleKmInput:false , visibleNisInput:false})
+                console.log(" case remark ")
+                break;  
+            default:        
+        } 
+     }
+    
+     insertDataToInput = (e) => {
+        console.log(e.target.id)
+        console.log(e.target.value)
+        switch (e.target.id) {
+            case "kmInput": 
+                 this.setState({insertedKm:e.target.value})
+                 break;
+            case "nisInput" :
+                this.setState({insertedNis:e.target.value})
+                break;
+            case "remarkInput" :
+                this.setState({insertedRemark:e.target.value})
+                break;  
+            default:        
+        }
+    }
 
     render() {
 
-        const { projectsList, coursesList, subjectsList, startHoursList, endHoursList, selectedStartHour, selectedEndHour, GetProjects, status , totalHours, selectedSubject, selectedProject, selectedCourse} = this.state;
+        const {visibleKmInput,visibleNisInput,visibleRemarkInput, projectsList, coursesList, subjectsList, startHoursList, endHoursList, selectedStartHour, selectedEndHour, GetProjects, status , totalHours, selectedSubject, selectedProject, selectedCourse} = this.state;
         console.log(this.props.activeUser)
         if (!this.props.activeUser) {
             return <Redirect to='/' />
@@ -335,7 +367,6 @@ componentDidUpdate(){
         
         //88888888888888888888888888888888888888
 
-       
         //88888888888888888888888888888888888888
        
      
@@ -398,23 +429,36 @@ componentDidUpdate(){
            
              <Row>
                  <Col className="px-0">
-                 <div className="menu-field ml-5 mr-3">
-                        <div className="menu-text text-center ">  <span >רכב פרטי (ק"מ)</span> </div>
+                 <div className="menu-field ml-5 mr-3" id="km"  onClick={this.viewInput} onBlur={()=>this.changeView()}>
+                        <div className=" menu-text text-center "> 
+                         <span className={(!visibleKmInput)?"d-block":"d-none"} >{this.state.insertedKm}</span>
+                         <span className={(visibleKmInput)?"d-block":"d-none"} ><input id="kmInput" placeholder="0" onChange={this.insertDataToInput}></input></span>
+                         
+                          </div>
                 </div>
              </Col>
              <Col className="px-0">
-             <div className="menu-field ml-5 mr-3">
-                        <div className="menu-text text-center ">  <span >תחבורה ציבורית (ש"ח)</span> </div>
+             <div className="menu-field ml-5 mr-3" id="nis" onClick={this.viewInput} onBlur={()=>this.changeView()}>
+                    <div className=" menu-text text-center ">
+                          <span className={(!visibleNisInput)?"d-block":"d-none"}> {this.state.insertedNis} </span> 
+                          <span className={(visibleNisInput)?"d-block":"d-none"} ><input id="nisInput" placeholder="0" onChange={this.insertDataToInput}></input></span>
+                        </div>
                 </div>
              </Col>
              </Row>
             <Row>
             <Col>
-             <div className="menu-field">
-                        <div className="menu-text">  <span className="pr-3">הערות</span> </div>
+             <div className="menu-field" id="remark" onClick={this.viewInput} onBlur={()=>this.changeView()}>
+                        <div className="menu-text border-1"> 
+                         <span className="pr-3"> </span>
+                         <span className={(!visibleRemarkInput)?"d-inline":"d-none"}> {this.state.insertedRemark} </span>
+                          <span className={(visibleRemarkInput)?"d-inline":"d-none"} ><input id="remarkInput" placeholder=" " onChange={this.insertDataToInput}></input></span>
+                          </div>
                  </div>
                  </Col>
                  </Row>
+                 
+         
                  <Row  className=" fixed-bottom bg-white align-items-center justify-content-md-center px-3 " >
               <Col className=" px-1 text-center "> 
                   <img src="images\CourseControls\Save\drawable-mdpi\noun_save_2429243.png" alt="save"></img>

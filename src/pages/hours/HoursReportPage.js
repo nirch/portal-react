@@ -152,7 +152,7 @@ class HoursReportPage extends Component {
            <Row className="sticky-top bg-white">
              <Col>
              
-              <PortalNavbar />
+              <PortalNavbar header="דיווח שעות" />
                  <SelectMonth changeMonthYear={this.getMonthYear}/>
              
              </Col>

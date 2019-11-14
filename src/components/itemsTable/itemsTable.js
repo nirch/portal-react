@@ -12,7 +12,7 @@ class ItemsTable extends Component {
 
         const tableData = [];
              
-        for (var id in items) {
+        for (let id in items) {
             const tableRow = items[id].map((item, index)=>
                 <td key={index} className="itemsTable-data">
                     {item}
@@ -20,7 +20,7 @@ class ItemsTable extends Component {
             );
             
             tableData.push(
-            <tr key={id} className="itemsTable-row">
+            <tr key={id} className="itemsTable-row" onClick = {() => {this.props.handleClick(id)}}>
                {tableRow}
             </tr>)
         }

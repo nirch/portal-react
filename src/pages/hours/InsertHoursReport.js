@@ -4,7 +4,9 @@ import PortalNavbar from '../../components/navbar/PortalNavbar';
 import { connect } from "react-redux";
 import { Redirect } from 'react-router-dom'
 import { Container, Button , DropdownButton, Dropdown, Row, Col} from 'react-bootstrap';
-import server from '../../shared/server'
+import { TimePicker } from 'antd';
+import server from '../../shared/server';
+import 'antd/dist/antd.css';
 import SelectDate from '../../components/hoursApprove/selectDate.js'
 
 class InsertHoursReport extends Component {
@@ -24,6 +26,10 @@ class InsertHoursReport extends Component {
             coursesVisibility: "d-none",
             selectedSubject: "נושא פעילות",
             subjectsVisibility: "d-none",
+            selectedStartHour: "שעת התחלה",
+            startHourVisibility: "d-none",
+            selectedEndHour: "שעת סיום",
+            endHourVisibility: "d-none",
            
             openProjectsListStyle: "",
             year:new Date().getFullYear(),
@@ -124,19 +130,20 @@ class InsertHoursReport extends Component {
     openProjectsList =  (e) => {
         const{GetProjects,projectsVisibility} = this.state;
         console.log("openProjectsList")
+        console.log(e.currentTarget)
         let projectsArrayData = Object.values(GetProjects)
         let showData = [];
         let result;
         let show;
         let style = " dropdown "
-        this.setState({coursesVisibility:"d-none",subjectsVisibility:"d-none"})
+       // this.setState({})
         if(projectsVisibility=="d-none")
             show = "d-block"
         else  show = "d-none"
        
-        this.setState({projectsVisibility:show})
+       // this.setState({})
         showData = projectsArrayData.map((proj)=>
-                            <div className="dropdown-content" onClick={this.setState({selectedProject:e.target.innerHTML})}>
+                            <div className="dropdown-content" onClick={() => {this.setState({selectedProject:e.target.innerHTML})}}>
                                  {proj.projectName}
                             </div>
                    )
@@ -145,7 +152,7 @@ class InsertHoursReport extends Component {
                                {showData}
                             </div>
       
-        this.setState({projectsList:result})
+        this.setState({coursesVisibility:"d-none",subjectsVisibility:"d-none", endHourVisibility: "d-none",startHourVisibility: "d-none", projectsVisibility:show, projectsList:result})
          
     }
 
@@ -159,17 +166,17 @@ class InsertHoursReport extends Component {
         let show;
         let style = " dropdown "
 
-        this.setState({projectsVisibility:"d-none",subjectsVisibility:"d-none"})
+       // this.setState({})
         if(coursesVisibility == "d-none")
              show = "d-block"
         else  show = "d-none"
-        this.setState({coursesVisibility:show})
+     //   this.setState({coursesVisibility:show})
         if(selectedProject === "פרויקט")
            showData = []
         else{
             let proj =  projectsArrayData.find((proj)=>{if(proj.projectName==selectedProject)return proj})
             showData = proj.courses.map((crc)=>
-                             <div className="dropdown-content" onClick={this.setState({selectedCourse:e.target.innerHTML})}>
+                             <div className="dropdown-content" onClick={() =>{this.setState({selectedCourse:e.target.innerHTML})}}>
                                   {crc.courseName} - {crc.courseid}
                              </div>
                     )
@@ -178,7 +185,7 @@ class InsertHoursReport extends Component {
                                 {showData}
                              </div>
            }
-           this.setState({coursesList:result})
+           this.setState({projectsVisibility:"d-none",subjectsVisibility:"d-none", endHourVisibility: "d-none",startHourVisibility: "d-none", coursesVisibility:show, coursesList:result})
     }
 
 
@@ -192,17 +199,17 @@ class InsertHoursReport extends Component {
         let show = "";
         let style = " dropdown "
 
-        this.setState({coursesVisibility:"d-none",projectsVisibility:"d-none"})
+       // this.setState({})
         if(subjectsVisibility == "d-none")
              show = "d-block"
         else  show = "d-none"
-        this.setState({subjectsVisibility:show})
+       // this.setState({subjectsVisibility:show})
         if(selectedProject === "פרויקט" || selectedCourse === "מס/שם קורס")
            showData = []
         else{
             let proj =  projectsArrayData.find((proj)=>{if(proj.projectName==selectedProject)return proj})
             showData = proj.subjects.map((sbj)=>
-                             <div className="dropdown-content" onClick={this.setState({selectedSubject:e.target.innerHTML})}>
+                             <div className="dropdown-content" onClick={() => {this.setState({selectedSubject:e.target.innerHTML})}}>
                                   {sbj.subject} 
                              </div>
                     )
@@ -211,26 +218,113 @@ class InsertHoursReport extends Component {
                                 {showData}
                              </div>
            }
-           this.setState({subjectsList:result})
+           this.setState({coursesVisibility:"d-none",projectsVisibility:"d-none", endHourVisibility: "d-none",startHourVisibility: "d-none", subjectsVisibility:show, subjectsList:result})
+    }
+
+    getTimes(){
+        var startTime = new Date();
+       startTime.setUTCHours(-2);
+       startTime.setUTCMinutes(0);
+       startTime.setTime(startTime.getTime());
+       let showStartTime = startTime.getHours() + ":" + startTime.getMinutes()
+       let timesArray = []
+      
+       let hour, minute;
+       for(let i=0;i<96;i++){
+         hour = startTime.getHours()
+         if(hour<10)
+            hour = "0" + startTime.getHours()
+         minute = startTime.getMinutes()
+         if (minute<10)
+              minute = "0" + startTime.getMinutes()
+         showStartTime = hour + ":" + minute
+         timesArray.push(showStartTime)
+         startTime.setTime(startTime.getTime()+ (15 * 60 * 1000))  
+       } 
+       return timesArray;
     }
 
     openStartHour =(e)=>{
-       this.setState({coursesVisibility:"d-none",projectsVisibility:"d-none",subjectsVisibility:"d-none"})
+       const{startHourVisibility} = this.state
+      // this.setState({coursesVisibility:"d-none",projectsVisibility:"d-none",subjectsVisibility:"d-none",endHourVisibility: "d-none"})
+       console.log("openStartHour")
        let showData = [];
        let result;
        let show = "";
-       let style = " dropdown "
-       
+       let style = " dropdown show-times "
+       if(startHourVisibility == "d-none")
+             show = "d-block"
+        else  show = "d-none"
+     //  this.setState({startHourVisibility:show})
+       let timesArray = this.getTimes();
+      // console.log(timesArray);
+     
+        style+= show
+        showData = timesArray.map((time)=>
+        <div className="dropdown-content" onClick={() => {this.setState({selectedStartHour:e.target.innerHTML})}}>
+             {time} 
+        </div>
+         )
+        // console.log(showData);
+        result = <div className={style} >
+                  {showData}
+                 </div>
+        this.setState({coursesVisibility:"d-none",projectsVisibility:"d-none",subjectsVisibility:"d-none",endHourVisibility: "d-none", startHourVisibility:show, startHoursList:result})         
     }
 
     openEndHour =(e)=>{
-       this.setState({coursesVisibility:"d-none",projectsVisibility:"d-none",subjectsVisibility:"d-none"})
+       const{endHourVisibility,selectedStartHour,selectedEndHour} = this.state 
+     //  this.setState({coursesVisibility:"d-none",projectsVisibility:"d-none",subjectsVisibility:"d-none", startHourVisibility: "d-none"})
+       console.log("openEndHour")
+       let showData = [];
+       let result;
+       let show = "";
+       let style = " dropdown show-times "
+       if(endHourVisibility == "d-none")
+             show = "d-block"
+        else  show = "d-none"
+    //   this.setState({endHourVisibility:show})
+       let timesArray = this.getTimes();
+      // console.log(timesArray);
+     
+        style+= show
+        if( selectedStartHour === "שעת התחלה")
+           result = ""
+        else {
+          //  console.log(timesArray.indexOf(selectedStartHour))
+            let endTimesArray = []
+            for(let i=timesArray.indexOf(selectedStartHour)+1;i<timesArray.length;i++){
+                 endTimesArray.push(timesArray[i])   
+                }
+       //     console.log(endTimesArray)
+            showData = endTimesArray.map((time)=>
+                <div className="dropdown-content" onClick={() => {this.setState({selectedEndHour:e.target.innerHTML})}}>
+                    {time} 
+                </div>
+            )
+            // console.log(showData);
+             result = <div className={style} >
+                  {showData}
+                 </div>
+            }
+        this.setState({coursesVisibility:"d-none",projectsVisibility:"d-none",subjectsVisibility:"d-none", startHourVisibility: "d-none", endHourVisibility:show, endHoursList:result})  
+       
+        if (isNaN(selectedStartHour)||isNaN(selectedEndHour)){
+            let diff = this.diff(selectedStartHour, selectedEndHour)
+            this.setState({totalHours:diff})
+        }
+       console.log(selectedStartHour)
+       console.log(selectedEndHour)
     }
+componentDidUpdate(){
+    const{selectedStartHour,selectedEndHour} = this.state 
+    //console.log("diff: " + diff )
+}
 
     render() {
 
-         const { projectsList,coursesList, subjectsList, GetReports, GetCourses, GetProjects,status , totalHours, selectedSubject, selectedProject, selectedCourse} = this.state;
-
+        const { projectsList, coursesList, subjectsList, startHoursList, endHoursList, selectedStartHour, selectedEndHour, GetProjects, status , totalHours, selectedSubject, selectedProject, selectedCourse} = this.state;
+        console.log(this.props.activeUser)
         if (!this.props.activeUser) {
             return <Redirect to='/' />
         }
@@ -239,6 +333,10 @@ class InsertHoursReport extends Component {
         //console.log(GetProjects)
         //console.log(selectedProject)
         
+        //88888888888888888888888888888888888888
+
+       
+        //88888888888888888888888888888888888888
        
      
         return (
@@ -262,6 +360,10 @@ class InsertHoursReport extends Component {
                   <div className="menu-text">  <span className="pr-3">{selectedProject}</span> <img src="images\ArrowDown\drawable-mdpi\arrow_down.png" alt=""></img></div>
                        {projectsList}
                   </div>
+ {/* <div className="menu-text">  <span className="pr-3">{selectedProject}</span> <img src="images\ArrowDown\drawable-mdpi\arrow_down.png" alt=""></img></div>
+                       {result}
+                  </div> */}
+
                                  
                   <div className="menu-field" id="coursesList"  onClick={this.openCoursesList}>
                         <div className="menu-text" >  <span className="pr-3">{selectedCourse} </span> <img src="images\ArrowDown\drawable-mdpi\arrow_down.png" alt=""></img></div>
@@ -275,18 +377,25 @@ class InsertHoursReport extends Component {
                   </div>
                   </Col>
               </Row>
+      
+      
              <Row>
                  <Col className="px-0">
                  <div className="menu-field ml-5 mr-3" id="startHour"  onClick={this.openStartHour}>
-                        <div className="menu-text text-center ">  <span >שעת התחלה</span> </div>
+                        <div className="menu-text text-center ">   {selectedStartHour}  </div>
+                        {startHoursList}
                 </div>
              </Col>
              <Col className="px-0">
              <div className="menu-field ml-5 mr-3" id="endHour"  onClick={this.openEndHour}>
-                        <div className="menu-text text-center ">  <span >שעת סיום</span> </div>
+                        <div className="menu-text text-center ">  {selectedEndHour}  </div>
+                        {endHoursList}
                 </div>
              </Col>
              </Row>
+           
+           
+           
              <Row>
                  <Col className="px-0">
                  <div className="menu-field ml-5 mr-3">

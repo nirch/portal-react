@@ -62,8 +62,13 @@ export default class SelectDate extends React.Component {
         if((newDate.getMonth()+1)>0 && (newDate.getMonth()+1)<10)
             month = "0"+ (newDate.getMonth()+1)
         let year = newDate.getFullYear() % 100;  
+        let currentDay = new Date();
+        let currentYear = currentDay.getFullYear() % 100;  
+        let currentMonth = (currentDay.getMonth()+1)
+        let currentDate = currentDay.getDate()
         let hour = newDate.getHours();
         let minute =  newDate.getMinutes();
+        
         let bgColor;
         switch (status) {
              case "-1": 
@@ -97,7 +102,7 @@ export default class SelectDate extends React.Component {
             </Row>
             <Row className=" hours-header-small-text  text-center ">
                 <Col >
-               <span className="mr-1"> זמן שינוי סטטוס:</span><span className="mr-2">{hour + ":" + minute  + " | " + date + "." + month + "." + year  }</span>
+               <span className="mr-1"> זמן שינוי סטטוס:</span><span className="mr-2">{hour + ":" + minute  + " | " + currentDate + "." + currentMonth + "." + currentYear  }</span>
                 </Col>
                 <Col >
                 <span className="mr-5">  סטטוס: </span><span className="mr-3">{status}</span>

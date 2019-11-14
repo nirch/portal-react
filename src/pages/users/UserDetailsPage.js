@@ -14,7 +14,7 @@ class UserDetailsPage extends Component {
 
         return (
             <div>
-                <PortalNavbar/>
+                <PortalNavbar className="users-Navbar" header="עובדים" />
                 <h1>פרטי משתמש</h1>
             </div>
         );

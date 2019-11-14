@@ -11,24 +11,24 @@ class UsersPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            decs: false,
+            desc: false,
             page: 0,
             search: "",
             sorting: "userid",
             userstatus: 1,
 
-            users: {},
+            users: [],
             showUserDetails: null
         }
 
         this.titles = ["שם", "שם משפחה", "אימייל"];
     }
     componentDidMount() {
-        const data = { desc: false, page: 0, search: "", sorting: "userid", userstatus: 1 };
+        const { desc, page, search, sorting, userstatus } = this.state;
+        const data = { desc, page, search, sorting, userstatus };
         server(data, "SearchStaffUnderMe").then(res => {
-            console.log(res);
             if (res.data.error) {
-                alert("error in loading");
+                console.error(res.data.error);
             } else {
                 console.log(res.data);
                 this.setState({ users: res.data.users });
@@ -39,13 +39,11 @@ class UsersPage extends Component {
     }
     componentDidUpdate(prevState) {
         if (this.state.userstatus !== prevState.userstatus) {
-            const { userstatus } = this.state;
-           
-            const data = { desc: false, page: 0, search: "", sorting: "userid", userstatus };
+            const { desc, page, search, sorting, userstatus } = this.state;
+            const data = { desc, page, search, sorting, userstatus };
             server(data, "SearchStaffUnderMe").then(res => {
-                console.log(res);
                 if (res.data.error) {
-                    alert("error in loading");
+                    console.error(res.data.error);
                 } else {
                     console.log(res.data);
                     this.setState({ users: res.data.users });
@@ -59,26 +57,19 @@ class UsersPage extends Component {
 
 
     getFilteredData = (key) => {
-        if (key == 1) {
-            console.log("shalom" + key)
-            this.setState({ userstatus: 1 });
-        }
-        if (key == 2) {
-            console.log("by" + key)
-            this.setState({ userstatus: 0 });
-        }
+        this.setState({ userstatus: key });
     }
 
     userDetails = (id) => {
         this.setState({ showUserDetails: id });
     }
-    userSearch() {
-        const { users } = this.state;
-        const text = "search ref value";
-        // access all data in array???
-        const foundUser = users.filter(text);
-        this.setState({ users: foundUser })
-    }
+    // userSearch() {
+    //     const { users } = this.state;
+    //     const text = "search ref value";
+    //     // access all data in array???
+    //     const foundUser = users.filter(text);
+    //     this.setState({ users: foundUser })
+    // }
 
 
 
@@ -103,16 +94,16 @@ class UsersPage extends Component {
 
         const buttonsData = [
             { key: 1, title: "עובדים פעילים" },
-            { key: 2, title: "לא פעילים" }
+            { key: 0, title: "לא פעילים" }
         ]
 
         return (
             <div>
                 <PortalNavbar className="users-Navbar" header="עובדים" />
                 <h1 className="users-searchBox" onClick={this.userSearch}>Search component</h1>
-
-                <ItemsTable items={userDisplay} titles={this.titles} handleClick={this.userDetails} className="users-table"/>
-
+                <div className="users-table">
+                    <ItemsTable items={userDisplay} titles={this.titles} handleClick={this.userDetails} />
+                </div>
                 <div className="users-activeFilter">
                     <ButtonSet makeChoice={this.getFilteredData} buttons={buttonsData} />
                 </div>

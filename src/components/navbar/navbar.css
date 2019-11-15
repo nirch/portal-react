@@ -65,7 +65,6 @@
 }
 .profile-preview{
 	height: calc(7vh + 4px);
-	padding: 1vh;
 	border-bottom: 1px solid #ccc;
 }
 .profile-image{
@@ -102,12 +101,13 @@
 	font-weight: bold;
 	color: #2E598B;
 	padding-right: 2vh;
-	padding-top: 4vh;
 	transition: transform 0.5s ease;
 	-moz-transition: -moz-transform 0.5s ease;
 	-ms-transition: -ms-transform 0.5s ease;
 	-webkit-transition: -webkit-transform 0.5s ease;
 	-o-transition: -o-transform 0.5s ease;
+	border-bottom: 1px lightgrey solid;
+	padding-top: 10px; 
 }
 .sidebar-options .menu-information:nth-child(2){
 	transition-delay: 0.075s;
@@ -115,7 +115,6 @@
 	-ms-transition-delay: 0.075s;
 	-webkit-transition-delay: 0.075s;
 	-o-transition-delay: 0.075s;
-	padding-top: 20px;
 }
 .sidebar-options .menu-information:nth-child(3){
 	transition-delay: 0.15s;
@@ -211,19 +210,14 @@ header{
 display: none;
 }
 
-.menu-information .show-dropdown{
+/* .menu-information .show-dropdown{
 	display: initial;
 	top:0;
 	margin-right: 30px;
-}
+} */
 
 .sidebar-options .menu-information .dropdown-content .menu-information{
 padding-top: 25px;
-}
-
-.sidebar-options .menu-information:first-child{
-	height: initial;
-	
 }
 
 .sidebar-options .revert{
@@ -234,6 +228,11 @@ padding-top: 25px;
 float: left;
 }
 
-.sidebar-options .menu-information .last-field{
-	padding-bottom: 30px;
+.sidebar-options .dropdown .menu-information {
+	border:0;
+	margin-right: 25px;
+}
+
+.sidebar-options .dropdown .menu-information:first-child {
+margin-top: 10px;
 }

@@ -105,7 +105,7 @@ class PortalNavbar extends Component {
         let { header } = this.props;
         let { redirectTo, isMenuOpen, isDropDown } = this.state;
         let sidebarOpen;
-        let dropDown, arrow;
+        let dropDown, arrow, height;
 
         if (isMenuOpen) {
             sidebarOpen = "sidebar-open";
@@ -117,10 +117,16 @@ class PortalNavbar extends Component {
         if (isDropDown) {
             arrow = "sidebar-icons push-left revert";
             dropDown="show-dropdown";
+            height={
+                height: 'initial'
+              };
         }
         else {
             arrow = "sidebar-icons push-left";
             dropDown="hide-dropdown";
+            height={
+                height: '6vh'
+              };
         }
 
         if (redirectTo) {
@@ -157,7 +163,7 @@ class PortalNavbar extends Component {
                                 </div>
                             </div>
                             <div className="sidebar-options">
-                                <div className="menu-information dropdown" onClick={this.openDropDown}>
+                                <div className="menu-information dropdown" onClick={this.openDropDown} style={height}>
                                     <span className="sidebar-icons">
                                         <img src="images/users.png"></img>
                                     </span>

@@ -162,7 +162,7 @@ class PortalNavbar extends Component {
                                         <img src="images/users.png"></img>
                                     </span>
                                     משתמשים
-                                    <span className={arrow}>
+                                    <span className={arrow} style={{transition: "all 0.5s"}}>
                                         <img src="images/arrow_down.png"></img>
                                     </span>
                                     <div className={dropDown}>
@@ -172,7 +172,7 @@ class PortalNavbar extends Component {
                                         <div className="menu-information" onClick={this.goToStudentsPage}>
                                             חניכים
                                         </div>
-                                        <div className="menu-information" onClick={this.goToNewUsersPage}>
+                                        <div className="menu-information last-field" onClick={this.goToNewUsersPage}>
                                             משתמשים חדשים
                                         </div>
                                     </div>

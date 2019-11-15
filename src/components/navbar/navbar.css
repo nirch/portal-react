@@ -115,6 +115,7 @@
 	-ms-transition-delay: 0.075s;
 	-webkit-transition-delay: 0.075s;
 	-o-transition-delay: 0.075s;
+	padding-top: 20px;
 }
 .sidebar-options .menu-information:nth-child(3){
 	transition-delay: 0.15s;
@@ -226,6 +227,7 @@ padding-top: 25px;
 
 .sidebar-options .menu-information:first-child{
 	height: initial;
+	
 }
 
 .sidebar-options .revert{
@@ -236,3 +238,6 @@ padding-top: 25px;
 float: left;
 }
 
+.sidebar-options .menu-information .last-field{
+	padding-bottom: 30px;
+}

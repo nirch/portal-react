@@ -178,7 +178,7 @@ class PortalNavbar extends Component {
                                         <div className="menu-information" onClick={this.goToStudentsPage}>
                                             חניכים
                                         </div>
-                                        <div className="menu-information last-field" onClick={this.goToNewUsersPage}>
+                                        <div className="menu-information" onClick={this.goToNewUsersPage}>
                                             משתמשים חדשים
                                         </div>
                                     </div>

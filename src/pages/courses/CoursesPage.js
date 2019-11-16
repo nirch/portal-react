@@ -15,7 +15,7 @@ class CoursesPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            searchPages: 15,
+            searchPages: 1,
             currentPage: 1,
             isActive: 1,
             coursestatus: 1,
@@ -29,8 +29,8 @@ class CoursesPage extends Component {
         this.titles = ["שם קורס מקוצר", "פרויקט", "מדריך"]
     }
     componentDidMount() {
-        const { coursestatus, desc, page, search, sorting, } = this.state;
-        const data = { coursestatus, desc, page, search, sorting };
+        const { coursestatus, desc, page, search, sorting, searchPages } = this.state;
+        const data = { coursestatus, desc, page, search, sorting, searchPages };
         server(data, "SearchCourses").then(res => {
             if (res.data.error) {
                 console.error(res.data.error)
@@ -58,11 +58,17 @@ class CoursesPage extends Component {
         console.log(page);
     }
     render() {
-
         if (!this.props.activeUser) {
             return <Redirect to='/' />
         }
-
+        const {courses} = this.state;
+        const courseDisplay = {};
+        for( let i = 0; i < courses.length; i++) {
+            courseDisplay[courses[i].courseid] = [];
+            courseDisplay[courses[i].courseid].push(courses[i].subname);
+            courseDisplay[courses[i].courseid].push(courses[i].project);
+            courseDisplay[courses[i].courseid].push(courses[i].teachers);
+        }
 
         const buttonsData = [
             { key: 1, title: "קורסים פעילים" },
@@ -73,7 +79,7 @@ class CoursesPage extends Component {
             <div>
                 <PortalNavbar header="קורסים" />
                 <SearchBar searchLabel="חיפוש קורס" handleSearch={this.handleSearch} updateSearch={this.updateSearch} pages={this.state.searchPages} />
-                <ItemsTable titles={this.titles} />
+                <ItemsTable titles={this.titles} items = {courseDisplay}/>
                 <ButtonSet makeChoice={this.getFilteredData} buttons={buttonsData} />
             </div>
         );

@@ -250,6 +250,8 @@ class HoursApprovePage extends Component {
                 approvedTime = "00:00"; declineTime = "00:00"; waitingTime = "00:00"; totalTime = "00:00"
                 for (var secondIndex = 0; secondIndex < searchedReporters[index].reports.length; secondIndex++) {
                     timeLeg = this.calculatTime(searchedReporters[index].reports[secondIndex].finishhour, searchedReporters[index].reports[secondIndex].starthour)
+                    var reportid=searchedReporters[index].reports[secondIndex].reportid;
+                    console.log(reportid);
                     switch (searchedReporters[index].reports[secondIndex].approval) {
                         
                         case -1: blockColor = "#ffa1a1";
@@ -257,7 +259,7 @@ class HoursApprovePage extends Component {
                             declineTime = declineTime.hours + ":" + declineTime.minutes;
                             totalTime = this.addTime(totalTime, timeLeg.hours + ":" + timeLeg.minutes);
                             totalTime = totalTime.hours + ":" + totalTime.minutes;
-                            checkAproved = <input onClick={()=>{this.aproveReport(searchedReporters[index].reports[secondIndex].reportid)}} className="Radio" type="radio" name={index + " " + secondIndex} value="aproved" />;
+                            checkAproved = <input onClick={()=>{this.aproveReport(reportid)}} className="Radio" type="radio" name={index + " " + secondIndex} value="aproved" />;
                             checkDecline = <input key={searchedReporters[index].reports[secondIndex].reportid} className="Radio" type="radio" name={index + " " + secondIndex} value="decline" defaultChecked />;
                             checkWaiting = <input key={searchedReporters[index].reports[secondIndex].reportid} className="Radio" type="radio" name={index + " " + secondIndex} value="wait" />;
                             // Decline
@@ -267,7 +269,7 @@ class HoursApprovePage extends Component {
                             approvedTime = approvedTime.hours + ":" + approvedTime.minutes;
                             totalTime = this.addTime(totalTime, timeLeg.hours + ":" + timeLeg.minutes);
                             totalTime = totalTime.hours + ":" + totalTime.minutes;
-                            checkAproved = <input onClick={()=>{this.aproveReport(searchedReporters[index].reports[secondIndex].reportid)}}  className="Radio" type="radio" name={index + " " + secondIndex} value="aproved" defaultChecked />;
+                            checkAproved = <input onClick={()=>{this.aproveReport(reportid)}}  className="Radio" type="radio" name={index + " " + secondIndex} value="aproved" defaultChecked />;
                             checkDecline = <input key={searchedReporters[index].reports[secondIndex].reportid} className="Radio" type="radio" name={index + " " + secondIndex} value="decline" />;
                             checkWaiting = <input key={searchedReporters[index].reports[secondIndex].reportid} className="Radio" type="radio" name={index + " " + secondIndex} value="wait" />;
                             // aproved
@@ -277,7 +279,7 @@ class HoursApprovePage extends Component {
                             waitingTime = waitingTime.hours + ":" + waitingTime.minutes;
                             totalTime = this.addTime(totalTime, timeLeg.hours + ":" + timeLeg.minutes);
                             totalTime = totalTime.hours + ":" + totalTime.minutes;
-                            checkAproved = <input onClick={()=>{this.aproveReport(searchedReporters[index].reports[secondIndex].reportid)}}  className="Radio" type="radio" name={index + " " + secondIndex} value="aproved" />;
+                            checkAproved = <input onClick={()=>{this.aproveReport(reportid)}}  className="Radio" type="radio" name={index + " " + secondIndex} value="aproved" />;
                             checkDecline = <input key={searchedReporters[index].reports[secondIndex].reportid} className="Radio" type="radio" name={index + " " + secondIndex} value="decline" />;
                             checkWaiting = <input key={searchedReporters[index].reports[secondIndex].reportid} className="Radio" type="radio" name={index + " " + secondIndex} value="wait" defaultChecked />;
                         // waiting

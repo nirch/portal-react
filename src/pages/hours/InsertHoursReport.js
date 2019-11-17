@@ -288,6 +288,15 @@ class InsertHoursReport extends Component {
     else {
         let project = projectsArrayData.find((proj)=>{if(proj.projectName===selectedProject) return proj} )   
         dataToSend.projectid = project.projectid
+        if(selectedSubject== "נושא פעילות")
+            this.setState({errorSubject: true})
+        else{
+            let actionid = project.subjects.find((act)=>{if(act.subject===selectedSubject) return act})
+            // console.log(actionid)
+              dataToSend.actionid = actionid.reportsubjectid
+            // actionid: "52"
+        }
+ 
     }
     if(selectedCourse == "מס/שם קורס")
         this.setState({errorCourse: true})
@@ -295,7 +304,7 @@ class InsertHoursReport extends Component {
         dataToSend.coursename = selectedCourse 
         //   coursename: "כללי"
     }        
-            // selectedSubject: "נושא פעילות",
+            // ",
             // selectedStartHour: "שעת התחלה",
             // selectedEndHour: "שעת סיום",
           
@@ -303,11 +312,7 @@ class InsertHoursReport extends Component {
    
    
     // projectid: "7"
-    
-   // // let actionid = project.subjects.find((act)=>{if(act.subject===selectedSubject) return act})
-   // console.log(actionid)
-   // // dataToSend.actionid = actionid.reportsubjectid
-   // actionid: "52"
+   
     dataToSend.automatic = 0
    //     automatic: 0
         
@@ -413,10 +418,10 @@ class InsertHoursReport extends Component {
             return <Redirect to='/' />
         }
   
-        let style = " dropdown "
+        let style = "report-dropdown "
         let  projectsList = <div className={(visibleProjectList)? style + "d-inline": style + "d-none"} >
                        { projectsArrayData.map((proj)=>
-                         <div className="dropdown-content" onClick= {this.handleProjectClick}>
+                         <div className="report-dropdown-content" onClick= {this.handleProjectClick}>
                               {proj.projectName}
                          </div>
                              )}
@@ -429,7 +434,7 @@ class InsertHoursReport extends Component {
                 
             coursesList = <div className={(visibleCoursesList)? style + "d-inline": style + "d-none"} >
                              {coursesOfProject.map((crc)=>
-                               <div className="dropdown-content" onClick={this.handleCourseClick}>
+                               <div className="report-dropdown-content" onClick={this.handleCourseClick}>
                                   {crc.courseName}
                                    {/* - {crc.courseid} */}
                                </div>
@@ -442,7 +447,7 @@ class InsertHoursReport extends Component {
         else{     
             subjectsList = <div className={(visibleSubjectsList)? style + "d-inline": style + "d-none"} >
                                 {subjectsOfProject.map((sbj)=>
-                             <div className="dropdown-content" onClick={this.handleSubjectClick}>
+                             <div className="report-dropdown-content" onClick={this.handleSubjectClick}>
                                   {sbj.subject} 
                              </div>
                                  )}
@@ -451,7 +456,7 @@ class InsertHoursReport extends Component {
       
        let startHoursList = <div className={(visibleStartHourList)? style + "show-times d-inline": style + "show-times d-none"} >
                      {timesArray.map((time)=>
-                       <div className="dropdown-content" onClick={this.handleStartHourClick}>
+                       <div className="report-dropdown-content" onClick={this.handleStartHourClick}>
                        {time} 
                        </div>
                      )}
@@ -462,7 +467,7 @@ class InsertHoursReport extends Component {
       else{
            endHoursList = <div className={(visibleEndHourList)? style + "show-times d-inline": style + "show-times d-none"} >
                    {timesArray.map((time)=>
-                     <div className="dropdown-content" onClick={this.handleEndHourClick}>
+                     <div className="report-dropdown-content" onClick={this.handleEndHourClick}>
                      {time} 
                     </div>
                    )}
@@ -471,7 +476,7 @@ class InsertHoursReport extends Component {
 
     return (
         <div className=" report-font-size " >
-       <Container className=" report-font-size " >     
+       <Container className="insert-container report-font-size " >     
            
            <Row className="sticky-top bg-white">
              <Col>

@@ -15,21 +15,22 @@ class CoursesPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            searchPages: 1,
-            currentPage: 1,
+            
+            
             coursestatus: 1,
             desc: false,
-            page: 0,
+            page: 1,
             search: "",
             sorting: "courseid",
             courses: [],
             showCourseDetails: null
         }
-        this.titles = ["שם קורס מקוצר", "פרויקט", "מדריך"]
+        this.titles = ["שם קורס מקוצר", "פרויקט", "מדריך"];
+
     }
     componentDidMount() {
         const { coursestatus, desc, page, search, sorting, searchPages } = this.state;
-        const data = { coursestatus, desc, page, search, sorting, searchPages };
+        const data = { coursestatus, desc, page : page - 1, search, sorting, searchPages };
         server(data, "SearchCourses").then(res => {
             if (res.data.error) {
                 console.error(res.data.error)
@@ -45,10 +46,10 @@ class CoursesPage extends Component {
         }
         )
     }
-    componentDidUpdate(prevState) {
-        if (prevState.coursestatus != this.state.coursestatus) {
+    componentDidUpdate(prevProp, prevState) {
+        if (prevState.coursestatus !== this.state.coursestatus  || prevState.page !== this.state.page || prevState.search !== this.state.search) {
             const { coursestatus, desc, page, search, sorting, searchPages } = this.state;
-            const data = { coursestatus, desc, page, search, sorting, searchPages };
+            const data = { coursestatus, desc, page : page - 1, search, sorting, searchPages };
             server(data, "SearchCourses").then(res => {
                 if (res.data.error) {
                     console.error(res.data.error)
@@ -71,7 +72,7 @@ class CoursesPage extends Component {
         this.setState({ search: val })
     }
     updatePage = (page) => {
-        console.log(page);
+        this.setState({ page: page})
     }
     courseDetails = (id) => {
         this.setState({ showCourseDetails: "id" })
@@ -97,11 +98,12 @@ class CoursesPage extends Component {
             { key: 1, title: "קורסים פעילים" },
             { key: 0, title: "לא פעילים" }
         ]
+        
 
         return (
             <div>
                 <PortalNavbar header="קורסים" />
-                <SearchBar searchLabel="חיפוש קורס" handleSearch={this.handleSearch} updatePage={this.updatePage} pages={this.state.searchPages} currentPage={this.state.page + 1} />
+                <SearchBar searchLabel="חיפוש קורס" handleSearch={this.handleSearch} updatePage={this.updatePage} pages={this.state.searchPages} currentPage={this.state.page } />
                 <ItemsTable titles={this.titles} items={courseDisplay} handleClick={this.courseDetails} />
                 <div className="courses-activeFilter">
                     <ButtonSet makeChoice={this.getFilteredData} buttons={buttonsData} />

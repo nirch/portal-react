@@ -33,10 +33,12 @@ class UserDetailsPage extends Component {
             console.error(err);
         })
     }
+    
+    
 
     render() {
 
-
+const {user} = this.state;
         if (!this.props.activeUser) {
             return <Redirect to='/' />
         }
@@ -46,17 +48,11 @@ class UserDetailsPage extends Component {
         } else {
             return (
                 <div>
-                    <PortalNavbar className="users-Navbar" header="עובדים" />
-
-                    <div className="header-Col">
-                        <p> {this.state.user.firstname}</p>
-                        <p> {this.state.user.lastname}</p>
-                        <p> שינוי סיסמה</p>
-                        <p>נרשם  ב:</p>
-                    </div>
+                    <PortalNavbar className="users-Navbar" header="עובדים"/>
 
                     <div>
-                        <DetailsHeader />
+                        <DetailsHeader  line1={user.firstname} line2={user.lastname}
+                        line3="שינוי סיסמה" line4 = { `נרשם ב: ${user.registerdate}`}  />
                     </div>
 
 

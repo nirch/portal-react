@@ -25,26 +25,24 @@ class UsersPage extends Component {
         }
 
         this.titles = ["שם", "שם משפחה", "אימייל"];
-        
+
+        let pagePath = window.location.href.split("type=");
+        let userType = pagePath[pagePath.length - 1];
+        if (userType == "staff") {
+           this.userRequest = "SearchStaffUnderMe";                         
+        } else if(userType == "students") {
+            this.userRequest = "SearchStudentsUnderMe";
+        } else if (userType == "new"){
+             this.userRequest = "SearchNewUsers";
+        };
+            
     }
 
+   
     componentDidMount() {
         const { desc, page, search, sorting, userstatus } = this.state;
-        const data = { desc,  page : page - 1, search, sorting, userstatus };
-
-        // const pagePath = window.location.href.split("/");
-        // const userType = pagePath[pagePath.length - 1];
-        // const userRequest ;
-        // if (userType = "staff") {
-        //   const userRequest = "SearchStaffUnderMe";                         
-        // } else if(userType = "students") {
-        //    const userRequest = "SearchStudentsUnderMe";
-        // } else if (userType = "new"){
-        //     const userRequest = "SearchNewUsers";
-        // }
-
-
-            server(data, "SearchStaffUnderMe").then(res => {
+        const data = { desc,  page : page - 1, search, sorting, userstatus };    
+            server(data, this.userRequest).then(res => {
                 if (res.data.error) {
                     console.error(res.data.error);
                 } else {
@@ -60,11 +58,10 @@ class UsersPage extends Component {
 
     componentDidUpdate(prevProps, prevState) {
         if (this.state.userstatus !== prevState.userstatus || this.state.page !== prevState.page ||
-            this.state.search !== prevState.search) {
+            this.state.search !== prevState.search || this.props.key !== prevProps.key) {
             const { desc, page, search, sorting, userstatus } = this.state;
-
             const data = { desc,  page : page - 1, search, sorting, userstatus };
-            server(data, "SearchStaffUnderMe").then(res => {
+            server(data, this.userRequest).then(res => {
                 if (res.data.error) {
                     console.error(res.data.error);
                 } else {

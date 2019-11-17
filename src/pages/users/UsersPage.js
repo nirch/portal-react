@@ -85,7 +85,7 @@ class UsersPage extends Component {
     }
 
     userSearch = (val) => {
-        this.setState({ search: val });
+        this.setState({ search: val, page: 1 });
     }
 
     userCurrentPage = (page) => {

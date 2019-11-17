@@ -72,15 +72,15 @@ export default class SelectDate extends React.Component {
         let bgColor;
         switch (status) {
              case "-1": 
-               bgColor =  " bg-danger "  
+               bgColor =  " bg-red "  
                status = "נדחה"
                break;
              case "1":    
-               bgColor = " bg-success " 
+               bgColor = " bg-green " 
                status = "אושר"
                break;
              default:  
-               bgColor = " bg-warning "   
+               bgColor = " bg-yellow "   
                status = "ממתין"
         }
         let style = "px-0 showDateHeader " + bgColor

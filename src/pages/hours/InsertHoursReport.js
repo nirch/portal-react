@@ -37,6 +37,14 @@ class InsertHoursReport extends Component {
             visibleNisInput: false,
             visibleRemark: false,
 
+            errorProject:false,
+            errorSubject:false,
+            errorCourse:false, 
+            errorStartHour:false,
+            errorEndHour:false,
+            errorKm:false ,
+            errorNis:false,
+
             insertedKm: ' רכב פרטי (ק"מ) ',
             insertedNis:'  תחבורה ציבורית (ש"ח) ',
             insertedRemark: ' הערות ',
@@ -265,13 +273,13 @@ class InsertHoursReport extends Component {
         console.log(e.target.value)
         switch (e.target.id) {
             case "kmInput": 
-                 this.setState({insertedKm:e.target.value})
+                 this.setState({insertedKm:e.target.value, errorKm:false})
                  break;
             case "nisInput" :
-                this.setState({insertedNis:e.target.value})
+                this.setState({insertedNis:e.target.value, errorNis:false})
                 break;
             case "remarkInput" :
-                this.setState({insertedRemark:e.target.value})
+                this.setState({insertedRemark:e.target.value })
                 break;  
             default:        
         }
@@ -279,68 +287,82 @@ class InsertHoursReport extends Component {
 
    saveDataToServer = (e) =>{
     //************************************************ */
-    const{projectsArrayData, selectedProject, selectedSubject,selectedCourse, selectedStartHour, selectedEndHour,totalHours, date, month, year}  = this.state;
+    const{projectsArrayData, selectedProject, selectedSubject,selectedCourse, 
+          selectedStartHour, selectedEndHour,totalHours, insertedKm, insertedNis, insertedRemark,
+          errorProject, errorSubject,errorCourse, errorStartHour, errorEndHour, errorKm , errorNis,
+          date, month, year}  = this.state;
     let dataToSend = {}
-    if(selectedProject=="פרויקט")
+    if(selectedProject =="פרויקט")   //check if project selected
         this.setState({errorProject: true})
     else {
         let project = projectsArrayData.find((proj)=>{if(proj.projectName===selectedProject) return proj} )   
-        dataToSend.projectid = project.projectid
-        if(selectedSubject== "נושא פעילות")
+        dataToSend.projectid = project.projectid  // insert project id 
+        dataToSend.isSetProject = true
+        if(selectedCourse == "מס/שם קורס")  // check if course selected 
+              this.setState({errorCourse: true})
+                else {
+                       dataToSend.coursename = selectedCourse 
+                       let course = project.courses.find((crs)=>{if(crs.courseName===selectedCourse) return crs})
+                       dataToSend.courseid = course.courseid
+                       //   coursename: "כללי"
+                      }      
+        if(selectedSubject == "נושא פעילות")   // check if subject selected - insert as action to data base
             this.setState({errorSubject: true})
         else{
             let actionid = project.subjects.find((act)=>{if(act.subject===selectedSubject) return act})
             // console.log(actionid)
               dataToSend.actionid = actionid.reportsubjectid
+              dataToSend.isSetSubject = true
             // actionid: "52"
         }
  
     }
-    if(selectedCourse == "מס/שם קורס")
-        this.setState({errorCourse: true})
-    else {
-        dataToSend.coursename = selectedCourse 
-        //   coursename: "כללי"
-    }        
-            // ",
-            // selectedStartHour: "שעת התחלה",
-            // selectedEndHour: "שעת סיום",
-          
-   
-   
-   
+      
     // projectid: "7"
-   
     dataToSend.automatic = 0
    //     automatic: 0
-    
     let currentDate = date + "/" + month + "/" + year
     dataToSend.date = currentDate
      // date: "15/11/2019"
-    if(selectedStartHour == "שעת התחלה")
+    
+    if(selectedStartHour == "שעת התחלה")  // check if start hour selected 
         this.setState({errorStartHour: true})
     else{
         dataToSend.starthour = selectedStartHour
+        dataToSend.starthourvalid = true
         // starthour: "19:00"
-        if( selectedEndHour == "שעת סיום")
-            this.setState({errorStartHour: true})
-         
+        if( selectedEndHour == "שעת סיום")  // check if end  hour selected 
+            this.setState({errorEndHour: true})
+         else{ 
+            dataToSend.finishhour = selectedEndHour
+            // finishhour: "20:00"
+            dataToSend.finishhourvalid = true
+            dataToSend.hoursvalid = true
+            dataToSend.hours = totalHours
          }
-      dataToSend.starthourvalid = true
-    dataToSend.endhour = selectedEndHour
-        // finishhour: "20:00"
-        dataToSend.finishhourvalid = true
-    dataToSend.hours = totalHours 
-        // hours: "01:00"
-    dataToSend.hoursvalid = true
-    dataToSend.isSetProject = true
-    dataToSend.isSetSubject = true
-        // noInterstion: true -- check 
-       
+         }
+    
+  
+    if( insertedKm!== ' רכב פרטי (ק"מ) '){
+        if (isNaN(insertedKm))
+            this.setState({errorKm:true})
+        else
+            dataToSend.carkm = insertedKm}
+    if (insertedNis!=='  תחבורה ציבורית (ש"ח) '){
+         if (isNaN(insertedNis))
+             this.setState({errorNis:true})
+         else
+              dataToSend.cost = insertedNis }
+    if(insertedRemark!== ' הערות ')
+          dataToSend.comment=insertedRemark
+    
+    if(errorProject|| errorSubject ||errorCourse|| errorStartHour || errorEndHour || errorKm || errorNis)
+          return 
+   
+    // noInterstion: true -- check 
+  
     dataToSend.reportid= "-1"
-       
     dataToSend.status= ""
-
     dataToSend.copyreport = {   actionid: dataToSend.actionid,
                                 date: dataToSend.date,
                                 finishhour: dataToSend.finishhour,
@@ -386,14 +408,14 @@ class InsertHoursReport extends Component {
        else
            courses = proj.courses
       
-       this.setState({selectedProject:e.target.innerHTML,coursesOfProject:courses, subjectsOfProject:subjects})
+       this.setState({selectedProject:e.target.innerHTML,coursesOfProject:courses, subjectsOfProject:subjects, errorProject:false})
 
     }
     handleCourseClick =(e)=>{
-        this.setState({selectedCourse:e.target.innerHTML})
+        this.setState({selectedCourse:e.target.innerHTML,errorCourse:false})
     }
     handleSubjectClick =(e) =>{
-         this.setState({selectedSubject:e.target.innerHTML})
+         this.setState({selectedSubject:e.target.innerHTML, errorSubject:false})
     }
    
     handleStartHourClick =(e) =>{
@@ -403,25 +425,27 @@ class InsertHoursReport extends Component {
             for(let i=timesArray.indexOf(hour)+1;i<timesArray.length;i++){
                  endTimesArray.push(timesArray[i])   
                 }
-        this.setState({selectedStartHour:e.target.innerHTML, timesArray:endTimesArray})
+        this.setState({selectedStartHour:e.target.innerHTML, timesArray:endTimesArray, errorStartHour:false})
     }
     handleEndHourClick =(e) =>{
         const{selectedStartHour} = this.state
-      //  if (!isNaN(selectedStartHour)&&!isNaN(selectedEndHour)){
-            let diff = this.diff(selectedStartHour, e.target.innerHTML)
-            this.setState({totalHours:diff})
-     //   }
-        this.setState({selectedEndHour:e.target.innerHTML})
+        let diff = this.diff(selectedStartHour, e.target.innerHTML)
+        this.setState({totalHours:diff, selectedEndHour:e.target.innerHTML, errorEndHour:false})
     }
 
     render() {
 
-        const {projectsArrayData,coursesOfProject, subjectsOfProject, visibleStartHourList, visibleEndHourList, visibleKmInput,visibleNisInput,visibleRemarkInput, visibleProjectList, visibleCoursesList, visibleSubjectsList, timesArray, selectedStartHour, selectedEndHour, GetProjects, status , totalHours, selectedSubject, selectedProject, selectedCourse} = this.state;
-        console.log(this.props.activeUser)
+        const {projectsArrayData,coursesOfProject, subjectsOfProject, visibleStartHourList, visibleEndHourList, 
+            visibleKmInput,visibleNisInput,visibleRemarkInput, visibleProjectList, visibleCoursesList, 
+            visibleSubjectsList, timesArray, selectedStartHour, selectedEndHour, status , 
+            totalHours, selectedSubject, selectedProject, selectedCourse,
+            errorProject, errorSubject, errorCourse, errorStartHour, errorEndHour, errorKm , errorNis } = this.state;
+       
+            console.log(this.props.activeUser)
         if (!this.props.activeUser) {
             return <Redirect to='/' />
         }
-  
+        let styleMenuField = "report-menu-field "
         let style = "report-dropdown "
         let  projectsList = <div className={(visibleProjectList)? style + "d-inline": style + "d-none"} >
                        { projectsArrayData.map((proj)=>
@@ -494,8 +518,8 @@ class InsertHoursReport extends Component {
           
               <Row>
                   <Col>
-                  <div className="report-menu-field " id="projectsList"  onClick = {this.openProjectsList}>
-    
+                  <div className= {(errorProject)? styleMenuField + " bg-danger ": styleMenuField + " "} id="projectsList"  onClick = {this.openProjectsList}>
+                 
                   <div className="report-menu-text">  <span className="pr-3">{selectedProject}</span> <img src="images\ArrowDown\drawable-mdpi\arrow_down.png" alt=""></img></div>
                        {projectsList}
                       
@@ -505,13 +529,13 @@ class InsertHoursReport extends Component {
                   </div> */}
 
                                  
-                  <div className="report-menu-field " id="coursesList"  onClick={this.openCoursesList}>
+                  <div className={(errorCourse)? styleMenuField + " bg-danger ": styleMenuField + " "} id="coursesList"  onClick={this.openCoursesList}>
                         <div className="report-menu-text" >  <span className="pr-3">{selectedCourse} </span> <img src="images\ArrowDown\drawable-mdpi\arrow_down.png" alt=""></img></div>
                         {coursesList}
                   </div>
             
             
-                  <div className="report-menu-field " id="subjectsList"  onClick={this.openSubjectsList}>
+                  <div className={(errorSubject)? styleMenuField + " bg-danger ": styleMenuField + " "} id="subjectsList"  onClick={this.openSubjectsList}>
                         <div className="report-menu-text">  <span className="pr-3">  {selectedSubject}   </span> <img src="images\ArrowDown\drawable-mdpi\arrow_down.png" alt=""></img></div>
                         {subjectsList}
                   </div>
@@ -522,13 +546,13 @@ class InsertHoursReport extends Component {
              <Row>
                  <Col className="px-0">
                 
-                 <div className="report-menu-field ml-5 mr-3" id="startHour"  onClick={this.openStartHour}>
+                 <div className={(errorStartHour)? styleMenuField + "  ml-5 mr-3 bg-danger ": styleMenuField + "  ml-5 mr-3 "} id="startHour"  onClick={this.openStartHour}>
                         <div className="report-menu-text text-center ">   {selectedStartHour}  </div>
                         {startHoursList}
                 </div>
              </Col>
              <Col className="px-0">
-             <div className="report-menu-field ml-5 mr-3" id="endHour"  onClick={this.openEndHour}>
+             <div className={(errorEndHour)? styleMenuField + "  ml-5 mr-3 bg-danger ": styleMenuField + "  ml-5 mr-3 "} id="endHour"  onClick={this.openEndHour}>
                         <div className="report-menu-text text-center ">  {selectedEndHour}  </div>
                         {endHoursList}
                 </div>
@@ -540,7 +564,7 @@ class InsertHoursReport extends Component {
              <Row>
                  <Col className="px-0">
                 
-                 <div className="report-menu-field ml-5 mr-3" id="km"  onClick={this.viewInput} onBlur={()=>this.changeView()}>
+                 <div className={(errorKm)? styleMenuField + "  ml-5 mr-3 bg-danger ": styleMenuField + "  ml-5 mr-3 "} id="km"  onClick={this.viewInput} onBlur={()=>this.changeView()}>
                         <div className=" report-menu-text text-center "> 
                          <span className={(!visibleKmInput)?"d-block":"d-none"} >{this.state.insertedKm}</span>
                          <span className={(visibleKmInput)?"d-block":"d-none"} ><input id="kmInput" placeholder="0" onChange={this.insertDataToInput}></input></span>
@@ -549,7 +573,7 @@ class InsertHoursReport extends Component {
                 </div>
              </Col>
              <Col className="px-0">
-             <div className="report-menu-field ml-5 mr-3" id="nis" onClick={this.viewInput} onBlur={()=>this.changeView()}>
+             <div className={(errorNis)? styleMenuField + "  ml-5 mr-3 bg-danger ": styleMenuField + "  ml-5 mr-3 "} id="nis" onClick={this.viewInput} onBlur={()=>this.changeView()}>
                     <div className=" report-menu-text text-center ">
                           <span className={(!visibleNisInput)?"d-block":"d-none"}> {this.state.insertedNis} </span> 
                           <span className={(visibleNisInput)?"d-block":"d-none"} ><input id="nisInput" placeholder="0" onChange={this.insertDataToInput}></input></span>

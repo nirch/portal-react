@@ -58,8 +58,8 @@ class HoursReportPage extends Component {
         })
     }
     getMonthYear(month,year){
-        this.setState({month:month,year:year})
-        this.getDataFromServer(month,year);
+        this.setState({month:month,year:year}) // set state with data from component 
+        this.getDataFromServer(month,year); //call to server when change the month 
         console.log(month,year)
     }
     
@@ -117,15 +117,15 @@ class HoursReportPage extends Component {
                 let bgStyle; 
                 switch (item.approval) {
                      case "-1": 
-                        bgStyle =  " bg-danger "  
+                        bgStyle =  " bg-red "  
                         break;
                         case "1":    
-                        bgStyle = " bg-success " 
+                        bgStyle = " bg-green " 
                         break;
                      default:  
-                         bgStyle = " bg-warning "   
+                         bgStyle = " bg-yellow "   
                  }
-                 let style = " report-status mt-2 py-2 " + bgStyle
+                 let style = "report-container mt-2 py-2 " + bgStyle
                  let hoursDiff = this.diff(item.starthour,item.finishhour)
                  let project = GetProjects.find((proj) => {if(proj.projectid===item.projectid) return proj})
             //    console.log(project)
@@ -148,7 +148,7 @@ class HoursReportPage extends Component {
         )
      
         return (
-            <Container className=" report-container " >
+            <Container  >
            
            <Row className="sticky-top bg-white">
              <Col>
@@ -159,7 +159,7 @@ class HoursReportPage extends Component {
              </Col>
            </Row>
                   
-              <Row className=" justify-content-md-center report-font-bold  py-2">
+              <Row className=" report-container justify-content-md-center report-font-bold  py-2"> 
               <Col xs  className=" px-1 text-center " >
                     <span>תאריך</span>
                   </Col>
@@ -178,7 +178,7 @@ class HoursReportPage extends Component {
                   {rows}
                   </Col>
               </Row>
-              <Row className=" fixed-bottom bg-white align-items-center justify-content-md-center px-3" >
+              <Row className="  fixed-bottom bg-white align-items-center justify-content-md-center px-3" >
               <Col className=" px-1 text-center "> 
                   <img src="images\CourseControls\Save\drawable-mdpi\noun_save_2429243.png" alt="save"></img>
                   </Col>

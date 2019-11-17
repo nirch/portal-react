@@ -14,14 +14,14 @@ class InPageNavbar extends Component {
 
     handleClick = (tab) => {
         // console.log(tab.key)
-        this.setState({selectedKey: tab.key})
+        this.setState({ selectedKey: tab.key })
     }
 
-    render() { 
+    render() {
 
         const tabsDisplay = this.props.tabs.map(tab =>
             <a
-                className = {"nav-item nav-link" + (this.state.selectedKey == tab.key ? " active" : "")}    
+                className={"nav-item nav-link" + (this.state.selectedKey == tab.key ? " active" : "")}
                 id="nav-curses-tab"
                 data-toggle="tab"
                 // href="#" 
@@ -32,10 +32,31 @@ class InPageNavbar extends Component {
             </a>
         )
 
+        var curses
+
+        if (this.state.selectedKey == 1) {
+            curses = this.props.tabs[0].component
+
+        } else if (this.state.selectedKey == 2) {
+            curses = this.props.tabs[1].component
+
+        } else if (this.state.selectedKey == 3) {
+            curses = this.props.tabs[2].component
+
+        } else if (this.state.selectedKey == 4) {
+            curses = this.props.tabs[3].component
+
+        }
 
         return (
-            <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
-                {tabsDisplay}
+            <div>
+                <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
+                    {tabsDisplay}
+
+                </div>
+                <div>
+                    {curses}
+                </div>
             </div>
         );
     }

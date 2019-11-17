@@ -3,6 +3,34 @@ import './navbar.css'
 import { Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { logoutAction } from "../../store/reducers/ActiveUser/actions";
+import server from '../../shared/server'
+
+class Hamburger extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+    render() {
+        return <div>
+            <div className="hamburger-menu" onClick={this.props.openSidebar}>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+    }
+}
+
+class ArrowBack extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+    render() {
+        return <div>
+            <div className="arrow-back" onClick={this.props.returnToPreviousPage}>
+            </div>
+        </div>
+    }
+}
 
 class PortalNavbar extends Component {
     constructor(props) {
@@ -10,7 +38,10 @@ class PortalNavbar extends Component {
         this.state = {
             redirectTo: "",
             isMenuOpen: false,
-            isDropDown: false
+            isDropDown: false,
+            currentUser: {
+
+            }
         }
 
         this.logout = this.logout.bind(this);
@@ -20,9 +51,12 @@ class PortalNavbar extends Component {
         this.goToStaffPage = this.goToStaffPage.bind(this);
         this.goToStudentsPage = this.goToStudentsPage.bind(this);
         this.goToNewUsersPage = this.goToNewUsersPage.bind(this);
-        this.openDropDown=this.openDropDown.bind(this);
+        this.openDropDown = this.openDropDown.bind(this);
         this.goToHoursApprovePage = this.goToHoursApprovePage.bind(this);
         this.goToHoursReportPage = this.goToHoursReportPage.bind(this);
+
+
+
     }
     logout() {
         this.props.logoutAction();
@@ -49,29 +83,29 @@ class PortalNavbar extends Component {
     }
 
     openDropDown() {
-        let{isDropDown}=this.state;
+        let { isDropDown } = this.state;
         if (isDropDown)
-        isDropDown=false;
+            isDropDown = false;
         else
-        isDropDown=true;
-        this.setState({isDropDown})
+            isDropDown = true;
+        this.setState({ isDropDown })
     }
 
-    goToStaffPage(){
+    goToStaffPage() {
         let { redirectTo } = this.state;
         redirectTo = "/users?type=staff";
         this.setState({ redirectTo })
         this.closeSidebar();
     }
 
-    goToStudentsPage(){
+    goToStudentsPage() {
         let { redirectTo } = this.state;
         redirectTo = "/users?type=students";
         this.setState({ redirectTo })
         this.closeSidebar();
     }
 
-    goToNewUsersPage(){
+    goToNewUsersPage() {
         let { redirectTo } = this.state;
         redirectTo = "/users?type=new";
         this.setState({ redirectTo })
@@ -101,12 +135,30 @@ class PortalNavbar extends Component {
 
     }
 
+    componentDidMount() {
+        let { currentUser } = this.state;
+        server({}, "GetMyProfile").then(res => {
+            console.log(res);
+            if (res.data.error) {
+                console.error(res.data.error);
+            } else {
+                currentUser = res.data;
+                currentUser.image= "https://pil1.appleseeds.org.il/dcnir/"+currentUser.image;
+                this.setState({ currentUser });
+            }
+        }, err => {
+            console.error(err);
+        })
+    }
+
     render() {
         let { header } = this.props;
-        let { redirectTo, isMenuOpen, isDropDown } = this.state;
+        let { redirectTo, isMenuOpen, isDropDown, currentUser } = this.state;
         let sidebarOpen;
         let dropDown, arrow, height;
-
+        let hamburgerOrBack = this.props.enableBack ? <ArrowBack returnToPreviousPage={this.props.enableBack} /> : <Hamburger openSidebar={this.openSidebar} />;
+        if (!currentUser.image || currentUser.image == "")
+            currentUser.image = "images/profile-icon.png";
         if (isMenuOpen) {
             sidebarOpen = "sidebar-open";
         }
@@ -116,17 +168,17 @@ class PortalNavbar extends Component {
 
         if (isDropDown) {
             arrow = "sidebar-icons push-left revert";
-            dropDown="show-dropdown";
-            height={
+            dropDown = "show-dropdown";
+            height = {
                 height: 'initial'
-              };
+            };
         }
         else {
             arrow = "sidebar-icons push-left";
-            dropDown="hide-dropdown";
-            height={
+            dropDown = "hide-dropdown";
+            height = {
                 height: '6vh'
-              };
+            };
         }
 
         if (redirectTo) {
@@ -136,11 +188,7 @@ class PortalNavbar extends Component {
         return (
             <div>
                 <header>
-                    <div className="hamburger-menu" onClick={this.openSidebar}>
-                        <div></div>
-                        <div></div>
-                        <div></div>
-                    </div>
+                    {hamburgerOrBack}
                     <div className="header-title">
                         {header}
                     </div>
@@ -154,11 +202,10 @@ class PortalNavbar extends Component {
                                 <div className="x" onClick={this.closeSidebar}>&times;</div>
                             </div>
                             <div className="profile-preview">
-                                <img className="profile-image" onClick={this.profileClick} src="images/profile-icon.png"></img>
+                                <img className="profile-image" onClick={this.profileClick} src={currentUser.image}></img>
                                 <div className="name-wrap">
                                     <span className="user-name">
-                                        אלעד שפר
-                                        {/* {{ me.firstname + ' ' + me.lastname }} */}
+                                        {currentUser.firstname + ' ' + currentUser.lastname}
                                     </span>
                                 </div>
                             </div>
@@ -168,7 +215,7 @@ class PortalNavbar extends Component {
                                         <img src="images/users.png"></img>
                                     </span>
                                     משתמשים
-                                    <span className={arrow} style={{transition: "all 0.5s"}}>
+                                    <span className={arrow} style={{ transition: "all 0.5s" }}>
                                         <img src="images/arrow_down.png"></img>
                                     </span>
                                     <div className={dropDown}>
@@ -213,26 +260,6 @@ class PortalNavbar extends Component {
                 </div>
 
             </div>
-
-            // <div>
-            //     <Navbar bg="light" expand="lg" className="portalNavbar">
-            //         <Navbar.Brand className="portalNavbar" href="/">פורטל תפוח</Navbar.Brand>
-            //         <Navbar.Toggle aria-controls="basic-navbar-nav" />
-            //         <Navbar.Collapse id="basic-navbar-nav">
-            //             <Nav>
-            //                 <NavDropdown title="משתמשים" id="basic-nav-dropdown">
-            //                     <NavDropdown.Item href="#">עובדים</NavDropdown.Item>
-            //                     <NavDropdown.Item href="#">חניכים</NavDropdown.Item>
-            //                     <NavDropdown.Item href="#">משתמשים חדשים</NavDropdown.Item>
-            //                 </NavDropdown>
-            //                 <Nav.Link href="#/courses">קורסים</Nav.Link>
-            //                 <Nav.Link href="#/hours-report">דיווח שעות</Nav.Link>
-            //                 <Nav.Link href="#/hours-approve">אישור שעות</Nav.Link>
-            //                 <Nav.Link onClick={this.logout}>התנתקות</Nav.Link>
-            //             </Nav>
-            //         </Navbar.Collapse>
-            //     </Navbar>
-            // </div>
         );
     }
 }

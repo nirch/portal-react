@@ -14,7 +14,7 @@ class PortalInput extends Component {
     }
 
     onChangeValue(event) {
-        this.handleChange(event.target.value)
+        this.props.onChange(event.target.value)
     }
 
 
@@ -24,6 +24,7 @@ class PortalInput extends Component {
         const type = this.props.type
 
         return (
+            
             <div className="inputDetails" >
                 <h6 className="hederField" >{title}</h6>
                 <input className="inputField" type={type} placeholder={title} onChange={this.onChangeValue}></input>

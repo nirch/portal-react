@@ -35,16 +35,16 @@ class InPageNavbar extends Component {
         var curses
 
         if (this.state.selectedKey == 1) {
-            curses = this.props.tabs[0].Component
+            curses = this.props.tabs[0].component
 
         } else if (this.state.selectedKey == 2) {
-            curses = this.props.tabs[1].Component
+            curses = this.props.tabs[1].component
 
         } else if (this.state.selectedKey == 3) {
-            curses = this.props.tabs[2].Component
+            curses = this.props.tabs[2].component
 
         } else if (this.state.selectedKey == 4) {
-            curses = this.props.tabs[3].Component
+            curses = this.props.tabs[3].component
 
         }
 

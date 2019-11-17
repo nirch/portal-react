@@ -13,7 +13,7 @@ class UsersPage extends Component {
         super(props);
         this.state = {
             desc: false,
-            page: 0,
+            page: 1,
             search: "",
             sorting: "userid",
             userstatus: 1,
@@ -25,31 +25,45 @@ class UsersPage extends Component {
         }
 
         this.titles = ["שם", "שם משפחה", "אימייל"];
+        
     }
 
     componentDidMount() {
         const { desc, page, search, sorting, userstatus } = this.state;
-        const data = { desc, page, search, sorting, userstatus };
-        server(data, "SearchStaffUnderMe").then(res => {
-            if (res.data.error) {
-                console.error(res.data.error);
-            } else {
-                this.setState({
-                    users: res.data.users,
-                    numberOfPages: res.data.pages
-                });
-            }
-        }, err => {
-            console.error(err);
-        })
+        const data = { desc,  page : page - 1, search, sorting, userstatus };
+
+        // const pagePath = window.location.href.split("/");
+        // const userType = pagePath[pagePath.length - 1];
+        // const userRequest ;
+        // if (userType = "staff") {
+        //   const userRequest = "SearchStaffUnderMe";                         
+        // } else if(userType = "students") {
+        //    const userRequest = "SearchStudentsUnderMe";
+        // } else if (userType = "new"){
+        //     const userRequest = "SearchNewUsers";
+        // }
+
+
+            server(data, "SearchStaffUnderMe").then(res => {
+                if (res.data.error) {
+                    console.error(res.data.error);
+                } else {
+                    this.setState({
+                        users: res.data.users,
+                        numberOfPages: res.data.pages
+                    });
+                }
+            }, err => {
+                console.error(err);
+            })
     }
 
-    componentDidUpdate(prevState) {
+    componentDidUpdate(prevProps, prevState) {
         if (this.state.userstatus !== prevState.userstatus || this.state.page !== prevState.page ||
-            this.state.search !== prevState.search || this.state.userstatus !== prevState.userstatus) {
+            this.state.search !== prevState.search) {
             const { desc, page, search, sorting, userstatus } = this.state;
 
-            const data = { desc, page, search, sorting, userstatus };
+            const data = { desc,  page : page - 1, search, sorting, userstatus };
             server(data, "SearchStaffUnderMe").then(res => {
                 if (res.data.error) {
                     console.error(res.data.error);
@@ -66,7 +80,7 @@ class UsersPage extends Component {
     }
 
     userIsActive = (key) => {
-        this.setState({ userstatus: key, page: 0 });
+        this.setState({ userstatus: key, page: 1 });
     }
 
     userDetails = (id) => {
@@ -74,7 +88,7 @@ class UsersPage extends Component {
     }
 
     userSearch = (val) => {
-        this.setState({search: val});
+        this.setState({ search: val });
     }
 
     userCurrentPage = (page) => {
@@ -82,7 +96,7 @@ class UsersPage extends Component {
     }
 
     render() {
-        const { users, numberOfPages } = this.state;
+        const { users, numberOfPages, page } = this.state;
 
         if (!this.props.activeUser) {
             return <Redirect to='/' />
@@ -108,8 +122,8 @@ class UsersPage extends Component {
         return (
             <div>
                 <PortalNavbar className="users-Navbar" header="עובדים" />
-                <SearchBar searchLabel="חיפוש עובד" handleSearch={this.userSearch} updateSearch={this.userCurrentPage}
-                 pages={numberOfPages} />
+                <SearchBar searchLabel="חיפוש עובד" handleSearch={this.userSearch} updatePage={this.userCurrentPage}
+                    pages={numberOfPages} currentPage={page} />
                 <div className="users-table">
                     <ItemsTable items={userDisplay} titles={this.titles} handleClick={this.userDetails} />
                 </div>

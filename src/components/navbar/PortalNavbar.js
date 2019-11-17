@@ -4,6 +4,33 @@ import { Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { logoutAction } from "../../store/reducers/ActiveUser/actions";
 
+class Hamburger extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+    render() {
+        return <div>
+            <div className="hamburger-menu" onClick={this.props.openSidebar}>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+    }
+}
+
+class ArrowBack extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+    render() {
+        return <div>
+            <div className="arrow-back" onClick={this.props.returnToPreviousPage}>
+            </div>
+        </div>
+    }
+}
+
 class PortalNavbar extends Component {
     constructor(props) {
         super(props);
@@ -20,7 +47,7 @@ class PortalNavbar extends Component {
         this.goToStaffPage = this.goToStaffPage.bind(this);
         this.goToStudentsPage = this.goToStudentsPage.bind(this);
         this.goToNewUsersPage = this.goToNewUsersPage.bind(this);
-        this.openDropDown=this.openDropDown.bind(this);
+        this.openDropDown = this.openDropDown.bind(this);
         this.goToHoursApprovePage = this.goToHoursApprovePage.bind(this);
         this.goToHoursReportPage = this.goToHoursReportPage.bind(this);
     }
@@ -49,29 +76,29 @@ class PortalNavbar extends Component {
     }
 
     openDropDown() {
-        let{isDropDown}=this.state;
+        let { isDropDown } = this.state;
         if (isDropDown)
-        isDropDown=false;
+            isDropDown = false;
         else
-        isDropDown=true;
-        this.setState({isDropDown})
+            isDropDown = true;
+        this.setState({ isDropDown })
     }
 
-    goToStaffPage(){
+    goToStaffPage() {
         let { redirectTo } = this.state;
         redirectTo = "/users?type=staff";
         this.setState({ redirectTo })
         this.closeSidebar();
     }
 
-    goToStudentsPage(){
+    goToStudentsPage() {
         let { redirectTo } = this.state;
         redirectTo = "/users?type=students";
         this.setState({ redirectTo })
         this.closeSidebar();
     }
 
-    goToNewUsersPage(){
+    goToNewUsersPage() {
         let { redirectTo } = this.state;
         redirectTo = "/users?type=new";
         this.setState({ redirectTo })
@@ -106,6 +133,7 @@ class PortalNavbar extends Component {
         let { redirectTo, isMenuOpen, isDropDown } = this.state;
         let sidebarOpen;
         let dropDown, arrow, height;
+        let hamburgerOrBack = this.props.enableBack ? <ArrowBack returnToPreviousPage={this.props.enableBack} /> : <Hamburger openSidebar={this.openSidebar} />;
 
         if (isMenuOpen) {
             sidebarOpen = "sidebar-open";
@@ -116,17 +144,17 @@ class PortalNavbar extends Component {
 
         if (isDropDown) {
             arrow = "sidebar-icons push-left revert";
-            dropDown="show-dropdown";
-            height={
+            dropDown = "show-dropdown";
+            height = {
                 height: 'initial'
-              };
+            };
         }
         else {
             arrow = "sidebar-icons push-left";
-            dropDown="hide-dropdown";
-            height={
+            dropDown = "hide-dropdown";
+            height = {
                 height: '6vh'
-              };
+            };
         }
 
         if (redirectTo) {
@@ -136,11 +164,7 @@ class PortalNavbar extends Component {
         return (
             <div>
                 <header>
-                    <div className="hamburger-menu" onClick={this.openSidebar}>
-                        <div></div>
-                        <div></div>
-                        <div></div>
-                    </div>
+                    {hamburgerOrBack}
                     <div className="header-title">
                         {header}
                     </div>
@@ -168,7 +192,7 @@ class PortalNavbar extends Component {
                                         <img src="images/users.png"></img>
                                     </span>
                                     משתמשים
-                                    <span className={arrow} style={{transition: "all 0.5s"}}>
+                                    <span className={arrow} style={{ transition: "all 0.5s" }}>
                                         <img src="images/arrow_down.png"></img>
                                     </span>
                                     <div className={dropDown}>

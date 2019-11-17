@@ -30,12 +30,13 @@ class HoursReportPage extends Component {
             } else {
                 data = res.data;
                 this.setState({GetProjects:data})
+                this.getDataFromServer(this.state.month,this.state.year);
+                this.getCourses();
             }
         }, err => {
             console.error(err);
         }) 
-        this.getDataFromServer(this.state.month,this.state.year);
-        this.getCourses();
+      
         
         
     }

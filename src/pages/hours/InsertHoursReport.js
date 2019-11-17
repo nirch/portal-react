@@ -71,8 +71,7 @@ class InsertHoursReport extends Component {
         }) 
        
        // this.getDataFromServer(this.state.month,this.state.year);
-        
-        //this.getCourses();
+      
      }
     getDataFromServer(month,year){
         var data = {

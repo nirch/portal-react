@@ -8,6 +8,8 @@ import UsersPage from './pages/users/UsersPage'
 import UserDetailsPage from './pages/users/UserDetailsPage'
 import HoursReportPage from './pages/hours/HoursReportPage'
 import HoursApprovePage from './pages/hours/HoursApprovePage'
+import InsertHoursReport from './pages/hours/InsertHoursReport'
+
 import { loginAction } from "../src/store/reducers/ActiveUser/actions";
 import { connect } from "react-redux";
 
@@ -44,6 +46,9 @@ class App extends React.Component {
         </Route>
         <Route path="/hours-report">
           <HoursReportPage/>
+        </Route>
+        <Route path="/add-hours-report">
+          <InsertHoursReport/>
         </Route>
         <Route path="/hours-approve">
           <HoursApprovePage/>

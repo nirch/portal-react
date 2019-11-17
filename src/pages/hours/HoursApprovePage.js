@@ -6,6 +6,7 @@ import { Redirect } from 'react-router-dom'
 import SelectMonth from '../../components/hoursApprove/selectMonth'
 
 class HoursApprovePage extends Component {
+
     constructor(props){
         super(props);
         this.state={

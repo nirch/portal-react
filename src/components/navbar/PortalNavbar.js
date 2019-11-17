@@ -3,6 +3,7 @@ import './navbar.css'
 import { Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { logoutAction } from "../../store/reducers/ActiveUser/actions";
+import server from '../../shared/server'
 
 class Hamburger extends React.Component {
     constructor(props) {
@@ -37,7 +38,10 @@ class PortalNavbar extends Component {
         this.state = {
             redirectTo: "",
             isMenuOpen: false,
-            isDropDown: false
+            isDropDown: false,
+            currentUser: {
+
+            }
         }
 
         this.logout = this.logout.bind(this);
@@ -50,6 +54,9 @@ class PortalNavbar extends Component {
         this.openDropDown = this.openDropDown.bind(this);
         this.goToHoursApprovePage = this.goToHoursApprovePage.bind(this);
         this.goToHoursReportPage = this.goToHoursReportPage.bind(this);
+
+
+
     }
     logout() {
         this.props.logoutAction();
@@ -128,13 +135,30 @@ class PortalNavbar extends Component {
 
     }
 
+    componentDidMount() {
+        let { currentUser } = this.state;
+        server({}, "GetMyProfile").then(res => {
+            console.log(res);
+            if (res.data.error) {
+                console.error(res.data.error);
+            } else {
+                currentUser = res.data;
+                currentUser.image= "https://pil1.appleseeds.org.il/dcnir/"+currentUser.image;
+                this.setState({ currentUser });
+            }
+        }, err => {
+            console.error(err);
+        })
+    }
+
     render() {
         let { header } = this.props;
-        let { redirectTo, isMenuOpen, isDropDown } = this.state;
+        let { redirectTo, isMenuOpen, isDropDown, currentUser } = this.state;
         let sidebarOpen;
         let dropDown, arrow, height;
         let hamburgerOrBack = this.props.enableBack ? <ArrowBack returnToPreviousPage={this.props.enableBack} /> : <Hamburger openSidebar={this.openSidebar} />;
-
+        if (!currentUser.image || currentUser.image == "")
+            currentUser.image = "images/profile-icon.png";
         if (isMenuOpen) {
             sidebarOpen = "sidebar-open";
         }
@@ -178,11 +202,10 @@ class PortalNavbar extends Component {
                                 <div className="x" onClick={this.closeSidebar}>&times;</div>
                             </div>
                             <div className="profile-preview">
-                                <img className="profile-image" onClick={this.profileClick} src="images/profile-icon.png"></img>
+                                <img className="profile-image" onClick={this.profileClick} src={currentUser.image}></img>
                                 <div className="name-wrap">
                                     <span className="user-name">
-                                        אלעד שפר
-                                        {/* {{ me.firstname + ' ' + me.lastname }} */}
+                                        {currentUser.firstname + ' ' + currentUser.lastname}
                                     </span>
                                 </div>
                             </div>
@@ -237,26 +260,6 @@ class PortalNavbar extends Component {
                 </div>
 
             </div>
-
-            // <div>
-            //     <Navbar bg="light" expand="lg" className="portalNavbar">
-            //         <Navbar.Brand className="portalNavbar" href="/">פורטל תפוח</Navbar.Brand>
-            //         <Navbar.Toggle aria-controls="basic-navbar-nav" />
-            //         <Navbar.Collapse id="basic-navbar-nav">
-            //             <Nav>
-            //                 <NavDropdown title="משתמשים" id="basic-nav-dropdown">
-            //                     <NavDropdown.Item href="#">עובדים</NavDropdown.Item>
-            //                     <NavDropdown.Item href="#">חניכים</NavDropdown.Item>
-            //                     <NavDropdown.Item href="#">משתמשים חדשים</NavDropdown.Item>
-            //                 </NavDropdown>
-            //                 <Nav.Link href="#/courses">קורסים</Nav.Link>
-            //                 <Nav.Link href="#/hours-report">דיווח שעות</Nav.Link>
-            //                 <Nav.Link href="#/hours-approve">אישור שעות</Nav.Link>
-            //                 <Nav.Link onClick={this.logout}>התנתקות</Nav.Link>
-            //             </Nav>
-            //         </Navbar.Collapse>
-            //     </Navbar>
-            // </div>
         );
     }
 }

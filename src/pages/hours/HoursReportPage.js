@@ -108,9 +108,9 @@ class HoursReportPage extends Component {
         if (!this.props.activeUser) {
             return <Redirect to='/' />
         }
-        console.log(GetReports)
-        console.log(GetCourses)
-        console.log(GetProjects)
+        // console.log(GetReports)
+        // console.log(GetCourses)
+        // console.log(GetProjects)
         
         
         let rows =  GetReports.map((item) => {  // generate table with customers
@@ -128,7 +128,7 @@ class HoursReportPage extends Component {
                  let style = " report-status mt-2 py-2 " + bgStyle
                  let hoursDiff = this.diff(item.starthour,item.finishhour)
                  let project = GetProjects.find((proj) => {if(proj.projectid===item.projectid) return proj})
-                console.log(project)
+            //    console.log(project)
                 return  <Row className={style}>
                       <Col className="px-1 text-center">
                        {item.date}

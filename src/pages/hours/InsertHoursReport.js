@@ -5,7 +5,6 @@ import { connect } from "react-redux";
 import { Redirect } from 'react-router-dom'
 import { Container, Button , DropdownButton, Dropdown, Row, Col} from 'react-bootstrap';
 import server from '../../shared/server';
-import 'antd/dist/antd.css';
 import SelectDate from '../../components/hoursApprove/selectDate.js'
 
 class InsertHoursReport extends Component {
@@ -315,13 +314,19 @@ class InsertHoursReport extends Component {
    
     dataToSend.automatic = 0
    //     automatic: 0
-        
-   
+    
     let currentDate = date + "/" + month + "/" + year
     dataToSend.date = currentDate
      // date: "15/11/2019"
-    dataToSend.starthour = selectedStartHour
-      // starthour: "19:00"
+    if(selectedStartHour == "שעת התחלה")
+        this.setState({errorStartHour: true})
+    else{
+        dataToSend.starthour = selectedStartHour
+        // starthour: "19:00"
+        if( selectedEndHour == "שעת סיום")
+            this.setState({errorStartHour: true})
+         
+         }
       dataToSend.starthourvalid = true
     dataToSend.endhour = selectedEndHour
         // finishhour: "20:00"

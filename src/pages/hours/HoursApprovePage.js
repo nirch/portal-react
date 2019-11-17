@@ -337,6 +337,9 @@ class HoursApprovePage extends Component {
                     var isChecked = false;
                     if (this.state.checked.includes(reportid)) { isChecked = true } else { isChecked = false };
                     console.log(reportid);
+                    checkAproved = <input onChange={this.ChangeReport.bind(this, [reportid], 1)} className="Radio" type="radio" name={index + " " + secondIndex} value="aproved" checked={searchedReporters[index].reports[secondIndex].approval===1}/>;
+                    checkDecline = <input onChange={this.ChangeReport.bind(this, [reportid], -1)} className="Radio" type="radio" name={index + " " + secondIndex} value="decline" checked={searchedReporters[index].reports[secondIndex].approval===-1} />;
+                    checkWaiting = <input onChange={this.ChangeReport.bind(this, [reportid], 0)} className="Radio" type="radio" name={index + " " + secondIndex} value="wait" checked={searchedReporters[index].reports[secondIndex].approval===0} />;
                     switch (searchedReporters[index].reports[secondIndex].approval) {
 
                         case -1: blockColor = "#ffa1a1";
@@ -344,9 +347,7 @@ class HoursApprovePage extends Component {
                             declineTime = declineTime.hours + ":" + declineTime.minutes;
                             totalTime = this.addTime(totalTime, timeLeg.hours + ":" + timeLeg.minutes);
                             totalTime = totalTime.hours + ":" + totalTime.minutes;
-                            checkAproved = <input onChange={this.ChangeReport.bind(this, [reportid], 1)} className="Radio" type="radio" name={index + " " + secondIndex} value="aproved" />;
-                            checkDecline = <input onChange={this.ChangeReport.bind(this, [reportid], -1)} className="Radio" type="radio" name={index + " " + secondIndex} value="decline" checked />;
-                            checkWaiting = <input onChange={this.ChangeReport.bind(this, [reportid], 0)} className="Radio" type="radio" name={index + " " + secondIndex} value="wait" />;
+
                             // Decline
                             break;
                         case 1: blockColor = "#a1d47f";
@@ -354,20 +355,14 @@ class HoursApprovePage extends Component {
                             approvedTime = approvedTime.hours + ":" + approvedTime.minutes;
                             totalTime = this.addTime(totalTime, timeLeg.hours + ":" + timeLeg.minutes);
                             totalTime = totalTime.hours + ":" + totalTime.minutes;
-                            checkAproved = <input onChange={this.ChangeReport.bind(this, [reportid], 1)} className="Radio" type="radio" name={index + " " + secondIndex} value="aproved" checked />;
-                            checkDecline = <input onChange={this.ChangeReport.bind(this, [reportid], -1)} className="Radio" type="radio" name={index + " " + secondIndex} value="decline" />;
-                            checkWaiting = <input onChange={this.ChangeReport.bind(this, [reportid], 0)} className="Radio" type="radio" name={index + " " + secondIndex} value="wait" />;
-                            // aproved
+                              // aproved
                             break;
                         default: blockColor = "#ffd300";
                             waitingTime = this.addTime(waitingTime, timeLeg.hours + ":" + timeLeg.minutes);
                             waitingTime = waitingTime.hours + ":" + waitingTime.minutes;
                             totalTime = this.addTime(totalTime, timeLeg.hours + ":" + timeLeg.minutes);
                             totalTime = totalTime.hours + ":" + totalTime.minutes;
-                            checkAproved = <input onChange={this.ChangeReport.bind(this, [reportid], 1)} className="Radio" type="radio" name={index + " " + secondIndex} value="aproved" />;
-                            checkDecline = <input onChange={this.ChangeReport.bind(this, [reportid], -1)} className="Radio" type="radio" name={index + " " + secondIndex} value="decline" />;
-                            checkWaiting = <input onChange={this.ChangeReport.bind(this, [reportid], 0)} className="Radio" type="radio" name={index + " " + secondIndex} value="wait" checked />;
-                        // waiting
+                         // waiting
                     }
 
                     reporterReportsRows.push(

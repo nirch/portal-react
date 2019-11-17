@@ -95,8 +95,8 @@ class InsertHoursReport extends Component {
     }
     getDate(month,year,date){   // get values from selectDate component . month and year for server call, date for new report 
         this.setState({month:month,year:year,date:date})
-        this.getDataFromServer(month,year);
-        console.log(month,year, date)
+      //  this.getDataFromServer(month,year);
+        console.log(month,year,date)
     }
     
     diff(start, end) {
@@ -279,7 +279,67 @@ class InsertHoursReport extends Component {
         }
     }
 
-   saveDataToServer(){
+   saveDataToServer = (e) =>{
+    //************************************************ */
+    const{projectsArrayData, selectedProject, selectedSubject,selectedCourse, selectedStartHour, selectedEndHour,totalHours, date, month, year}  = this.state;
+    let dataToSend = {}
+    if(selectedProject=="פרויקט")
+        this.setState({errorProject: true})
+    else {
+        let project = projectsArrayData.find((proj)=>{if(proj.projectName===selectedProject) return proj} )   
+        dataToSend.projectid = project.projectid
+    }
+    if(selectedCourse == "מס/שם קורס")
+        this.setState({errorCourse: true})
+    else {
+        dataToSend.coursename = selectedCourse 
+        //   coursename: "כללי"
+    }        
+            // selectedSubject: "נושא פעילות",
+            // selectedStartHour: "שעת התחלה",
+            // selectedEndHour: "שעת סיום",
+          
+   
+   
+   
+    // projectid: "7"
+    
+   // // let actionid = project.subjects.find((act)=>{if(act.subject===selectedSubject) return act})
+   // console.log(actionid)
+   // // dataToSend.actionid = actionid.reportsubjectid
+   // actionid: "52"
+    dataToSend.automatic = 0
+   //     automatic: 0
+        
+   
+    let currentDate = date + "/" + month + "/" + year
+    dataToSend.date = currentDate
+     // date: "15/11/2019"
+    dataToSend.starthour = selectedStartHour
+      // starthour: "19:00"
+      dataToSend.starthourvalid = true
+    dataToSend.endhour = selectedEndHour
+        // finishhour: "20:00"
+        dataToSend.finishhourvalid = true
+    dataToSend.hours = totalHours 
+        // hours: "01:00"
+    dataToSend.hoursvalid = true
+    dataToSend.isSetProject = true
+    dataToSend.isSetSubject = true
+        // noInterstion: true -- check 
+       
+    dataToSend.reportid= "-1"
+       
+    dataToSend.status= ""
+
+    dataToSend.copyreport = {   actionid: dataToSend.actionid,
+                                date: dataToSend.date,
+                                finishhour: dataToSend.finishhour,
+                                hours: dataToSend.hours,
+                                projectid: dataToSend.projectid,
+                                starthour: dataToSend.starthour}
+   console.log(dataToSend)
+        //*********************************************** */
     var data = {};
     // data.reports=$scope.reports;
     // // console.log("hour reports:");
@@ -291,18 +351,18 @@ class InsertHoursReport extends Component {
     // });
    
    // data.reports
-    server(data, "SaveReports").then(res => {
-        console.log(res);
-        if (res.data.error) {
-            alert("error to add data to server");
-        } 
-        // else {
-        //     data = res.data;
-        //     this.setState({GetReports:data})
-        // }
-    }, err => {
-        console.error(err);
-    })
+    // server(data, "SaveReports").then(res => {
+    //     console.log(res);
+    //     if (res.data.error) {
+    //         alert("error to add data to server");
+    //     } 
+    //     // else {
+    //     //     data = res.data;
+    //     //     this.setState({GetReports:data})
+    //     // }
+    // }, err => {
+    //     console.error(err);
+    // })
 
    }
 
@@ -326,9 +386,7 @@ class InsertHoursReport extends Component {
     handleSubjectClick =(e) =>{
          this.setState({selectedSubject:e.target.innerHTML})
     }
-    handleSubjectClick =(e) =>{
-        this.setState({selectedSubject:e.target.innerHTML})
-    }
+   
     handleStartHourClick =(e) =>{
         const{timesArray} = this.state
         let hour = e.target.innerHTML
@@ -372,7 +430,8 @@ class InsertHoursReport extends Component {
             coursesList = <div className={(visibleCoursesList)? style + "d-inline": style + "d-none"} >
                              {coursesOfProject.map((crc)=>
                                <div className="dropdown-content" onClick={this.handleCourseClick}>
-                                  {crc.courseName} - {crc.courseid}
+                                  {crc.courseName}
+                                   {/* - {crc.courseid} */}
                                </div>
                                )}
                           </div>
@@ -426,7 +485,7 @@ class InsertHoursReport extends Component {
           
               <Row>
                   <Col>
-                  <div className="menu-field" id="projectsList"  onClick = {this.openProjectsList}>
+                  <div className="menu-field " id="projectsList"  onClick = {this.openProjectsList}>
     
                   <div className="menu-text">  <span className="pr-3">{selectedProject}</span> <img src="images\ArrowDown\drawable-mdpi\arrow_down.png" alt=""></img></div>
                        {projectsList}
@@ -453,7 +512,7 @@ class InsertHoursReport extends Component {
       
              <Row>
                  <Col className="px-0">
-                 <div className="menu-text text-center ">   {selectedStartHour}  </div>
+                
                  <div className="menu-field ml-5 mr-3" id="startHour"  onClick={this.openStartHour}>
                         <div className="menu-text text-center ">   {selectedStartHour}  </div>
                         {startHoursList}
@@ -471,6 +530,7 @@ class InsertHoursReport extends Component {
            
              <Row>
                  <Col className="px-0">
+                
                  <div className="menu-field ml-5 mr-3" id="km"  onClick={this.viewInput} onBlur={()=>this.changeView()}>
                         <div className=" menu-text text-center "> 
                          <span className={(!visibleKmInput)?"d-block":"d-none"} >{this.state.insertedKm}</span>
@@ -488,6 +548,7 @@ class InsertHoursReport extends Component {
                 </div>
              </Col>
              </Row>
+         
             <Row>
             <Col>
              <div className="menu-field" id="remark" onClick={this.viewInput} onBlur={()=>this.changeView()}>
@@ -510,7 +571,7 @@ class InsertHoursReport extends Component {
                   </Col>
                  
                   <Col className=" plus text-center mx-auto ">
-                  <img src="images\CourseControls\Plus\plus.png" alt="copy"></img>
+                  <img className="link" src="images\CourseControls\Plus\plus.png" alt="add" onClick={this.saveDataToServer}></img>
                   </Col>
                   
                   <Col className=" px-1 text-center ">

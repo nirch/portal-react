@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import { Redirect } from 'react-router-dom';
 import server from '../../shared/server';
 import DetailsHeader from '../../components/detailsHeader/detailsHeader';
+import InPageNavbar from '../../components/inPageNavbar/inPageNavbar';
 
 
 class UserDetailsPage extends Component {
@@ -27,34 +28,47 @@ class UserDetailsPage extends Component {
                 console.error(res.data.error);
             } else {
                 let user = res.data.profile;
-                this.setState({user: user});
+                this.setState({ user: user });
             }
         }, err => {
             console.error(err);
         })
     }
-    
-    
+
+
 
     render() {
 
-const {user} = this.state;
+        const { user } = this.state;
         if (!this.props.activeUser) {
             return <Redirect to='/' />
         }
+        const tabsData = [
+            { key: 1, title: "פרופיל", component: <div></div> },
+            { key: 2, title: "קורסים", component: <div></div> },
+            { key: 3, title: "עובדים", component: <div></div> },
+            { key: 4, title: "דיווח", component: <div></div> }
+        ]
+        const optionsData = [
+            { key: 1, value: "פרופיל" },
+            { key: 2, value: "קורסים" },
+            { key: 3, value: "עובדים" },
+            { key: 4, value: "דיווח" }
+        ]
 
         if (!this.state.user) {
             return false;
         } else {
             return (
                 <div>
-                    <PortalNavbar className="users-Navbar" header="עובדים"/>
+                    <PortalNavbar className="users-Navbar" header="עובדים" />
 
                     <div>
-                        <DetailsHeader  line1={user.firstname} line2={user.lastname}
-                        line3="שינוי סיסמה" line4 = { `נרשם ב: ${user.registerdate}`}  />
+                        <DetailsHeader line1={user.firstname} line2={user.lastname}
+                            line3="שינוי סיסמה" line4={`נרשם ב: ${user.registerdate}`} />
                     </div>
 
+                    <InPageNavbar tabs={tabsData} />
 
                 </div>
 

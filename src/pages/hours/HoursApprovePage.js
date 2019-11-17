@@ -41,7 +41,9 @@ function getDetails(field, reportersArray, index1, index2) {
 }
 
 class HoursApprovePage extends Component {
-    constructor(props) {
+
+    constructor(props){
+
         super(props);
         this.state = {
             year: new Date().getFullYear(),
@@ -470,9 +472,7 @@ class HoursApprovePage extends Component {
                 {/* enableBack */}
                 <PortalNavbar header="אישור שעות" />
                 <SelectMonth changeMonthYear={this.changeMonthYear} />
-                <SearchBar handleSearch={this.changeSearch} updateSearch={this.changePage} currentPage={this.state.page} pages={this.state.pages} searchLabel="חיפוש עובד" />
-                {/* <input type="text" placeholder="חיפוש עובד" onChange={this.changeSearch} />
-                <input type="number" placeholder="page" onChange={this.changePage} /> */}
+                <SearchBar handleSearch={this.changeSearch} updateSearch={this.changePage} currentPage={this.state.page+1} pages={this.state.pages} searchLabel="חיפוש עובד" />
                 <Accordion>
                     {accordionRows}
                 </Accordion>

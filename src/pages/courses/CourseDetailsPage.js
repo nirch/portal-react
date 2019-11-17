@@ -14,7 +14,7 @@ class CourseDetailsPage extends Component {
 
         return (
             <div>
-                <PortalNavbar/>
+                <PortalNavbar header="קורסים" />
                 <h1>פרטי קורס</h1>
             </div>
         );

@@ -17,7 +17,6 @@ class CoursesPage extends Component {
         this.state = {
             searchPages: 1,
             currentPage: 1,
-            isActive: 1,
             coursestatus: 1,
             desc: false,
             page: 0,
@@ -36,34 +35,58 @@ class CoursesPage extends Component {
                 console.error(res.data.error)
             } else {
                 console.log(res.data);
-                this.setState({ courses: res.data.courses })
+                this.setState({
+                    courses: res.data.courses,
+                    searchPages: res.data.pages
+                })
             }
         }, err => {
             console.error(err)
         }
         )
     }
+    componentDidUpdate(prevState) {
+        if (prevState.coursestatus != this.state.coursestatus) {
+            const { coursestatus, desc, page, search, sorting, searchPages } = this.state;
+            const data = { coursestatus, desc, page, search, sorting, searchPages };
+            server(data, "SearchCourses").then(res => {
+                if (res.data.error) {
+                    console.error(res.data.error)
+                } else {
+                    this.setState({
+                        courses: res.data.courses,
+                        searchPages: res.data.pages
+                    })
+                }
+            }, err => {
+                console.error(err)
+            }
+            )
+        }
+    }
     getFilteredData = (key) => {
-        if (key == 1) {
-            console.log("shalom" + key)
-        }
-        if (key == 2) {
-            console.log("by" + key)
-        }
+        this.setState({ coursestatus: key })
     }
     handleSearch = (val) => {
-        alert(val);
+        this.setState({ search: val })
     }
-    updateSearch = (page) => {
+    updatePage = (page) => {
         console.log(page);
     }
+    courseDetails = (id) => {
+        this.setState({ showCourseDetails: "id" })
+    }
     render() {
+        const { courses, showCourseDetails } = this.state;
         if (!this.props.activeUser) {
             return <Redirect to='/' />
         }
-        const {courses} = this.state;
+        if (this.state.showCourseDetails !== null) {
+            return <Redirect to={'/courses/' + showCourseDetails} />
+        }
+
         const courseDisplay = {};
-        for( let i = 0; i < courses.length; i++) {
+        for (let i = 0; i < courses.length; i++) {
             courseDisplay[courses[i].courseid] = [];
             courseDisplay[courses[i].courseid].push(courses[i].subname);
             courseDisplay[courses[i].courseid].push(courses[i].project);
@@ -72,15 +95,17 @@ class CoursesPage extends Component {
 
         const buttonsData = [
             { key: 1, title: "קורסים פעילים" },
-            { key: 2, title: "לא פעילים" }
+            { key: 0, title: "לא פעילים" }
         ]
 
         return (
             <div>
                 <PortalNavbar header="קורסים" />
-                <SearchBar searchLabel="חיפוש קורס" handleSearch={this.handleSearch} updateSearch={this.updateSearch} pages={this.state.searchPages} />
-                <ItemsTable titles={this.titles} items = {courseDisplay}/>
-                <ButtonSet makeChoice={this.getFilteredData} buttons={buttonsData} />
+                <SearchBar searchLabel="חיפוש קורס" handleSearch={this.handleSearch} updatePage={this.updatePage} pages={this.state.searchPages} currentPage={this.state.page + 1} />
+                <ItemsTable titles={this.titles} items={courseDisplay} handleClick={this.courseDetails} />
+                <div className="courses-activeFilter">
+                    <ButtonSet makeChoice={this.getFilteredData} buttons={buttonsData} />
+                </div>
             </div>
         );
     }

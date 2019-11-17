@@ -15,18 +15,17 @@ class SearchBar extends React.Component {
         this.setState({ inputvalue: e.target.value })
     }
     increment = () => {
-        if(this.state.page < this.props.pages) {
-        this.setState({ 
-            page: this.state.page + 1 }, () => {this.props.updateSearch(this.state.page)});
-        }
+        if (this.props.currentPage < this.props.pages) {
+           let newPage =  this.props.currentPage +=1;
+            this.props.updatePage(newPage);
     }
+}
     decrement = () => {
-        if(this.state.page > 1) {
-        this.setState({ 
-            page: this.state.page - 1 }, () => {this.props.updateSearch(this.state.page)});
-        }
+        if (this.props.currentPage > 1) {
+            let newPage =  this.props.currentPage -=1;
+           this.props.updatePage(newPage);
     }
-
+    }
     render() {
         const searchValue = this.state.inputvalue
         return (
@@ -35,15 +34,14 @@ class SearchBar extends React.Component {
                 <form onSubmit={() => { this.props.handleSearch(searchValue) }}>
                     <input type="text" placeholder={this.props.searchLabel} value={searchValue} onChange={this.handleChange} />
                 </form>
-                <div className={this.props.pages < 1 ? "invis": ""}>
-
-                    <span className={this.state.page == this.props.pages ? "disactive" : "active"} onClick={this.increment}> 
-                     <img src = "images/arrow_down.svg"  alt=""/>
-                      </span>
-                    <span className= "page-num">{this.state.page}</span>
-                    <span className={this.state.page == 1 ? "disactive" : "active"} onClick={this.decrement}> 
-                      <img src = "images/arrow_down_left.svg"  alt=""/>
-                        </span>
+                <div className={this.props.pages < 1 ? "invis" : ""}>
+                    <span className={this.props.currentPage == 1 ? "disactive" : "active"} onClick={this.decrement}>
+                        <img src="images/arrow_down.svg" alt="" />
+                    </span>
+                    <span className="page-num">{this.props.currentPage}</span>
+                    <span className={this.props.currentPage == this.props.pages ? "disactive" : "active"} onClick={this.increment}>
+                        <img src="images/arrow_down_left.svg" alt="" />
+                    </span>
                 </div>
 
             </div>

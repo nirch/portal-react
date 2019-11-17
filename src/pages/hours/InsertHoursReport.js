@@ -52,6 +52,7 @@ class InsertHoursReport extends Component {
             year:new Date().getFullYear(),
             month:new Date().getMonth()+1,
             date: new Date().getDate(),
+            day: new Date(),
             status: "0", // waiting by default 0 - new report (for change 1 - success, -1 - decline)
             totalHours: 0  // total hours for report - for new report defaut is 0
         }
@@ -71,14 +72,15 @@ class InsertHoursReport extends Component {
             } else {
                 data = res.data;
                 let projectsArrayData = Object.values(data)
+                console.log(projectsArrayData)
                 let timesArray = this.getTimes();
-                this.setState({GetReports:data,projectsArrayData:projectsArrayData, timesArray: timesArray})
+                this.setState({projectsArrayData:projectsArrayData, timesArray: timesArray})
             }
         }, err => {
             console.error(err);
         }) 
        
-       // this.getDataFromServer(this.state.month,this.state.year);
+       this.getDataFromServer(this.state.month,this.state.year);
       
      }
     getDataFromServer(month,year){
@@ -99,10 +101,11 @@ class InsertHoursReport extends Component {
         })
        
     }
-    getDate(month,year,date){   // get values from selectDate component . month and year for server call, date for new report 
-        this.setState({month:month,year:year,date:date})
-      //  this.getDataFromServer(month,year);
-        console.log(month,year,date)
+    getDate(month,year,day){   // get values from selectDate component . month and year for server call, date for new report 
+        this.setState({month:month,year:year,day:day})
+        this.getDataFromServer(day.getMonth()+1,day.getFullYear()); // if change month - get data from selected month 
+        //console.log(month,year,day)
+        //console.log(day.getMonth(),day.getFullYear())
     }
     
     diff(start, end) {
@@ -125,7 +128,7 @@ class InsertHoursReport extends Component {
     openProjectsList =  (e) => {
         const{visibleProjectList} = this.state;
         console.log("openProjectsList")
-        console.log(e.currentTarget)
+       // console.log(e.currentTarget)
       
         this.setState({
             selectedCourse: "מס/שם קורס",
@@ -253,7 +256,7 @@ class InsertHoursReport extends Component {
     }
 
    viewInput = (e) => {
-        console.log(e.currentTarget.id)
+    //    console.log(e.currentTarget.id)
         switch (e.currentTarget.id) {
             case "km": 
                  this.setState({visibleKmInput:true, visibleRemarkInput:false,visibleNisInput:false })
@@ -269,8 +272,8 @@ class InsertHoursReport extends Component {
      }
     
    insertDataToInput = (e) => {
-        console.log(e.target.id)
-        console.log(e.target.value)
+    //    console.log(e.target.id)
+    //    console.log(e.target.value)
         switch (e.target.id) {
             case "kmInput": 
                  this.setState({insertedKm:e.target.value, errorKm:false})
@@ -287,7 +290,7 @@ class InsertHoursReport extends Component {
 
    saveDataToServer = (e) =>{
     //************************************************ */
-    const{projectsArrayData, selectedProject, selectedSubject,selectedCourse, 
+    const{GetReports, projectsArrayData, selectedProject, selectedSubject,selectedCourse, 
           selectedStartHour, selectedEndHour,totalHours, insertedKm, insertedNis, insertedRemark,
           errorProject, errorSubject,errorCourse, errorStartHour, errorEndHour, errorKm , errorNis,
           date, month, year}  = this.state;
@@ -317,7 +320,7 @@ class InsertHoursReport extends Component {
         }
  
     }
-      
+    console.log(GetReports)  
     // projectid: "7"
     dataToSend.automatic = 0
    //     automatic: 0

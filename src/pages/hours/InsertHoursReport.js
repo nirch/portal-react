@@ -490,25 +490,25 @@ class InsertHoursReport extends Component {
           
               <Row>
                   <Col>
-                  <div className="menu-field " id="projectsList"  onClick = {this.openProjectsList}>
+                  <div className="report-menu-field " id="projectsList"  onClick = {this.openProjectsList}>
     
-                  <div className="menu-text">  <span className="pr-3">{selectedProject}</span> <img src="images\ArrowDown\drawable-mdpi\arrow_down.png" alt=""></img></div>
+                  <div className="report-menu-text">  <span className="pr-3">{selectedProject}</span> <img src="images\ArrowDown\drawable-mdpi\arrow_down.png" alt=""></img></div>
                        {projectsList}
                       
                   </div>
- {/* <div className="menu-text">  <span className="pr-3">{selectedProject}</span> <img src="images\ArrowDown\drawable-mdpi\arrow_down.png" alt=""></img></div>
+ {/* <div className="report-menu-text">  <span className="pr-3">{selectedProject}</span> <img src="images\ArrowDown\drawable-mdpi\arrow_down.png" alt=""></img></div>
                        {result}
                   </div> */}
 
                                  
-                  <div className="menu-field" id="coursesList"  onClick={this.openCoursesList}>
-                        <div className="menu-text" >  <span className="pr-3">{selectedCourse} </span> <img src="images\ArrowDown\drawable-mdpi\arrow_down.png" alt=""></img></div>
+                  <div className="report-menu-field " id="coursesList"  onClick={this.openCoursesList}>
+                        <div className="report-menu-text" >  <span className="pr-3">{selectedCourse} </span> <img src="images\ArrowDown\drawable-mdpi\arrow_down.png" alt=""></img></div>
                         {coursesList}
                   </div>
             
             
-                  <div className="menu-field" id="subjectsList"  onClick={this.openSubjectsList}>
-                        <div className="menu-text">  <span className="pr-3">  {selectedSubject}   </span> <img src="images\ArrowDown\drawable-mdpi\arrow_down.png" alt=""></img></div>
+                  <div className="report-menu-field " id="subjectsList"  onClick={this.openSubjectsList}>
+                        <div className="report-menu-text">  <span className="pr-3">  {selectedSubject}   </span> <img src="images\ArrowDown\drawable-mdpi\arrow_down.png" alt=""></img></div>
                         {subjectsList}
                   </div>
                   </Col>
@@ -518,14 +518,14 @@ class InsertHoursReport extends Component {
              <Row>
                  <Col className="px-0">
                 
-                 <div className="menu-field ml-5 mr-3" id="startHour"  onClick={this.openStartHour}>
-                        <div className="menu-text text-center ">   {selectedStartHour}  </div>
+                 <div className="report-menu-field ml-5 mr-3" id="startHour"  onClick={this.openStartHour}>
+                        <div className="report-menu-text text-center ">   {selectedStartHour}  </div>
                         {startHoursList}
                 </div>
              </Col>
              <Col className="px-0">
-             <div className="menu-field ml-5 mr-3" id="endHour"  onClick={this.openEndHour}>
-                        <div className="menu-text text-center ">  {selectedEndHour}  </div>
+             <div className="report-menu-field ml-5 mr-3" id="endHour"  onClick={this.openEndHour}>
+                        <div className="report-menu-text text-center ">  {selectedEndHour}  </div>
                         {endHoursList}
                 </div>
              </Col>
@@ -536,8 +536,8 @@ class InsertHoursReport extends Component {
              <Row>
                  <Col className="px-0">
                 
-                 <div className="menu-field ml-5 mr-3" id="km"  onClick={this.viewInput} onBlur={()=>this.changeView()}>
-                        <div className=" menu-text text-center "> 
+                 <div className="report-menu-field ml-5 mr-3" id="km"  onClick={this.viewInput} onBlur={()=>this.changeView()}>
+                        <div className=" report-menu-text text-center "> 
                          <span className={(!visibleKmInput)?"d-block":"d-none"} >{this.state.insertedKm}</span>
                          <span className={(visibleKmInput)?"d-block":"d-none"} ><input id="kmInput" placeholder="0" onChange={this.insertDataToInput}></input></span>
                          
@@ -545,8 +545,8 @@ class InsertHoursReport extends Component {
                 </div>
              </Col>
              <Col className="px-0">
-             <div className="menu-field ml-5 mr-3" id="nis" onClick={this.viewInput} onBlur={()=>this.changeView()}>
-                    <div className=" menu-text text-center ">
+             <div className="report-menu-field ml-5 mr-3" id="nis" onClick={this.viewInput} onBlur={()=>this.changeView()}>
+                    <div className=" report-menu-text text-center ">
                           <span className={(!visibleNisInput)?"d-block":"d-none"}> {this.state.insertedNis} </span> 
                           <span className={(visibleNisInput)?"d-block":"d-none"} ><input id="nisInput" placeholder="0" onChange={this.insertDataToInput}></input></span>
                         </div>
@@ -556,8 +556,8 @@ class InsertHoursReport extends Component {
          
             <Row>
             <Col>
-             <div className="menu-field" id="remark" onClick={this.viewInput} onBlur={()=>this.changeView()}>
-                        <div className="menu-text border-1"> 
+             <div className="report-menu-field " id="remark" onClick={this.viewInput} onBlur={()=>this.changeView()}>
+                        <div className="report-menu-text border-1"> 
                          <span className="pr-3"> </span>
                          <span className={(!visibleRemarkInput)?"d-inline":"d-none"}> {this.state.insertedRemark} </span>
                           <span className={(visibleRemarkInput)?"d-inline":"d-none"} ><input id="remarkInput" placeholder=" " onChange={this.insertDataToInput}></input></span>

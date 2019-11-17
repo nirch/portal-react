@@ -326,7 +326,7 @@ class HoursApprovePage extends Component {
                     </Row>;
                     myColapse1 = <img onClick={this.toggleImage.bind(this, index, searchedReporters[index].reports.length)} className="arrowleftright" src={srcLink} />
                 }
-                else { myColapse1 = "";myColapse2="" }
+                else { myColapse1 = <img style={{opacity:"0.2"}} onClick={this.toggleImage.bind(this, index, searchedReporters[index].reports.length)} className="arrowleftright" src={srcLink} />;myColapse2="" }
                 reporterReportsRows = [];
                 approvedTime = "00:00"; declineTime = "00:00"; waitingTime = "00:00"; totalTime = "00:00"
                 for (var secondIndex = 0; secondIndex < searchedReporters[index].reports.length; secondIndex++) {
@@ -436,7 +436,7 @@ class HoursApprovePage extends Component {
 
                 accordionRows.push(
                     <Card key={index}>
-                        <Card.Header>
+                        <Card.Header style={{border:"none"}}>
                             <Row>
                                 <Col xs="4">
                                     <h5>{searchedReporters[index].lastname} {searchedReporters[index].firstname}</h5>

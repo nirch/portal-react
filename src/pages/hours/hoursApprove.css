@@ -21,6 +21,7 @@ text-align:center ;
     height: 20px;
     border: 1px solid black;
     border-radius: 50%;
+    outline :none;
     
 }
 .whiteButton{
@@ -91,10 +92,12 @@ text-align:center ;
 .textInHours{
     font-size:11px;
     font-weight: bold;
+    margin-right: 10px;
 }
 .textInHoursHead{
     font-size:11px;
     margin-bottom: 5px;
+    margin-right: 10px;
 }
 .hoursNavBar{
     width:100px;

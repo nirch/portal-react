@@ -51,7 +51,10 @@ class HoursApprovePage extends Component {
             search: "",
             pages: 0,
             page: 0,
-            rowsPerPage: 5
+            rowsPerPage: 10,
+            checked: [],
+            mark: "סמן הכל",
+            open: null
         }
 
     }
@@ -77,16 +80,64 @@ class HoursApprovePage extends Component {
         page = value - 1;
         this.setState({ page });
     }
-    aproveReport = (value) => {
-        alert(value);
+    toggleCheck = (reportId) => {
+        let { checked } = this.state;
+        if (checked.includes(reportId)) {
+            for (var i = 0; i < checked.length; i++) {
+                if (checked[i] === reportId) {
+                    checked.splice(i, 1);
+                    break;
+                }
+            }
+        }
+        else {
+            checked.push(reportId);
+        }
+        console.log("checked");
+        console.log(checked);
+        this.setState({ checked });
+    }
+    toggleChecked = (reports) => {
+        let { mark, checked } = this.state;
+        if (mark === "סמן הכל") {
+            mark = "מחק הכל";
+            checked = [];
+            for (var i = 0; i < reports.length; i++) {
+                checked.push(reports[i].reportid)
+            }
+        }
+        else {
+            mark = "סמן הכל";
+            checked = [];
+        }
+        this.setState({ mark, checked });
+    }
+    ChangeReport = (reportids, status) => {
+        console.log(reportids);
+
+        let { allReporters } = this.state;
+        var data = { 'reportids': reportids, 'status': status, 'checkdate2': true };
+        console.log(data);
+        //var data = {'reportids' : reportids, 'status' : reportStatus};
+        server(data, 'SetReportApproval').then(() => {
+            //    this.getReporters();
+            for (var i = 0; i < allReporters.length; i++) {
+                for (var j = 0; j < allReporters[i].reports.length; j++) {
+                    if (reportids.includes(allReporters[i].reports[j].reportid)) {
+                        allReporters[i].reports[j].approval = status;
+                    }
+                }
+            }
+
+            this.setState({ allReporters });
+        })
     }
 
     getReporters = () => {
         let { isLoading, month, year, allReporters, search, pages, rowsPerPage } = this.state;
+        this.setState({ isLoading: true });
         let usefulReporters = [];
         var data = { month, year };
-        console.log('retriving month:');
-        console.log(month + " " + year);
         server(data, 'GetAllReporters').then((res) => {
             let reporters = res.data
             for (var i = 0; i < reporters.length; i++) {
@@ -195,9 +246,12 @@ class HoursApprovePage extends Component {
 
 
     }
-    toggleImage = (e) => {
-        if (e.target.src.includes("ArrowDown")) { e.target.src = "/images/ArrowUp/drawable-xxhdpi/arrow_down.png" }
-        else { e.target.src = "/images/ArrowDown/drawable-xxhdpi/arrow_down.png" }
+    toggleImage = (index, reportsLength) => {
+
+        if (reportsLength) {
+            if (this.state.open === index) { this.setState({ open: null }) }
+            else { this.setState({ open: index }) };
+        }
     }
 
     render() {
@@ -220,7 +274,7 @@ class HoursApprovePage extends Component {
         let checkAproved, checkDecline, checkWaiting;
         let timeLeg = 0;
         let approvedTime, declineTime, waitingTime, totalTime;
-
+        let myColapse1, myColapse2;
 
         console.log("searchedreporters");
         console.log(searchedReporters);
@@ -246,22 +300,51 @@ class HoursApprovePage extends Component {
         }
         else {
             for (var index = page * rowsPerPage; (index < searchedReporters.length && index < (parseInt(page) + 1) * rowsPerPage); index++) {
+                let srcLink;
+                var reports = searchedReporters[index].reports;
+                if (this.state.open === index) { srcLink = "/images/ArrowUp/drawable-xxhdpi/arrow_down.png" } else { srcLink = "/images/ArrowDown/drawable-xxhdpi/arrow_down.png" }
+                if (searchedReporters[index].reports.length) {
+                    myColapse2 =
+                    <Row>
+                        <Col xs="4">
+                            <button onClick={this.toggleChecked.bind(this, reports)} className="roundButton whiteButton" style={{ outline: "none" }}></button>
+
+                            <p className="buttonTag">{this.state.mark}</p>
+                        </Col>
+                        <Col xs="4">
+                            <button onClick={() => { this.ChangeReport(this.state.checked, 1) }} className="roundButton greenButton" style={{ outline: "none" }}></button>
+
+                            <p className="buttonTag">אישור מסומנים</p>
+                        </Col>
+                        <Col xs="4">
+                            <button onClick={() => { this.ChangeReport(this.state.checked, -1) }} className="roundButton redButton" style={{ outline: "none" }}></button>
+
+                            <p className="buttonTag">דחיית מסומנים</p>
+                        </Col>
+                    </Row>;
+                    myColapse1 = <img onClick={this.toggleImage.bind(this, index, searchedReporters[index].reports.length)} className="arrowleftright" src={srcLink} />
+                }
+                else { myColapse1 = "";myColapse2="" }
                 reporterReportsRows = [];
                 approvedTime = "00:00"; declineTime = "00:00"; waitingTime = "00:00"; totalTime = "00:00"
                 for (var secondIndex = 0; secondIndex < searchedReporters[index].reports.length; secondIndex++) {
                     timeLeg = this.calculatTime(searchedReporters[index].reports[secondIndex].finishhour, searchedReporters[index].reports[secondIndex].starthour)
-                    var reportid=searchedReporters[index].reports[secondIndex].reportid;
+                    var reportid = searchedReporters[index].reports[secondIndex].reportid;
+
+
+                    var isChecked = false;
+                    if (this.state.checked.includes(reportid)) { isChecked = true } else { isChecked = false };
                     console.log(reportid);
                     switch (searchedReporters[index].reports[secondIndex].approval) {
-                        
+
                         case -1: blockColor = "#ffa1a1";
                             declineTime = this.addTime(declineTime, timeLeg.hours + ":" + timeLeg.minutes);
                             declineTime = declineTime.hours + ":" + declineTime.minutes;
                             totalTime = this.addTime(totalTime, timeLeg.hours + ":" + timeLeg.minutes);
                             totalTime = totalTime.hours + ":" + totalTime.minutes;
-                            checkAproved = <input onClick={()=>{this.aproveReport(reportid)}} className="Radio" type="radio" name={index + " " + secondIndex} value="aproved" />;
-                            checkDecline = <input key={searchedReporters[index].reports[secondIndex].reportid} className="Radio" type="radio" name={index + " " + secondIndex} value="decline" defaultChecked />;
-                            checkWaiting = <input key={searchedReporters[index].reports[secondIndex].reportid} className="Radio" type="radio" name={index + " " + secondIndex} value="wait" />;
+                            checkAproved = <input onChange={this.ChangeReport.bind(this, [reportid], 1)} className="Radio" type="radio" name={index + " " + secondIndex} value="aproved" />;
+                            checkDecline = <input onChange={this.ChangeReport.bind(this, [reportid], -1)} className="Radio" type="radio" name={index + " " + secondIndex} value="decline" checked />;
+                            checkWaiting = <input onChange={this.ChangeReport.bind(this, [reportid], 0)} className="Radio" type="radio" name={index + " " + secondIndex} value="wait" />;
                             // Decline
                             break;
                         case 1: blockColor = "#a1d47f";
@@ -269,9 +352,9 @@ class HoursApprovePage extends Component {
                             approvedTime = approvedTime.hours + ":" + approvedTime.minutes;
                             totalTime = this.addTime(totalTime, timeLeg.hours + ":" + timeLeg.minutes);
                             totalTime = totalTime.hours + ":" + totalTime.minutes;
-                            checkAproved = <input onClick={()=>{this.aproveReport(reportid)}}  className="Radio" type="radio" name={index + " " + secondIndex} value="aproved" defaultChecked />;
-                            checkDecline = <input key={searchedReporters[index].reports[secondIndex].reportid} className="Radio" type="radio" name={index + " " + secondIndex} value="decline" />;
-                            checkWaiting = <input key={searchedReporters[index].reports[secondIndex].reportid} className="Radio" type="radio" name={index + " " + secondIndex} value="wait" />;
+                            checkAproved = <input onChange={this.ChangeReport.bind(this, [reportid], 1)} className="Radio" type="radio" name={index + " " + secondIndex} value="aproved" checked />;
+                            checkDecline = <input onChange={this.ChangeReport.bind(this, [reportid], -1)} className="Radio" type="radio" name={index + " " + secondIndex} value="decline" />;
+                            checkWaiting = <input onChange={this.ChangeReport.bind(this, [reportid], 0)} className="Radio" type="radio" name={index + " " + secondIndex} value="wait" />;
                             // aproved
                             break;
                         default: blockColor = "#ffd300";
@@ -279,17 +362,11 @@ class HoursApprovePage extends Component {
                             waitingTime = waitingTime.hours + ":" + waitingTime.minutes;
                             totalTime = this.addTime(totalTime, timeLeg.hours + ":" + timeLeg.minutes);
                             totalTime = totalTime.hours + ":" + totalTime.minutes;
-                            checkAproved = <input onClick={()=>{this.aproveReport(reportid)}}  className="Radio" type="radio" name={index + " " + secondIndex} value="aproved" />;
-                            checkDecline = <input key={searchedReporters[index].reports[secondIndex].reportid} className="Radio" type="radio" name={index + " " + secondIndex} value="decline" />;
-                            checkWaiting = <input key={searchedReporters[index].reports[secondIndex].reportid} className="Radio" type="radio" name={index + " " + secondIndex} value="wait" defaultChecked />;
+                            checkAproved = <input onChange={this.ChangeReport.bind(this, [reportid], 1)} className="Radio" type="radio" name={index + " " + secondIndex} value="aproved" />;
+                            checkDecline = <input onChange={this.ChangeReport.bind(this, [reportid], -1)} className="Radio" type="radio" name={index + " " + secondIndex} value="decline" />;
+                            checkWaiting = <input onChange={this.ChangeReport.bind(this, [reportid], 0)} className="Radio" type="radio" name={index + " " + secondIndex} value="wait" checked />;
                         // waiting
                     }
-
-
-
-
-
-
 
                     reporterReportsRows.push(
                         <div key={searchedReporters[index].reports[secondIndex].reportid} className="hoursLeg">
@@ -327,7 +404,7 @@ class HoursApprovePage extends Component {
                                 </div>
                                 <Row>
                                     <Col xs="2">
-                                        <input className="chekBoxHours" type="checkbox" name="hoursCheck" />
+                                        <input onChange={this.toggleCheck.bind(this, reportid)} className="chekBoxHours" type="checkbox" name="hoursCheck" checked={isChecked} />
                                     </Col>
                                     <Col xs="4">
                                         <p className="textInHoursLegBold"> תאריך: {searchedReporters[index].reports[secondIndex].date}</p>
@@ -372,7 +449,7 @@ class HoursApprovePage extends Component {
                                 </Col>
                                 <Col xs="2">
                                     <Accordion.Toggle as={Button} variant="link" eventKey={index}>
-                                        <img onClick={this.toggleImage} className="arrowleftright" src="/images/ArrowDown/drawable-xxhdpi/arrow_down.png" />
+                                    {myColapse1}
                                     </Accordion.Toggle>
                                 </Col>
                             </Row>
@@ -380,23 +457,7 @@ class HoursApprovePage extends Component {
                         </Card.Header>
                         <Accordion.Collapse eventKey={index}>
                             <Card.Body>
-                                <Row>
-                                    <Col xs="4">
-                                        <button className="roundButton whiteButton"></button>
-
-                                        <p className="buttonTag">סמן הכל</p>
-                                    </Col>
-                                    <Col xs="4">
-                                        <button className="roundButton greenButton"></button>
-
-                                        <p className="buttonTag">אישור מסומנים</p>
-                                    </Col>
-                                    <Col xs="4">
-                                        <button className="roundButton redButton"></button>
-
-                                        <p className="buttonTag">דחיית מסומנים</p>
-                                    </Col>
-                                </Row>
+                                {myColapse2}
                                 {reporterReportsRows}
                             </Card.Body>
                         </Accordion.Collapse>
@@ -406,9 +467,10 @@ class HoursApprovePage extends Component {
 
         return (
             <div>
+                {/* enableBack */}
                 <PortalNavbar header="אישור שעות" />
                 <SelectMonth changeMonthYear={this.changeMonthYear} />
-                <SearchBar handleSearch={this.changeSearch} updateSearch={this.changePage} pages={this.state.pages} searchLabel="חיפוש עובד" />
+                <SearchBar handleSearch={this.changeSearch} updateSearch={this.changePage} currentPage={this.state.page} pages={this.state.pages} searchLabel="חיפוש עובד" />
                 {/* <input type="text" placeholder="חיפוש עובד" onChange={this.changeSearch} />
                 <input type="number" placeholder="page" onChange={this.changePage} /> */}
                 <Accordion>

@@ -189,6 +189,8 @@ header{
 
 .hamburger-menu{
 	position: absolute;
+	top: 3px;
+	right: 6px;
 }
 
 .hamburger-menu > div{
@@ -200,6 +202,8 @@ header{
 
 .arrow-back{
 	position: absolute;
+	top: 8px;
+	right: 6px;
 }
 
 .arrow1, .arrow2, .arrow3{

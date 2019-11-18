@@ -36,6 +36,7 @@ class InsertHoursReport extends Component {
             visibleKmInput: false,
             visibleNisInput: false,
             visibleRemark: false,
+            isSavedReport:false,
 
             errorProject:false,
             errorSubject:false,
@@ -44,6 +45,7 @@ class InsertHoursReport extends Component {
             errorEndHour:false,
             errorKm:false ,
             errorNis:false,
+            visibleErrorHoursRemark: false,
 
             insertedKm: ' רכב פרטי (ק"מ) ',
             insertedNis:'  תחבורה ציבורית (ש"ח) ',
@@ -293,10 +295,12 @@ class InsertHoursReport extends Component {
     const{GetReports, projectsArrayData, selectedProject, selectedSubject,selectedCourse, 
           selectedStartHour, selectedEndHour,totalHours, insertedKm, insertedNis, insertedRemark,
           errorProject, errorSubject,errorCourse, errorStartHour, errorEndHour, errorKm , errorNis,
-          date, month, year}  = this.state;
+          day}  = this.state;
     let dataToSend = {}
-    if(selectedProject =="פרויקט")   //check if project selected
+    if(selectedProject == "פרויקט") {  //check if project selected
         this.setState({errorProject: true})
+        return
+        }
     else {
         let project = projectsArrayData.find((proj)=>{if(proj.projectName===selectedProject) return proj} )   
         dataToSend.projectid = project.projectid  // insert project id 
@@ -320,11 +324,11 @@ class InsertHoursReport extends Component {
         }
  
     }
-    console.log(GetReports)  
+  
     // projectid: "7"
     dataToSend.automatic = 0
    //     automatic: 0
-    let currentDate = date + "/" + month + "/" + year
+    let currentDate = day.getDate() + "/" + (day.getMonth()+1) + "/" + day.getFullYear()
     dataToSend.date = currentDate
      // date: "15/11/2019"
     
@@ -361,9 +365,22 @@ class InsertHoursReport extends Component {
     
     if(errorProject|| errorSubject ||errorCourse|| errorStartHour || errorEndHour || errorKm || errorNis)
           return 
-   
+    console.log(GetReports)  
     // noInterstion: true -- check 
-  
+    let project = GetReports.find((proj)=>{if(proj.date==dataToSend.date)return proj}) // search for exists report in previus reports
+    if(project !== undefined) {   // if we find the same project
+       var projstart = (+project.starthour.split(":")[0]) * 60 * 60 + (+project.starthour.split(":")[1]) * 60 ; //get tine in seconds 
+       var projend =  (+project.finishhour.split(":")[0]) * 60 * 60 + (+project.finishhour.split(":")[1]) * 60 ; 
+       var repstart = (+dataToSend.starthour.split(":")[0]) * 60 * 60 + (+dataToSend.starthour.split(":")[1]) * 60 ; 
+       var repend = (+dataToSend.finishhour.split(":")[0]) * 60 * 60 + (+dataToSend.finishhour.split(":")[1]) * 60 ;
+       if(! ((repstart<projstart&&repend<projstart)||(repstart>projend&&repend>projend)) ){
+         this.setState({visibleErrorHoursRemark:true})
+         return
+       }
+       else
+         this.setState({visibleErrorHoursRemark:false})
+    }
+   
     dataToSend.reportid= "-1"
     dataToSend.status= ""
     dataToSend.copyreport = {   actionid: dataToSend.actionid,
@@ -378,25 +395,25 @@ class InsertHoursReport extends Component {
     // data.reports=$scope.reports;
     // // console.log("hour reports:");
     // // console.log(data.reports);
-    // server.requestPhp(data, 'SaveReports').then(function (data) {
+    // server.requestPhp(dataToSend, 'SaveReports').then(function (data) {
     //     alert("saved");
-    //     $scope.GetReports();
-    //     disableSaveButton=false;
+    //     this.setState({isSavedReport:true})
     // });
    
    // data.reports
-    // server(data, "SaveReports").then(res => {
-    //     console.log(res);
-    //     if (res.data.error) {
-    //         alert("error to add data to server");
-    //     } 
-    //     // else {
-    //     //     data = res.data;
-    //     //     this.setState({GetReports:data})
-    //     // }
-    // }, err => {
-    //     console.error(err);
-    // })
+    server(dataToSend, "SaveReports").then(res => {
+        console.log(res);
+        if (res.data.error) {
+            alert("error to add data to server");
+        } 
+        else {
+            data = res.data;
+            this.setState({GetReports:data})
+            this.setState({isSavedReport:true})
+        }
+    }, err => {
+        console.error(err);
+    })
 
    }
 
@@ -406,11 +423,14 @@ class InsertHoursReport extends Component {
         let proj =  projectsArrayData.find((proj)=>{if(proj.projectName==project)return proj})
         let courses =[]
         let subjects = proj.subjects
-        if (proj.courses.length===0)
-           courses[0] = "כללי"
+        if (proj.courses.length===0){
+           courses[0]={}
+           courses[0].courseName = 'כללי'
+          
+        }
        else
            courses = proj.courses
-      
+       console.log(courses)
        this.setState({selectedProject:e.target.innerHTML,coursesOfProject:courses, subjectsOfProject:subjects, errorProject:false})
 
     }
@@ -440,13 +460,16 @@ class InsertHoursReport extends Component {
 
         const {projectsArrayData,coursesOfProject, subjectsOfProject, visibleStartHourList, visibleEndHourList, 
             visibleKmInput,visibleNisInput,visibleRemarkInput, visibleProjectList, visibleCoursesList, 
-            visibleSubjectsList, timesArray, selectedStartHour, selectedEndHour, status , 
-            totalHours, selectedSubject, selectedProject, selectedCourse,
+            visibleSubjectsList, timesArray, selectedStartHour, selectedEndHour, status , isSavedReport, 
+            totalHours, selectedSubject, selectedProject, selectedCourse, visibleErrorHoursRemark,
             errorProject, errorSubject, errorCourse, errorStartHour, errorEndHour, errorKm , errorNis } = this.state;
        
             console.log(this.props.activeUser)
         if (!this.props.activeUser) {
             return <Redirect to='/' />
+        }
+        if (isSavedReport) {
+            return <Redirect to='/hours-report' />
         }
         let styleMenuField = "report-menu-field "
         let style = "report-dropdown "
@@ -617,7 +640,10 @@ class InsertHoursReport extends Component {
                    <img src="images\CourseControls\Back\drawable-mdpi\noun_back_arrow_2690272.png" alt="back"></img>
                   </Col>
               </Row>
-
+             <Row>
+                 <Col><span className={(visibleErrorHoursRemark)?"d-inline report-hours-error":"d-none"}>לא ניתן לדווח על מספר פעילויות בשעות חופפות</span>
+                 </Col>
+             </Row>
           </Container></div>
         );
     }

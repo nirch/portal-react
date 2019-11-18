@@ -18,6 +18,14 @@
     height: 76px;
 }
 
+.report-hours-error {
+    color: red;
+    padding-top: 5px;
+    font-size: 12px;
+    border: none;
+    align-content: center;
+}
+
 .bottom-menu {
     padding: 0px 5px;
 }

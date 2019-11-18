@@ -31,10 +31,16 @@ class UsersPage extends Component {
         let userType = pagePath[pagePath.length - 1];
         if (userType == "staff") {
             this.userRequest = "SearchStaffUnderMe";
+            this.navbarTitle = "עובדים";
+            this.searchPlaceholder = "חיפוש עובד";
         } else if (userType == "students") {
             this.userRequest = "SearchStudentsUnderMe";
+            this.navbarTitle = "חניכים";
+            this.searchPlaceholder = "חיפוש חניך";
         } else if (userType == "new") {
             this.userRequest = "SearchNewUsers";
+            this.navbarTitle = "משתמשים חדשים";
+            this.searchPlaceholder = "חיפוש משתמש חדש";
         };
 
         this.isLoading = true;
@@ -49,11 +55,11 @@ class UsersPage extends Component {
             if (res.data.error) {
                 console.error(res.data.error);
             } else {
-                this.isLoading= false;
+                this.isLoading = false;
                 this.setState({
                     users: res.data.users,
-                    numberOfPages: res.data.pages                
-                });           
+                    numberOfPages: res.data.pages
+                });
             }
         }, err => {
             console.error(err);
@@ -70,11 +76,11 @@ class UsersPage extends Component {
                 if (res.data.error) {
                     console.error(res.data.error);
                 } else {
-                    this.isLoading= false;
+                    this.isLoading = false;
                     this.setState({
                         users: res.data.users,
                         numberOfPages: res.data.pages
-                    });               
+                    });
                 }
             }, err => {
                 console.error(err);
@@ -119,25 +125,27 @@ class UsersPage extends Component {
             userDisplay[users[i].userid].push(users[i].lastname);
             userDisplay[users[i].userid].push(users[i].email);
         }
-
+        
         const buttonsData = [
-            { key: 1, title: "עובדים פעילים" },
+            { key: 1, title: "פעילים" },
             { key: 0, title: "לא פעילים" }
         ]
+
         var displayItemsTable = this.isLoading ? <div className="user-spinner">טוען נתונים, אנא המתן  <Spinner animation="border" variant="primary" /></div> :
             <ItemsTable items={userDisplay} titles={this.titles} handleClick={this.userDetails} />
 
         return (
             <div>
-                <PortalNavbar className="users-Navbar" header="עובדים" />
-                <SearchBar searchLabel="חיפוש עובד" handleSearch={this.userSearch} updatePage={this.userCurrentPage}
+                <PortalNavbar className="users-Navbar" header={this.navbarTitle} />
+
+                <SearchBar searchLabel={this.searchPlaceholder} handleSearch={this.userSearch} updatePage={this.userCurrentPage}
                     pages={numberOfPages} currentPage={page} />
 
 
                 <div className="users-table">
-                {displayItemsTable}
+                    {displayItemsTable}
                 </div>
-               
+
                 <div className="users-activeFilter">
                     <ButtonSet makeChoice={this.userIsActive} buttons={buttonsData} />
                 </div>

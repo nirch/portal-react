@@ -1,0 +1,40 @@
+
+.header-Row {
+    display: flex;  
+    height:166;  
+}
+
+.header-Col {
+    display:inline-block;
+    width:50%;
+   
+    
+}
+
+.header-icons-Row {
+    display: flex;
+flex-direction: column;
+justify-content: space-around;
+}
+
+.header-icons-Col {
+    width:100%;
+}
+.header-iconGroup {
+    display:flex;
+    
+   
+}
+.header-icons-actions {
+    height: 16px;
+   
+}
+.header-iconGroup > img{
+    padding: 0 14px;
+}
+.header-icons-profile {
+    height: 78px;
+    margin-top: 28.7px;
+    margin-bottom: 22.6px;
+    
+}

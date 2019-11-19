@@ -14,9 +14,20 @@
     font-family: "Assistant-Regular", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
 }
 
+.report-middle {
+    height: 69vh;
+    overflow: auto;
+}
+
 .fixed-bottom {
     height: 76px;
     z-index: 10;
+}
+
+.threedots {
+    opacity: 0.5;
+    height: 15px;
+    float: left;
 }
 
 .report-opacity {

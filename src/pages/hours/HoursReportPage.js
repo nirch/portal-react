@@ -163,11 +163,12 @@ class HoursReportPage extends Component {
                       </Col>
                       <Col className="px-1 text-center">
                       {/* {course.name} */}
+                      {item.courseid}
                       </Col>
-                      <Col className="px-1 text-center">
-                      {hoursDiff}
+                      <Col className="px-1 text-center"> 
+                      {hoursDiff}  <img src="images\threedots.png" className=" threedots " alt="details"></img>
                       </Col>
-                     
+                                            
                    </Row>
          }
         )
@@ -203,7 +204,7 @@ class HoursReportPage extends Component {
                     <span>סהייכ שעות</span>
                   </Col>
                 </Row>
-              <Row >
+              <Row className=" report-middle " >
                   <Col>
                   {rows}
                   </Col>

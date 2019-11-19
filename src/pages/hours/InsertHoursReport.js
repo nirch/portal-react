@@ -550,7 +550,7 @@ class InsertHoursReport extends Component {
         <div className=" report-font-size " >
        <Container className="insert-container report-font-size " >     
            
-           <Row className="sticky-top bg-white">
+           <Row className="sticky-top bg-white px-0">
              <Col>
              
               <PortalNavbar header="דיווח שעות"/>

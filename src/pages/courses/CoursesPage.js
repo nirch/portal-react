@@ -15,66 +15,99 @@ class CoursesPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            searchPages: 15,
-            currentPage: 1,
-            isActive: 1,
+            
+            
             coursestatus: 1,
             desc: false,
-            page: 0,
+            page: 1,
             search: "",
             sorting: "courseid",
             courses: [],
             showCourseDetails: null
         }
-        this.titles = ["שם קורס מקוצר", "פרויקט", "מדריך"]
+        this.titles = ["שם קורס מקוצר", "פרויקט", "מדריך"];
+
     }
     componentDidMount() {
-        const { coursestatus, desc, page, search, sorting, } = this.state;
-        const data = { coursestatus, desc, page, search, sorting };
+        const { coursestatus, desc, page, search, sorting, searchPages } = this.state;
+        const data = { coursestatus, desc, page : page - 1, search, sorting, searchPages };
         server(data, "SearchCourses").then(res => {
             if (res.data.error) {
                 console.error(res.data.error)
             } else {
                 console.log(res.data);
-                this.setState({ courses: res.data.courses })
+                this.setState({
+                    courses: res.data.courses,
+                    searchPages: res.data.pages
+                })
             }
         }, err => {
             console.error(err)
         }
         )
     }
+    componentDidUpdate(prevProp, prevState) {
+        if (prevState.coursestatus !== this.state.coursestatus  || prevState.page !== this.state.page || prevState.search !== this.state.search) {
+            const { coursestatus, desc, page, search, sorting, searchPages } = this.state;
+            const data = { coursestatus, desc, page : page - 1, search, sorting, searchPages };
+            server(data, "SearchCourses").then(res => {
+                if (res.data.error) {
+                    console.error(res.data.error)
+                } else {
+                    this.setState({
+                        courses: res.data.courses,
+                        searchPages: res.data.pages
+                    })
+                }
+            }, err => {
+                console.error(err)
+            }
+            )
+        }
+    }
     getFilteredData = (key) => {
-        if (key == 1) {
-            console.log("shalom" + key)
-        }
-        if (key == 2) {
-            console.log("by" + key)
-        }
+        this.setState({ coursestatus: key })
     }
     handleSearch = (val) => {
-        alert(val);
+        this.setState({ search: val })
     }
-    updateSearch = (page) => {
-        console.log(page);
+    updatePage = (page) => {
+        this.setState({ page: page})
+    }
+    courseDetails = (id) => {
+        this.setState({ showCourseDetails: "id" })
     }
     render() {
-
+        const { courses, showCourseDetails } = this.state;
         if (!this.props.activeUser) {
             return <Redirect to='/' />
         }
+        if (this.state.showCourseDetails !== null) {
+            return <Redirect to={'/courses/' + showCourseDetails} />
+        }
 
+        const courseDisplay = {};
+        for (let i = 0; i < courses.length; i++) {
+            courseDisplay[courses[i].courseid] = [];
+            courseDisplay[courses[i].courseid].push(courses[i].subname);
+            courseDisplay[courses[i].courseid].push(courses[i].project);
+            courseDisplay[courses[i].courseid].push(courses[i].teachers);
+        }
 
         const buttonsData = [
             { key: 1, title: "קורסים פעילים" },
-            { key: 2, title: "לא פעילים" }
+            { key: 0, title: "לא פעילים" }
         ]
+        
 
         return (
             <div>
                 <PortalNavbar header="קורסים" />
-                <SearchBar searchLabel="חיפוש קורס" handleSearch={this.handleSearch} updateSearch={this.updateSearch} pages={this.state.searchPages} />
-                <ItemsTable titles={this.titles} />
-                <ButtonSet makeChoice={this.getFilteredData} buttons={buttonsData} />
+                <SearchBar searchLabel="חיפוש קורס" handleSearch={this.handleSearch} updatePage={this.updatePage} pages={this.state.searchPages} currentPage={this.state.page } />
+                <ItemsTable titles={this.titles} items={courseDisplay} handleClick={this.courseDetails} />
+                <div className="courses-activeFilter">
+                    <ButtonSet makeChoice={this.getFilteredData} buttons={buttonsData} />
+                </div>
             </div>
         );
     }

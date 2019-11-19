@@ -25,12 +25,12 @@
 .search-bar .disactive {
     opacity: 0.2;
     display: inline-block;
-    /* width: 20px; */
+    
    
 }
 .search-bar .active {
     display: inline-block;
-    /* width: 20px; */
+  
 }
 .search-bar .invis {
     display: none;

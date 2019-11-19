@@ -1,0 +1,37 @@
+/* .inputDetails{
+    display: inline-block;
+    width: 100%;
+    border-bottom: 1px solid lightgray;
+    padding-top: 10px;  
+}
+
+.inputField{
+    height: 15px;
+    padding-right: 31px;
+    padding-left: 31px;
+    width:100%;
+    font-family: Assistant-Light;  
+    border:none;
+    font-size: 12px;
+    color:#5d5d5d;
+    outline:none;
+
+}
+
+.hederField{
+    height: 15px;
+    padding-right: 31px;
+    font-family: Assistant-SemiBold;  
+    border:none;
+    font-size: 12px;
+    color:#5d5d5d;
+    padding-top:8px;  
+} */
+.visible{
+    display: block;
+    position: absolute;
+    
+}
+.unVisible{
+    display: none;
+}

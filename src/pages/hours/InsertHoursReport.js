@@ -308,9 +308,15 @@ class InsertHoursReport extends Component {
         if(selectedCourse == "מס/שם קורס")  // check if course selected 
               this.setState({errorCourse: true})
                 else {
-                       dataToSend.coursename = selectedCourse 
-                       let course = project.courses.find((crs)=>{if(crs.courseName===selectedCourse) return crs})
-                       dataToSend.courseid = course.courseid
+                       if (selectedCourse == "כללי"){
+                          dataToSend.coursename = null
+                          dataToSend.courseid = null
+                         } 
+                        else{
+                            dataToSend.coursename = selectedCourse 
+                            let course = project.courses.find((crs)=>{if(crs.courseName===selectedCourse) return crs})
+                            dataToSend.courseid = course.courseid
+                       }
                        //   coursename: "כללי"
                       }      
         if(selectedSubject == "נושא פעילות")   // check if subject selected - insert as action to data base
@@ -332,14 +338,18 @@ class InsertHoursReport extends Component {
     dataToSend.date = currentDate
      // date: "15/11/2019"
     
-    if(selectedStartHour == "שעת התחלה")  // check if start hour selected 
+    if(selectedStartHour == "שעת התחלה") { // check if start hour selected 
         this.setState({errorStartHour: true})
+            return
+        }
     else{
         dataToSend.starthour = selectedStartHour
         dataToSend.starthourvalid = true
         // starthour: "19:00"
-        if( selectedEndHour == "שעת סיום")  // check if end  hour selected 
+        if( selectedEndHour == "שעת סיום") { // check if end  hour selected 
             this.setState({errorEndHour: true})
+            return
+        }
          else{ 
             dataToSend.finishhour = selectedEndHour
             // finishhour: "20:00"
@@ -369,10 +379,10 @@ class InsertHoursReport extends Component {
     // noInterstion: true -- check 
     let project = GetReports.find((proj)=>{if(proj.date==dataToSend.date)return proj}) // search for exists report in previus reports
     if(project !== undefined) {   // if we find the same project
-       var projstart = (+project.starthour.split(":")[0]) * 60 * 60 + (+project.starthour.split(":")[1]) * 60 ; //get tine in seconds 
-       var projend =  (+project.finishhour.split(":")[0]) * 60 * 60 + (+project.finishhour.split(":")[1]) * 60 ; 
-       var repstart = (+dataToSend.starthour.split(":")[0]) * 60 * 60 + (+dataToSend.starthour.split(":")[1]) * 60 ; 
-       var repend = (+dataToSend.finishhour.split(":")[0]) * 60 * 60 + (+dataToSend.finishhour.split(":")[1]) * 60 ;
+       let projstart = (+project.starthour.split(":")[0]) * 60 * 60 + (+project.starthour.split(":")[1]) * 60 ; //get tine in seconds 
+       let projend =  (+project.finishhour.split(":")[0]) * 60 * 60 + (+project.finishhour.split(":")[1]) * 60 ; 
+       let repstart = (+dataToSend.starthour.split(":")[0]) * 60 * 60 + (+dataToSend.starthour.split(":")[1]) * 60 ; 
+       let repend = (+dataToSend.finishhour.split(":")[0]) * 60 * 60 + (+dataToSend.finishhour.split(":")[1]) * 60 ;
        if(! ((repstart<projstart&&repend<projstart)||(repstart>projend&&repend>projend)) ){
          this.setState({visibleErrorHoursRemark:true})
          return
@@ -392,23 +402,29 @@ class InsertHoursReport extends Component {
    console.log(dataToSend)
         //*********************************************** */
     var data = {};
+    var reports = GetReports
+    reports = reports.concat(dataToSend)
+    data.reports = reports
+   // data.token = this.props.activeUser.token
+   // data.v = 2.3
+    console.log(data)
     // data.reports=$scope.reports;
     // // console.log("hour reports:");
     // // console.log(data.reports);
-    // server.requestPhp(dataToSend, 'SaveReports').then(function (data) {
+    // server.requestPhp(data, 'SaveReports').then(function (data) {
     //     alert("saved");
     //     this.setState({isSavedReport:true})
     // });
    
    // data.reports
-    server(dataToSend, "SaveReports").then(res => {
+    server(data, "SaveReports").then(res => {
         console.log(res);
         if (res.data.error) {
             alert("error to add data to server");
         } 
         else {
             data = res.data;
-            this.setState({GetReports:data})
+            this.setState({GetReports:data.reports})
             this.setState({isSavedReport:true})
         }
     }, err => {

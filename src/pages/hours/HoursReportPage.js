@@ -15,6 +15,7 @@ class HoursReportPage extends Component {
             GetReports: [],
             GetCourses:[],
             GetProjects:[],
+            totalHours: "",
             year:new Date().getFullYear(),
             month:new Date().getMonth()+1
         }
@@ -52,6 +53,7 @@ class HoursReportPage extends Component {
             } else {
                 data = res.data;
                 this.setState({GetReports:data})
+                this.calculateTotalHours(data)
             }
         }, err => {
             console.error(err);
@@ -100,19 +102,34 @@ class HoursReportPage extends Component {
             console.error(err);
         }) 
     }
-   
+    calculateTotalHours = (data) => {
+        //const{GetReports} = this.state
+        let GetReports = data
+        var totalMin = 0
+        for(let i=0;i<GetReports.length;i++){
+            let repstart = (+GetReports[i].starthour.split(":")[0]) * 60  + (+GetReports[i].starthour.split(":")[1])  ; 
+            let repend = (+GetReports[i].finishhour.split(":")[0]) * 60  + (+GetReports[i].finishhour.split(":")[1])  ; 
+            totalMin+=repend-repstart
+        }
+      
+       let minutes = totalMin%60
+       let hours = (totalMin-minutes)/60
+       let total 
+       if (minutes == 0)
+           total = hours.toString() 
+           else 
+              total = hours.toString() + ":" + minutes.toString()
+       this.setState({totalHours:total})
+       //return result 
+    }
     render() {
 
-         const { GetReports, GetCourses, GetProjects } = this.state;
+         const { GetReports, totalHours, GetProjects } = this.state;
 
         if (!this.props.activeUser) {
             return <Redirect to='/' />
         }
-        // console.log(GetReports)
-        // console.log(GetCourses)
-        // console.log(GetProjects)
-        
-        
+             
         let rows =  GetReports.map((item) => {  // generate table with customers
                 let bgStyle; 
                 switch (item.approval) {
@@ -125,7 +142,7 @@ class HoursReportPage extends Component {
                      default:  
                          bgStyle = " bg-yellow "   
                  }
-                 let style = "report-container mt-2 py-2 " + bgStyle
+                 let style = "report-row py-2 " + bgStyle
                  let hoursDiff = this.diff(item.starthour,item.finishhour)
                  let project = GetProjects.find((proj) => {if(proj.projectid===item.projectid) return proj})
             //    console.log(project)
@@ -150,16 +167,21 @@ class HoursReportPage extends Component {
         return (
             <Container  >
            
-           <Row className="sticky-top bg-white">
+           <Row className="sticky-top bg-white shadow">
              <Col>
              
               <PortalNavbar header="דיווח שעות" />
                  <SelectMonth changeMonthYear={this.getMonthYear}/>
-             
+                 <Row>
+               <Col className=" text-center hours-header-text pb-2">
+                <span>סהייכ שעות:</span><span className="mr-3 ">{totalHours}</span>
+                </Col>
+              </Row>  
              </Col>
+             
            </Row>
-                  
-              <Row className=" report-container justify-content-md-center report-font-bold  py-2"> 
+          
+              <Row className="report-row justify-content-md-center report-font-bold pt-2 pb-1"> 
               <Col xs  className=" px-1 text-center " >
                     <span>תאריך</span>
                   </Col>
@@ -173,7 +195,7 @@ class HoursReportPage extends Component {
                     <span>סהייכ שעות</span>
                   </Col>
                 </Row>
-              <Row>
+              <Row >
                   <Col>
                   {rows}
                   </Col>

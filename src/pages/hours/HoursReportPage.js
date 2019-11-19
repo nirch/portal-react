@@ -212,19 +212,19 @@ class HoursReportPage extends Component {
               <Col className=" px-1 text-center "> 
                   <img src="images\CourseControls\Save\drawable-mdpi\noun_save_2429243.png" alt="save"></img>
                   </Col>
-                  <Col className=" px-1 text-center ">
+                  <Col className=" px-1 text-center report-opacity">
                   <img src="images\CourseControls\Copy\drawable-mdpi\noun_copy_573715.png" alt="copy"></img>
                   </Col>
                  
                   <Col className=" plus text-center mx-auto ">
-                   {/* <div className="plus-cyrcle"><span >+</span></div> */}
-                  <Link to="/add-hours-report"><img src="images\CourseControls\Plus\plus.png" alt="copy" ></img></Link>
+                 
+                  <Link to="/add-hours-report"><img src="images\CourseControls\Plus\plus.png" alt="add new report" ></img></Link>
                   </Col>
                   
-                  <Col className=" px-1 text-center ">
+                  <Col className=" px-1 text-center report-opacity">
                   <img src="images\CourseControls\Delete\drawable-mdpi\noun_delete_1610851.png" alt="delete"></img>
                   </Col>
-                  <Col className=" px-1 text-center ">
+                  <Col className=" px-1 text-center report-opacity">
                    <img src="images\CourseControls\Back\drawable-mdpi\noun_back_arrow_2690272.png" alt="back"></img>
                   </Col>
               </Row>

@@ -471,7 +471,9 @@ class InsertHoursReport extends Component {
         let diff = this.diff(selectedStartHour, e.target.innerHTML)
         this.setState({totalHours:diff, selectedEndHour:e.target.innerHTML, errorEndHour:false})
     }
-
+    goBack =()=>{
+        this.setState({isSavedReport:true})
+    }
     render() {
 
         const {projectsArrayData,coursesOfProject, subjectsOfProject, visibleStartHourList, visibleEndHourList, 
@@ -653,7 +655,7 @@ class InsertHoursReport extends Component {
                   <img src="images\CourseControls\Delete\drawable-mdpi\noun_delete_1610851.png" alt="delete"></img>
                   </Col>
                   <Col className=" px-1 text-center ">
-                   <img src="images\CourseControls\Back\drawable-mdpi\noun_back_arrow_2690272.png" alt="back"></img>
+                   <img src="images\CourseControls\Back\drawable-mdpi\noun_back_arrow_2690272.png" alt="back" onClick={this.goBack}></img>
                   </Col>
               </Row>
              <Row>

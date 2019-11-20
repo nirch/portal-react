@@ -38,9 +38,7 @@ class App extends React.Component {
         <Route path="/courses/:id">
           <CourseDetailsPage/>
         </Route>
-        <Route exact path="/users">
-          <UsersPage/>
-        </Route>
+        <Route exact path="/users" render={() => (<UsersPage key={window.location.href}/>)}/>
         <Route path="/users/:id">
           <UserDetailsPage/>
         </Route>

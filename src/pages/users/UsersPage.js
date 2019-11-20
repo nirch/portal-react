@@ -5,48 +5,70 @@ import { connect } from "react-redux";
 import { Redirect } from 'react-router-dom';
 import ItemsTable from '../../components/itemsTable/itemsTable';
 import ButtonSet from '../../components/ButtonSet';
-import server from '../../shared/server'
+import server from '../../shared/server';
+import SearchBar from '../../components/SearchBar';
 
 class UsersPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
             desc: false,
-            page: 0,
+            page: 1,
             search: "",
             sorting: "userid",
             userstatus: 1,
 
             users: [],
+            numberOfPages: 1,
+
             showUserDetails: null
         }
 
         this.titles = ["שם", "שם משפחה", "אימייל"];
+
+        let pagePath = window.location.href.split("type=");
+        let userType = pagePath[pagePath.length - 1];
+        if (userType == "staff") {
+           this.userRequest = "SearchStaffUnderMe";                         
+        } else if(userType == "students") {
+            this.userRequest = "SearchStudentsUnderMe";
+        } else if (userType == "new"){
+             this.userRequest = "SearchNewUsers";
+        };
+            
     }
+
+   
     componentDidMount() {
         const { desc, page, search, sorting, userstatus } = this.state;
-        const data = { desc, page, search, sorting, userstatus };
-        server(data, "SearchStaffUnderMe").then(res => {
-            if (res.data.error) {
-                console.error(res.data.error);
-            } else {
-                console.log(res.data);
-                this.setState({ users: res.data.users });
-            }
-        }, err => {
-            console.error(err);
-        })
-    }
-    componentDidUpdate(prevState) {
-        if (this.state.userstatus !== prevState.userstatus) {
-            const { desc, page, search, sorting, userstatus } = this.state;
-            const data = { desc, page, search, sorting, userstatus };
-            server(data, "SearchStaffUnderMe").then(res => {
+        const data = { desc,  page : page - 1, search, sorting, userstatus };    
+            server(data, this.userRequest).then(res => {
                 if (res.data.error) {
                     console.error(res.data.error);
                 } else {
-                    console.log(res.data);
-                    this.setState({ users: res.data.users });
+                    this.setState({
+                        users: res.data.users,
+                        numberOfPages: res.data.pages
+                    });
+                }
+            }, err => {
+                console.error(err);
+            })
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (this.state.userstatus !== prevState.userstatus || this.state.page !== prevState.page ||
+            this.state.search !== prevState.search || this.props.key !== prevProps.key) {
+            const { desc, page, search, sorting, userstatus } = this.state;
+            const data = { desc,  page : page - 1, search, sorting, userstatus };
+            server(data, this.userRequest).then(res => {
+                if (res.data.error) {
+                    console.error(res.data.error);
+                } else {
+                    this.setState({
+                        users: res.data.users,
+                        numberOfPages: res.data.pages
+                    });
                 }
             }, err => {
                 console.error(err);
@@ -54,27 +76,24 @@ class UsersPage extends Component {
         }
     }
 
-
-
-    getFilteredData = (key) => {
-        this.setState({ userstatus: key });
+    userIsActive = (key) => {
+        this.setState({ userstatus: key, page: 1 });
     }
 
     userDetails = (id) => {
         this.setState({ showUserDetails: id });
     }
-    // userSearch() {
-    //     const { users } = this.state;
-    //     const text = "search ref value";
-    //     // access all data in array???
-    //     const foundUser = users.filter(text);
-    //     this.setState({ users: foundUser })
-    // }
 
+    userSearch = (val) => {
+        this.setState({ search: val, page: 1 });
+    }
 
+    userCurrentPage = (page) => {
+        this.setState({ page });
+    }
 
     render() {
-        const { users } = this.state;
+        const { users, numberOfPages, page } = this.state;
 
         if (!this.props.activeUser) {
             return <Redirect to='/' />
@@ -100,12 +119,13 @@ class UsersPage extends Component {
         return (
             <div>
                 <PortalNavbar className="users-Navbar" header="עובדים" />
-                <h1 className="users-searchBox" onClick={this.userSearch}>Search component</h1>
+                <SearchBar searchLabel="חיפוש עובד" handleSearch={this.userSearch} updatePage={this.userCurrentPage}
+                    pages={numberOfPages} currentPage={page} />
                 <div className="users-table">
                     <ItemsTable items={userDisplay} titles={this.titles} handleClick={this.userDetails} />
                 </div>
                 <div className="users-activeFilter">
-                    <ButtonSet makeChoice={this.getFilteredData} buttons={buttonsData} />
+                    <ButtonSet makeChoice={this.userIsActive} buttons={buttonsData} />
                 </div>
             </div>
         );

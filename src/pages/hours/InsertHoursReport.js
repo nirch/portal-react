@@ -305,8 +305,10 @@ class InsertHoursReport extends Component {
         let project = projectsArrayData.find((proj)=>{if(proj.projectName===selectedProject) return proj} )   
         dataToSend.projectid = project.projectid  // insert project id 
         dataToSend.isSetProject = true
-        if(selectedCourse == "מס/שם קורס")  // check if course selected 
+        if(selectedCourse == "מס/שם קורס") { // check if course selected 
               this.setState({errorCourse: true})
+              return
+             }
                 else {
                        if (selectedCourse == "כללי"){
                           dataToSend.coursename = null
@@ -319,8 +321,10 @@ class InsertHoursReport extends Component {
                        }
                        //   coursename: "כללי"
                       }      
-        if(selectedSubject == "נושא פעילות")   // check if subject selected - insert as action to data base
+        if(selectedSubject == "נושא פעילות") {  // check if subject selected - insert as action to data base
             this.setState({errorSubject: true})
+            return
+        }
         else{
             let actionid = project.subjects.find((act)=>{if(act.subject===selectedSubject) return act})
             // console.log(actionid)
@@ -359,19 +363,8 @@ class InsertHoursReport extends Component {
          }
          }
     
-  
-    if( insertedKm!== ' רכב פרטי (ק"מ) '){
-        if (isNaN(insertedKm))
-            this.setState({errorKm:true})
-        else
-            dataToSend.carkm = insertedKm}
-    if (insertedNis!=='  תחבורה ציבורית (ש"ח) '){
-         if (isNaN(insertedNis))
-             this.setState({errorNis:true})
-         else
-              dataToSend.cost = insertedNis }
-    if(insertedRemark!== ' הערות ')
-          dataToSend.comment=insertedRemark
+    dataToSend.copyreport={}
+   
     
     if(errorProject|| errorSubject ||errorCourse|| errorStartHour || errorEndHour || errorKm || errorNis)
           return 
@@ -387,10 +380,12 @@ class InsertHoursReport extends Component {
          this.setState({visibleErrorHoursRemark:true})
          return
        }
-       else
+       else{
          this.setState({visibleErrorHoursRemark:false})
+        
+       }
     }
-   
+    dataToSend.noInterstion = true
     dataToSend.reportid= "-1"
     dataToSend.status= ""
     dataToSend.copyreport = {   actionid: dataToSend.actionid,
@@ -398,8 +393,34 @@ class InsertHoursReport extends Component {
                                 finishhour: dataToSend.finishhour,
                                 hours: dataToSend.hours,
                                 projectid: dataToSend.projectid,
+                                courseid: dataToSend.courseid,
                                 starthour: dataToSend.starthour}
-   console.log(dataToSend)
+   
+    if( insertedKm!== ' רכב פרטי (ק"מ) '){
+        if (isNaN(insertedKm)){
+            this.setState({errorKm:true})
+            return
+        }
+        else{
+            dataToSend.carkm = parseInt(insertedKm)
+            dataToSend.copyreport.carkm = parseInt(insertedKm)
+        }
+        }
+    if (insertedNis!=='  תחבורה ציבורית (ש"ח) '){
+         if (isNaN(insertedNis)){
+             this.setState({errorNis:true})
+             return
+         }
+         else {
+              dataToSend.cost = parseInt(insertedNis)
+              dataToSend.copyreport.cost = parseInt(insertedNis)
+         }
+             }
+    if(insertedRemark!== ' הערות '){
+          dataToSend.comment=insertedRemark
+          dataToSend.copyreport.comment=insertedRemark
+    }
+    console.log(dataToSend)
         //*********************************************** */
     var data = {};
     var reports = GetReports
@@ -419,14 +440,14 @@ class InsertHoursReport extends Component {
    // data.reports
     server(data, "SaveReports").then(res => {
         console.log(res);
-        if (res.data.error) {
-            alert("error to add data to server");
-        } 
-        else {
+        // if (res.data.error) {
+        //     alert("error to add data to server");
+        // } 
+        // else {
             data = res.data;
             this.setState({GetReports:data.reports})
             this.setState({isSavedReport:true})
-        }
+       // }
     }, err => {
         console.error(err);
     })
@@ -554,12 +575,14 @@ class InsertHoursReport extends Component {
              <Col>
              
               <PortalNavbar header="דיווח שעות"/>
-{/* getDate(month,year,date) date - full date , status -1 - denied, 0 - await, 1 - success, totalHours - total hours of current report  */}
+               {/* getDate(month,year,date) date - full date , status -1 - denied, 0 - await, 1 - success, totalHours - total hours of current report  */}
               <SelectDate changeDate={this.getDate} status={status} totalHours={totalHours}/> 
              
              </Col>
            </Row>
           
+           <Row >
+                  <Col>
               <Row>
                   <Col>
                   <div className= {(errorProject)? styleMenuField + " bg-danger ": styleMenuField + " "} id="projectsList"  onClick = {this.openProjectsList}>
@@ -568,11 +591,7 @@ class InsertHoursReport extends Component {
                        {projectsList}
                       
                   </div>
- {/* <div className="report-menu-text">  <span className="pr-3">{selectedProject}</span> <img src="images\ArrowDown\drawable-mdpi\arrow_down.png" alt=""></img></div>
-                       {result}
-                  </div> */}
-
-                                 
+                                  
                   <div className={(errorCourse)? styleMenuField + " bg-danger ": styleMenuField + " "} id="coursesList"  onClick={this.openCoursesList}>
                         <div className="report-menu-text" >  <span className="pr-3">{selectedCourse} </span> <img src="images\ArrowDown\drawable-mdpi\arrow_down.png" alt=""></img></div>
                         {coursesList}
@@ -610,6 +629,7 @@ class InsertHoursReport extends Component {
                 
                  <div className={(errorKm)? styleMenuField + "  ml-5 mr-3 bg-danger ": styleMenuField + "  ml-5 mr-3 "} id="km"  onClick={this.viewInput} onBlur={()=>this.changeView()}>
                         <div className=" report-menu-text text-center "> 
+                         {/* <div>test</div> */}
                          <span className={(!visibleKmInput)?"d-block":"d-none"} >{this.state.insertedKm}</span>
                          <span className={(visibleKmInput)?"d-block":"d-none"} ><input id="kmInput" placeholder="0" onChange={this.insertDataToInput}></input></span>
                          
@@ -637,7 +657,8 @@ class InsertHoursReport extends Component {
                  </div>
                  </Col>
                  </Row>
-                 
+                 </Col>
+           </Row>        
          
                  <Row  className=" fixed-bottom bg-white align-items-center justify-content-md-center px-3 " >
               <Col className=" px-1 text-center "> 

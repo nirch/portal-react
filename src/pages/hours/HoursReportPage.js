@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './hours.css'
 import PortalNavbar from '../../components/navbar/PortalNavbar';
+import Loading from '../../components/loadingData/Loading';
 import { connect } from "react-redux";
 import { Redirect,Link } from 'react-router-dom'
 import { Container, Button , Table, Row, Col} from 'react-bootstrap';
@@ -16,6 +17,7 @@ class HoursReportPage extends Component {
             GetCourses:[],
             GetProjects:[],
             totalHours: "",
+            isLoading: "",
             year:new Date().getFullYear(),
             month:new Date().getMonth()+1
         }
@@ -30,7 +32,7 @@ class HoursReportPage extends Component {
                 alert("error in login");
             } else {
                 data = res.data;
-                this.setState({GetProjects:data})
+                this.setState({GetProjects:data,isLoading:"d-none"})
                 this.getDataFromServer(this.state.month,this.state.year);
                 this.getCourses();
             }
@@ -124,16 +126,19 @@ class HoursReportPage extends Component {
     }
     render() {
 
-         const { GetReports, totalHours, GetProjects, GetCourses } = this.state;
+         const { GetReports, totalHours, GetProjects, GetCourses , isLoading} = this.state;
 
         if (!this.props.activeUser) {
             return <Redirect to='/' />
         }
-       
+        
         console.log(GetCourses)  
         console.log(GetReports)  
-
-        let rows =  GetReports.map((item) => {  // generate table with customers
+        if(isLoading == ""){
+            var rows = <Loading isLoading={isLoading} />
+         }
+         else{
+            rows =  GetReports.map((item) => {  // generate table with customers
                 let bgStyle; 
                 switch (item.approval) {
                      case "-1": 
@@ -172,9 +177,11 @@ class HoursReportPage extends Component {
                    </Row>
          }
         )
-     
+        }
         return (
-            <Container  >
+           <div>
+        
+           <Container  >
            
            <Row className="sticky-top bg-white shadow">
              <Col>
@@ -204,32 +211,39 @@ class HoursReportPage extends Component {
                     <span>סהייכ שעות</span>
                   </Col>
                 </Row>
-              <Row className=" report-middle " >
-                  <Col>
+              <Row  >
+                  <Col >
                   {rows}
                   </Col>
               </Row>
+          <Row>
+              <Col className="space-bottom d-block">
+              </Col>
+          </Row>
               <Row className="  fixed-bottom bg-white align-items-center justify-content-md-center px-3" >
-              <Col className=" px-1 text-center "> 
-                  <img src="images\CourseControls\Save\drawable-mdpi\noun_save_2429243.png" alt="save"></img>
-                  </Col>
-                  <Col className=" px-1 text-center report-opacity">
-                  <img src="images\CourseControls\Copy\drawable-mdpi\noun_copy_573715.png" alt="copy"></img>
-                  </Col>
-                 
-                  <Col className=" plus text-center mx-auto ">
-                 
-                  <Link to="/add-hours-report"><img src="images\CourseControls\Plus\plus.png" alt="add new report" ></img></Link>
-                  </Col>
-                  
-                  <Col className=" px-1 text-center report-opacity">
-                  <img src="images\CourseControls\Delete\drawable-mdpi\noun_delete_1610851.png" alt="delete"></img>
-                  </Col>
-                  <Col className=" px-1 text-center report-opacity">
-                   <img src="images\CourseControls\Back\drawable-mdpi\noun_back_arrow_2690272.png" alt="back"></img>
-                  </Col>
-              </Row>
+          <Col className=" px-1 text-center "> 
+              <img src="images\CourseControls\Save\drawable-mdpi\noun_save_2429243.png" alt="save"></img>
+              </Col>
+              <Col className=" px-1 text-center report-opacity">
+              <img src="images\CourseControls\Copy\drawable-mdpi\noun_copy_573715.png" alt="copy"></img>
+              </Col>
+             
+              <Col className=" plus text-center mx-auto ">
+             
+              <Link to="/add-hours-report"><img src="images\CourseControls\Plus\plus.png" alt="add new report" ></img></Link>
+              </Col>
+              
+              <Col className=" px-1 text-center report-opacity">
+              <img src="images\CourseControls\Delete\drawable-mdpi\noun_delete_1610851.png" alt="delete"></img>
+              </Col>
+              <Col className=" px-1 text-center report-opacity">
+               <img src="images\CourseControls\Back\drawable-mdpi\noun_back_arrow_2690272.png" alt="back"></img>
+              </Col>
+          </Row>
           </Container>
+         
+         
+          </div>
         );
     }
 }

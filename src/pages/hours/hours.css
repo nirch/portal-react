@@ -15,13 +15,17 @@
 }
 
 .report-middle {
-    height: 69vh;
+    height: 90vh;
     overflow: auto;
 }
 
 .fixed-bottom {
     height: 76px;
     z-index: 10;
+}
+
+.space-bottom {
+    height: 76px;
 }
 
 .threedots {

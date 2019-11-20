@@ -75,16 +75,23 @@ class InsertHoursReport extends Component {
                 data = res.data;
                 let projectsArrayData = Object.values(data)
                 console.log(projectsArrayData)
+                console.log(this.props.match.params.id)
+                console.log(this.state.selectedProject)
                 let timesArray = this.getTimes();
                 this.setState({projectsArrayData:projectsArrayData, timesArray: timesArray})
+                const{selectedReport} = this.props.location
+                if (this.props.match.params.id!==null&&selectedReport!==undefined){
+                   this.insertReportDetails(projectsArrayData)
+                }   
             }
         }, err => {
             console.error(err);
         }) 
        
-       this.getDataFromServer(this.state.month,this.state.year);
-      
+      this.getDataFromServer(this.state.month,this.state.year);
+        
      }
+
     getDataFromServer(month,year){
         var data = {
             month : month,
@@ -97,11 +104,32 @@ class InsertHoursReport extends Component {
             } else {
                 data = res.data;
                 this.setState({GetReports:data})
+                
             }
         }, err => {
             console.error(err);
         })
        
+    }
+    insertReportDetails(reports){
+       const{selectedReport} = this.props.location
+       let project = reports.find((item)=>{if(item.projectid==selectedReport.projectid) return item})
+       let coursename
+       if(selectedReport.courseid==null)
+          coursename  = 'כללי'
+       else
+          coursename = project.courses.find((item)=>{if(item.courseid==selectedReport.courseid) return item}).courseName
+       let subject = project.subjects.find((item)=>{if(item.reportsubjectid == selectedReport.actionid) return item})
+       this.setState({
+            selectedProject:  project.projectName,
+            selectedCourse: coursename,
+            selectedSubject: subject.subject,
+            selectedStartHour: selectedReport.starthour,
+            selectedEndHour: selectedReport.finishhour,
+            insertedKm: selectedReport.carkm,
+            insertedNis:selectedReport.cost,
+            insertedRemark: selectedReport.comment,
+        })
     }
     getDate(month,year,day){   // get values from selectDate component . month and year for server call, date for new report 
         this.setState({month:month,year:year,day:day})
@@ -507,6 +535,11 @@ class InsertHoursReport extends Component {
         if (!this.props.activeUser) {
             return <Redirect to='/' />
         }
+      // console.log(this.props.match.params.reportId)
+       console.log(this.props)
+      // console.log(this.props.location.param1)
+        // this is 595212758daa6810cbba4104 
+ // this is Par1
         if (isSavedReport) {
             return <Redirect to='/hours-report' />
         }
@@ -659,7 +692,10 @@ class InsertHoursReport extends Component {
                  </Row>
                  </Col>
            </Row>        
-         
+           <Row>
+              <Col className="space-bottom d-block">
+              </Col>
+          </Row>
                  <Row  className=" fixed-bottom bg-white align-items-center justify-content-md-center px-3 " >
               <Col className=" px-1 text-center "> 
                   <img src="images\CourseControls\Save\drawable-mdpi\noun_save_2429243.png" alt="save"></img>

@@ -18,6 +18,9 @@ class HoursReportPage extends Component {
             GetProjects:[],
             totalHours: "",
             isLoading: "",
+            isDetailsMenuVisible: false,
+            selectedReport: {},
+            selectedReportId: null,
             year:new Date().getFullYear(),
             month:new Date().getMonth()+1
         }
@@ -124,20 +127,37 @@ class HoursReportPage extends Component {
        this.setState({totalHours:total})
        //return result 
     }
+
+    openDetails =(e)=>{
+        console.log(e.target.id)
+        const{isDetailsMenuVisible, GetReports} = this.state
+        let res = (isDetailsMenuVisible)? false : true
+        let selectedReport = GetReports.find((report)=>{if(report.reportid == e.target.id)return report})
+        this.setState({isDetailsMenuVisible:res, selectedReport:selectedReport, selectedReportId:e.target.id})
+        console.log(selectedReport.reportid)
+    }
     render() {
 
-         const { GetReports, totalHours, GetProjects, GetCourses , isLoading} = this.state;
+        const { GetReports, totalHours, GetProjects, GetCourses , isLoading, isDetailsMenuVisible, selectedReport, selectedReportId} = this.state;
+        const newTo = { 
+            pathname: '/add-hours-report/' + selectedReportId, 
+            action: "Add" ,
+            selectedReport: selectedReport
+          };
+     //   const test = "81700"
 
         if (!this.props.activeUser) {
             return <Redirect to='/' />
         }
-        
+        if(selectedReportId!==null){
+            return <Redirect to={newTo}/>
+        }
         console.log(GetCourses)  
         console.log(GetReports)  
         if(isLoading == ""){
             var rows = <Loading isLoading={isLoading} />
          }
-         else{
+        else{
             rows =  GetReports.map((item) => {  // generate table with customers
                 let bgStyle; 
                 switch (item.approval) {
@@ -159,7 +179,7 @@ class HoursReportPage extends Component {
                 //  else
                 //      course = GetCourses.find((crs)=>{if (crs.courseid == item.courseid) return crs})
                 // console.log(course)
-                 return  <Row className={style}>
+                 return  <Row className={style + "details-menu"}>
                       <Col className="px-1 text-center">
                        {item.date}
                       </Col >
@@ -170,10 +190,15 @@ class HoursReportPage extends Component {
                       {/* {course.name} */}
                       {item.courseid}
                       </Col>
-                      <Col className="px-1 text-center"> 
-                      {hoursDiff}  <img src="images\threedots.png" className=" threedots " alt="details"></img>
+                      <Col className="px-1 text-center "> 
+                      {hoursDiff}  <img src="images\threedots.png" id={item.reportid} className=" threedots " alt="details" onClick={this.openDetails}></img>
                       </Col>
-                                            
+                      {/* <div className={(isDetailsMenuVisible)? " details-menu-dropdown " + "d-block": " details-menu-content " + "d-none"}>
+                          <div className= " details-menu-dropdown-content ">פירוט</div>
+                          <div className= " details-menu-dropdown-content ">שיכפול</div>
+                          <div className= " details-menu-dropdown-content ">מחיקה</div>
+                          <div className= " details-menu-dropdown-content ">הוספה</div>
+                      </div>                  */}
                    </Row>
          }
         )
@@ -230,7 +255,7 @@ class HoursReportPage extends Component {
              
               <Col className=" plus text-center mx-auto ">
              
-              <Link to="/add-hours-report"><img src="images\CourseControls\Plus\plus.png" alt="add new report" ></img></Link>
+              <Link to={newTo}><img src="images\CourseControls\Plus\plus.png" alt="add new report" ></img></Link>
               </Col>
               
               <Col className=" px-1 text-center report-opacity">

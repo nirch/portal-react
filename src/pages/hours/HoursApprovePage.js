@@ -281,14 +281,6 @@ class HoursApprovePage extends Component {
 
         console.log("searchedreporters");
         console.log(searchedReporters);
-        console.log("pages");
-        console.log(pages);
-        console.log("page");
-        console.log(page);
-        console.log("search");
-        console.log(search);
-        console.log("rowsperpage");
-        console.log(rowsPerPage);
 
         if (page === "") page = "0";
 
@@ -338,7 +330,6 @@ class HoursApprovePage extends Component {
                     var isChecked = false;
                     if (this.state.checked.includes(reportid)) { isChecked = true } else { isChecked = false };
 
-                    let opacityOfRadio = [];
                     switch (searchedReporters[index].reports[secondIndex].approval) {
 
                         case -1: blockColor = "#ffa1a1";
@@ -346,7 +337,7 @@ class HoursApprovePage extends Component {
                             declineTime = declineTime.hours + ":" + declineTime.minutes;
                             totalTime = this.addTime(totalTime, timeLeg.hours + ":" + timeLeg.minutes);
                             totalTime = totalTime.hours + ":" + totalTime.minutes;
-                            opacityOfRadio = [1, 0, 0];
+                      
                             // Decline
                             break;
                         case 1: blockColor = "#a1d47f";
@@ -354,7 +345,7 @@ class HoursApprovePage extends Component {
                             approvedTime = approvedTime.hours + ":" + approvedTime.minutes;
                             totalTime = this.addTime(totalTime, timeLeg.hours + ":" + timeLeg.minutes);
                             totalTime = totalTime.hours + ":" + totalTime.minutes;
-                            opacityOfRadio = [0, 1, 0];
+                           
                             // aproved
                             break;
                         default: blockColor = "#ffd300";
@@ -362,7 +353,7 @@ class HoursApprovePage extends Component {
                             waitingTime = waitingTime.hours + ":" + waitingTime.minutes;
                             totalTime = this.addTime(totalTime, timeLeg.hours + ":" + timeLeg.minutes);
                             totalTime = totalTime.hours + ":" + totalTime.minutes;
-                            opacityOfRadio = [0, 0, 1];
+                           
                         // waiting
                     }
                     checkAproved=<Check 

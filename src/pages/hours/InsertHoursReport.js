@@ -548,6 +548,9 @@ class InsertHoursReport extends Component {
         this.setState({isSavedReport:true})
     }
  
+    enableBack =()=>{
+        this.setState({isSavedReport:true})
+    }
  
     render() {
 
@@ -631,7 +634,7 @@ class InsertHoursReport extends Component {
            <Row className="sticky-top bg-white px-0">
              <Col>
              
-              <PortalNavbar header="דיווח שעות"/ >
+              <PortalNavbar header="דיווח שעות" enableBack={this.enableBack}/>
                {/* getDate(month,year,date) date - full date , status -1 - denied, 0 - await, 1 - success, totalHours - total hours of current report  */}
               <SelectDate reportDate={reportDate} changeDate={this.getDate} status={status} totalHours={totalHours}/> 
              

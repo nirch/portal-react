@@ -153,7 +153,7 @@ class HoursReportPage extends Component {
             return <Redirect to={newTo}/>
         }
        // console.log(GetCourses)  
-       // console.log(GetReports)  
+        console.log(GetReports)  
         if(isLoading == ""){
             var rows = <Loading isLoading={isLoading} />
          }

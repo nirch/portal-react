@@ -178,7 +178,7 @@ class InsertHoursReport extends Component {
         this.setState({
             selectedCourse: "מס/שם קורס",
             selectedSubject: "נושא פעילות",
-           // selectedStartHour: "שעת התחלה",
+           // selectedStartHour: "שעת התחלה",  // do not change entered hours
           //  selectedEndHour: "שעת סיום",
           visibleCoursesList: false,
           visibleSubjectsList:false,
@@ -199,7 +199,7 @@ class InsertHoursReport extends Component {
         console.log("openCoursesList")
         this.setState({
             selectedSubject: "נושא פעילות",
-           // selectedStartHour: "שעת התחלה",
+           // selectedStartHour: "שעת התחלה",  // do not change entered hours
           //  selectedEndHour: "שעת סיום",
           visibleProjectList: false,
           visibleSubjectsList:false,
@@ -219,7 +219,7 @@ class InsertHoursReport extends Component {
         const{visibleSubjectsList} = this.state;
         console.log("openSubjectsList")
         this.setState({
-           // selectedStartHour: "שעת התחלה",
+           // selectedStartHour: "שעת התחלה",   // do not change entered hours
           //  selectedEndHour: "שעת סיום",
           visibleProjectList: false,
           visibleCoursesList: false,
@@ -235,7 +235,7 @@ class InsertHoursReport extends Component {
       
      }
 
-    getTimes(){
+    getTimes(){    // build array with times each 15 minutes 
        var startTime = new Date();
        startTime.setUTCHours(-2);
        startTime.setUTCMinutes(0);
@@ -300,7 +300,7 @@ class InsertHoursReport extends Component {
         this.setState({visibleKmInput:false, visibleRemarkInput:false,visibleNisInput:false })
     }
 
-   viewInput = (e) => {
+   viewInput = (e) => { // change div with header to input field per id 
     //    console.log(e.currentTarget.id)
         switch (e.currentTarget.id) {
             case "km": 
@@ -316,7 +316,7 @@ class InsertHoursReport extends Component {
         } 
      }
     
-   insertDataToInput = (e) => {
+   insertDataToInput = (e) => {  //set state with input value and change status error to false (not error)
     //    console.log(e.target.id)
     //    console.log(e.target.value)
         switch (e.target.id) {
@@ -340,7 +340,7 @@ class InsertHoursReport extends Component {
           selectedStartHour, selectedEndHour,totalHours, insertedKm, insertedNis, insertedRemark,
           errorProject, errorSubject,errorCourse, errorStartHour, errorEndHour, errorKm , errorNis,
           day}  = this.state;
-    let dataToSend = {}
+    let dataToSend = {} // build object with to send new report to server 
     if(selectedProject == "פרויקט") {  //check if project selected
         this.setState({errorProject: true})
         return
@@ -414,8 +414,7 @@ class InsertHoursReport extends Component {
          }
     
     dataToSend.copyreport={}
-   
-    
+       
     if(errorProject|| errorSubject ||errorCourse|| errorStartHour || errorEndHour || errorKm || errorNis)
           return 
     console.log(GetReports)  
@@ -477,8 +476,7 @@ class InsertHoursReport extends Component {
     var reports = GetReports
     reports = reports.concat(dataToSend)
     data.reports = reports
-   // data.token = this.props.activeUser.token
-   // data.v = 2.3
+   
     console.log(data)
     // data.reports=$scope.reports;
     // // console.log("hour reports:");
@@ -496,8 +494,8 @@ class InsertHoursReport extends Component {
         //     alert("error to add data to server");
         // } 
         // else {
-            data = res.data;
-            this.setState({GetReports:data.reports})
+          //  data = res.data;
+          //  this.setState({GetReports:data.reports})
             this.setState({isSavedReport:true})
        // }
     }, err => {
@@ -506,7 +504,7 @@ class InsertHoursReport extends Component {
 
    }
 
-    handleProjectClick =(e) =>{
+    handleProjectClick =(e) =>{   // call to projects list and set states for project and lists of subjects and courses
         const{projectsArrayData}=this.state
         let project = e.target.innerHTML
         let proj =  projectsArrayData.find((proj)=>{if(proj.projectName==project)return proj})
@@ -514,7 +512,7 @@ class InsertHoursReport extends Component {
         let subjects = proj.subjects
         if (proj.courses.length===0){
            courses[0]={}
-           courses[0].courseName = 'כללי'
+           courses[0].courseName = 'כללי'  // if  current project does not have courses so insert clali 
           
         }
        else
@@ -523,32 +521,32 @@ class InsertHoursReport extends Component {
        this.setState({selectedProject:e.target.innerHTML,coursesOfProject:courses, subjectsOfProject:subjects, errorProject:false})
 
     }
-    handleCourseClick =(e)=>{
+    handleCourseClick =(e)=>{  // insert course to state 
         this.setState({selectedCourse:e.target.innerHTML,errorCourse:false})
     }
-    handleSubjectClick =(e) =>{
+    handleSubjectClick =(e) =>{  // insert subject to state 
          this.setState({selectedSubject:e.target.innerHTML, errorSubject:false})
     }
    
-    handleStartHourClick =(e) =>{
+    handleStartHourClick =(e) =>{  // when set start hour -> reset end hours 
         const{timesArray} = this.state
         let hour = e.target.innerHTML
-        let endTimesArray = []
+        let endTimesArray = []    // build time array starts from selected start hour 
             for(let i=timesArray.indexOf(hour)+1;i<timesArray.length;i++){
                  endTimesArray.push(timesArray[i])   
                 }
         this.setState({selectedStartHour:e.target.innerHTML, timesArray:endTimesArray, errorStartHour:false})
     }
-    handleEndHourClick =(e) =>{
+    handleEndHourClick =(e) =>{  // insert start time 
         const{selectedStartHour} = this.state
         let diff = this.diff(selectedStartHour, e.target.innerHTML)
         this.setState({totalHours:diff, selectedEndHour:e.target.innerHTML, errorEndHour:false})
     }
-    goBack =()=>{
+    goBack =()=>{ // button go back 
         this.setState({isSavedReport:true})
     }
  
-    enableBack =()=>{
+    enableBack =()=>{  // havbar go back 
         this.setState({isSavedReport:true})
     }
  
@@ -636,6 +634,7 @@ class InsertHoursReport extends Component {
              
               <PortalNavbar header="דיווח שעות" enableBack={this.enableBack}/>
                {/* getDate(month,year,date) date - full date , status -1 - denied, 0 - await, 1 - success, totalHours - total hours of current report  */}
+              
               <SelectDate reportDate={reportDate} changeDate={this.getDate} status={status} totalHours={totalHours}/> 
              
              </Col>

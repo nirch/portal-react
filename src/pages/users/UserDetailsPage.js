@@ -56,8 +56,8 @@ class UserDetailsPage extends Component {
 
         const cardTitle =
             <div>
-                <div className="user-cardTitle">{user.firstname}</div>
-                <div className="user-cardTitle">{user.lastname}</div>
+                <div>{user.firstname}</div>
+                <div>{user.lastname}</div>
             </div>
 
         const cardSubtitle =

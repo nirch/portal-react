@@ -1,9 +1,9 @@
 .header-icons-profile {
     margin-top: 22.4px;
-    margin-right: 69.5px; 
 } 
 .header-profile-img {
     position: relative;
+    margin-right: 69.5px;
 }
 .header-compose-img { 
     position: absolute;
@@ -13,7 +13,7 @@
 .header-compose-outline {
     position: absolute;
     bottom: -5px;
-    right:7px;
+    right:75px;
     background-color: white;
     border: 1px solid #5d5d5d;
     border-radius: 50%;

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './detailsHeader.css';
-import { Row, Col, Card } from 'react-bootstrap';
+import { Row, Col, Card, Container } from 'react-bootstrap';
 import ProfileImg from '../profileImg/profileImg';
 
 class DetailsHeader extends Component {
@@ -17,17 +17,19 @@ class DetailsHeader extends Component {
         let showProfileImg = this.props.profileImg ? <ProfileImg/> : false;    
 
         return (
+            <Container fluid={true}>
             <Row className="header-Row">
                 <Col xs="6" className="header-Col">
                     <Card className="header-Card">
                         <Card.Body>
-                            <Card.Title>{this.props.cardTitle}</Card.Title>
-                            <Card.Subtitle>{this.props.cardSubtitle}</Card.Subtitle>
+                            <Card.Title className="cardTitle">{this.props.cardTitle}</Card.Title>
+                            <Card.Subtitle >{this.props.cardSubtitle}</Card.Subtitle>
                             <Card.Text>{this.props.cardText}</Card.Text>
                         </Card.Body>
                     </Card>
                 </Col>
                 <Col xs="6" className="header-Col">
+                    <Container fluid={true}>
                     <Row className="header-icons-Row">
                         <Col xs="12" className="header-icons-Col header-icons-actions">
                             <div className="header-iconGroup">
@@ -38,8 +40,10 @@ class DetailsHeader extends Component {
                         </Col>
                         {showProfileImg}
                     </Row>
+                    </Container>
                 </Col>
             </Row>
+            </Container>
 
         );
     }

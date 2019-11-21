@@ -96,9 +96,9 @@ export default class SelectDate extends React.Component {
             <Row>
                 <Col>
                 <div className=" mt-3 text-center">
-                   <img className="mb-2" src="/images/ArrowRight/drawable-mdpi/arrow_down.png" alt="" onClick={this.minusDate }/>
+                   <img className="mb-2" src="images/ArrowRight/drawable-mdpi/arrow_down.png" alt="" onClick={this.minusDate }/>
                    <span className="report-showDate font-weight-bold">   {date + "/" + month + "/" + year }  </span>
-                <img className="mb-2" src="/images/ArrowLeft/drawable-mdpi/arrow_down.png"  alt="" onClick={this.plusDate}/>
+                <img className="mb-2" src="images/ArrowLeft/drawable-mdpi/arrow_down.png"  alt="" onClick={this.plusDate}/>
                 </div>
                 </Col>
             </Row>

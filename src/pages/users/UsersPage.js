@@ -7,6 +7,7 @@ import ItemsTable from '../../components/itemsTable/itemsTable';
 import ButtonSet from '../../components/ButtonSet';
 import server from '../../shared/server';
 import SearchBar from '../../components/SearchBar';
+import { Spinner } from 'react-bootstrap';
 
 class UsersPage extends Component {
     constructor(props) {
@@ -29,42 +30,53 @@ class UsersPage extends Component {
         let pagePath = window.location.href.split("type=");
         let userType = pagePath[pagePath.length - 1];
         if (userType == "staff") {
-           this.userRequest = "SearchStaffUnderMe";                         
-        } else if(userType == "students") {
+            this.userRequest = "SearchStaffUnderMe";
+            this.navbarTitle = "עובדים";
+            this.searchPlaceholder = "חיפוש עובד";
+        } else if (userType == "students") {
             this.userRequest = "SearchStudentsUnderMe";
-        } else if (userType == "new"){
-             this.userRequest = "SearchNewUsers";
+            this.navbarTitle = "חניכים";
+            this.searchPlaceholder = "חיפוש חניך";
+        } else if (userType == "new") {
+            this.userRequest = "SearchNewUsers";
+            this.navbarTitle = "משתמשים חדשים";
+            this.searchPlaceholder = "חיפוש משתמש חדש";
         };
-            
+
+        this.isLoading = true;
+
     }
 
-   
+
     componentDidMount() {
         const { desc, page, search, sorting, userstatus } = this.state;
-        const data = { desc,  page : page - 1, search, sorting, userstatus };    
-            server(data, this.userRequest).then(res => {
-                if (res.data.error) {
-                    console.error(res.data.error);
-                } else {
-                    this.setState({
-                        users: res.data.users,
-                        numberOfPages: res.data.pages
-                    });
-                }
-            }, err => {
-                console.error(err);
-            })
+        const data = { desc, page: page - 1, search, sorting, userstatus };
+        server(data, this.userRequest).then(res => {
+            if (res.data.error) {
+                console.error(res.data.error);
+            } else {
+                this.isLoading = false;
+                this.setState({
+                    users: res.data.users,
+                    numberOfPages: res.data.pages
+                });
+            }
+        }, err => {
+            console.error(err);
+        })
     }
 
     componentDidUpdate(prevProps, prevState) {
         if (this.state.userstatus !== prevState.userstatus || this.state.page !== prevState.page ||
             this.state.search !== prevState.search || this.props.key !== prevProps.key) {
             const { desc, page, search, sorting, userstatus } = this.state;
-            const data = { desc,  page : page - 1, search, sorting, userstatus };
+            const data = { desc, page: page - 1, search, sorting, userstatus };
+            this.isLoading = true;
             server(data, this.userRequest).then(res => {
                 if (res.data.error) {
                     console.error(res.data.error);
                 } else {
+                    this.isLoading = false;
                     this.setState({
                         users: res.data.users,
                         numberOfPages: res.data.pages
@@ -77,6 +89,7 @@ class UsersPage extends Component {
     }
 
     userIsActive = (key) => {
+        this.isLoading = true;
         this.setState({ userstatus: key, page: 1 });
     }
 
@@ -85,10 +98,12 @@ class UsersPage extends Component {
     }
 
     userSearch = (val) => {
+        this.isLoading = true;
         this.setState({ search: val, page: 1 });
     }
 
     userCurrentPage = (page) => {
+        this.isLoading = true;
         this.setState({ page });
     }
 
@@ -110,20 +125,27 @@ class UsersPage extends Component {
             userDisplay[users[i].userid].push(users[i].lastname);
             userDisplay[users[i].userid].push(users[i].email);
         }
-
+        
         const buttonsData = [
-            { key: 1, title: "עובדים פעילים" },
+            { key: 1, title: "פעילים" },
             { key: 0, title: "לא פעילים" }
         ]
 
+        var displayItemsTable = this.isLoading ? <div className="user-spinner">טוען נתונים, אנא המתן  <Spinner animation="border" variant="primary" /></div> :
+            <ItemsTable items={userDisplay} titles={this.titles} handleClick={this.userDetails} />
+
         return (
             <div>
-                <PortalNavbar className="users-Navbar" header="עובדים" />
-                <SearchBar searchLabel="חיפוש עובד" handleSearch={this.userSearch} updatePage={this.userCurrentPage}
+                <PortalNavbar className="users-Navbar" header={this.navbarTitle} />
+
+                <SearchBar searchLabel={this.searchPlaceholder} handleSearch={this.userSearch} updatePage={this.userCurrentPage}
                     pages={numberOfPages} currentPage={page} />
+
+
                 <div className="users-table">
-                    <ItemsTable items={userDisplay} titles={this.titles} handleClick={this.userDetails} />
+                    {displayItemsTable}
                 </div>
+
                 <div className="users-activeFilter">
                     <ButtonSet makeChoice={this.userIsActive} buttons={buttonsData} />
                 </div>

@@ -20,7 +20,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
    if (localStorage.activeUser){
-     console.log(JSON.parse(localStorage.activeUser))
+     
     this.props.loginAction(JSON.parse(localStorage.activeUser))
    }
     

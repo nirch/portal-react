@@ -113,3 +113,23 @@ text-align:center ;
     margin-top:200px;
     margin-Right:90px;
 }
+.newRadio{
+    border-radius: 50%;
+    /* border:1px solid red; */
+    width:18px;
+    height:18px;
+    position:absolute;
+    pointer-events: none;
+}
+.newRadioCenter{
+    border-radius: 50%;
+    background-color: red;
+    width:10px;  
+    height:10px;
+    margin: 3px;
+
+}
+.newRadionDiv{
+    position :relative;
+   
+}

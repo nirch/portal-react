@@ -42,7 +42,7 @@ function getDetails(field, reportersArray, index1, index2) {
 
 class HoursApprovePage extends Component {
 
-    constructor(props){
+    constructor(props) {
 
         super(props);
         this.state = {
@@ -304,29 +304,29 @@ class HoursApprovePage extends Component {
             for (var index = page * rowsPerPage; (index < searchedReporters.length && index < (parseInt(page) + 1) * rowsPerPage); index++) {
                 let srcLink;
                 var reports = searchedReporters[index].reports;
-                if (this.state.open === index) { srcLink = "/images/ArrowUp/drawable-xxhdpi/arrow_down.png" } else { srcLink = "/images/ArrowDown/drawable-xxhdpi/arrow_down.png" }
+                if (this.state.open === index) { srcLink = "images/ArrowUp/drawable-xxhdpi/arrow_down.png" } else { srcLink = "images/ArrowDown/drawable-xxhdpi/arrow_down.png" }
                 if (searchedReporters[index].reports.length) {
                     myColapse2 =
-                    <Row>
-                        <Col xs="4">
-                            <button onClick={this.toggleChecked.bind(this, reports)} className="roundButton whiteButton" style={{ outline: "none" }}></button>
+                        <Row>
+                            <Col xs="4">
+                                <button onClick={this.toggleChecked.bind(this, reports)} className="roundButton whiteButton" style={{ outline: "none" }}></button>
 
-                            <p className="buttonTag">{this.state.mark}</p>
-                        </Col>
-                        <Col xs="4">
-                            <button onClick={() => { this.ChangeReport(this.state.checked, 1) }} className="roundButton greenButton" style={{ outline: "none" }}></button>
+                                <p className="buttonTag">{this.state.mark}</p>
+                            </Col>
+                            <Col xs="4">
+                                <button onClick={() => { this.ChangeReport(this.state.checked, 1) }} className="roundButton greenButton" style={{ outline: "none" }}></button>
 
-                            <p className="buttonTag">אישור מסומנים</p>
-                        </Col>
-                        <Col xs="4">
-                            <button onClick={() => { this.ChangeReport(this.state.checked, -1) }} className="roundButton redButton" style={{ outline: "none" }}></button>
+                                <p className="buttonTag">אישור מסומנים</p>
+                            </Col>
+                            <Col xs="4">
+                                <button onClick={() => { this.ChangeReport(this.state.checked, -1) }} className="roundButton redButton" style={{ outline: "none" }}></button>
 
-                            <p className="buttonTag">דחיית מסומנים</p>
-                        </Col>
-                    </Row>;
+                                <p className="buttonTag">דחיית מסומנים</p>
+                            </Col>
+                        </Row>;
                     myColapse1 = <img onClick={this.toggleImage.bind(this, index, searchedReporters[index].reports.length)} className="arrowleftright" src={srcLink} />
                 }
-                else { myColapse1 = <img style={{opacity:"0.2"}} onClick={this.toggleImage.bind(this, index, searchedReporters[index].reports.length)} className="arrowleftright" src={srcLink} />;myColapse2="" }
+                else { myColapse1 = <img style={{ opacity: "0.2" }} onClick={this.toggleImage.bind(this, index, searchedReporters[index].reports.length)} className="arrowleftright" src={srcLink} />; myColapse2 = "" }
                 reporterReportsRows = [];
                 approvedTime = "00:00"; declineTime = "00:00"; waitingTime = "00:00"; totalTime = "00:00"
                 for (var secondIndex = 0; secondIndex < searchedReporters[index].reports.length; secondIndex++) {
@@ -336,10 +336,8 @@ class HoursApprovePage extends Component {
 
                     var isChecked = false;
                     if (this.state.checked.includes(reportid)) { isChecked = true } else { isChecked = false };
-                    console.log(reportid);
-                    checkAproved = <input onChange={this.ChangeReport.bind(this, [reportid], 1)} className="Radio" type="radio" name={index + " " + secondIndex} value="aproved" checked={searchedReporters[index].reports[secondIndex].approval===1}/>;
-                    checkDecline = <input onChange={this.ChangeReport.bind(this, [reportid], -1)} className="Radio" type="radio" name={index + " " + secondIndex} value="decline" checked={searchedReporters[index].reports[secondIndex].approval===-1} />;
-                    checkWaiting = <input onChange={this.ChangeReport.bind(this, [reportid], 0)} className="Radio" type="radio" name={index + " " + secondIndex} value="wait" checked={searchedReporters[index].reports[secondIndex].approval===0} />;
+
+                    let opacityOfRadio = [];
                     switch (searchedReporters[index].reports[secondIndex].approval) {
 
                         case -1: blockColor = "#ffa1a1";
@@ -347,7 +345,7 @@ class HoursApprovePage extends Component {
                             declineTime = declineTime.hours + ":" + declineTime.minutes;
                             totalTime = this.addTime(totalTime, timeLeg.hours + ":" + timeLeg.minutes);
                             totalTime = totalTime.hours + ":" + totalTime.minutes;
-
+                            opacityOfRadio = [1, 0, 0];
                             // Decline
                             break;
                         case 1: blockColor = "#a1d47f";
@@ -355,16 +353,77 @@ class HoursApprovePage extends Component {
                             approvedTime = approvedTime.hours + ":" + approvedTime.minutes;
                             totalTime = this.addTime(totalTime, timeLeg.hours + ":" + timeLeg.minutes);
                             totalTime = totalTime.hours + ":" + totalTime.minutes;
-                              // aproved
+                            opacityOfRadio = [0, 1, 0];
+                            // aproved
                             break;
                         default: blockColor = "#ffd300";
                             waitingTime = this.addTime(waitingTime, timeLeg.hours + ":" + timeLeg.minutes);
                             waitingTime = waitingTime.hours + ":" + waitingTime.minutes;
                             totalTime = this.addTime(totalTime, timeLeg.hours + ":" + timeLeg.minutes);
                             totalTime = totalTime.hours + ":" + totalTime.minutes;
-                         // waiting
+                            opacityOfRadio = [0, 0, 1];
+                        // waiting
                     }
+                    checkAproved =
+                        <div className="newRadionDiv">
+                            <input onChange={this.ChangeReport.bind(this, [reportid], 1)}
+                                className="Radio" type="radio"
+                                name={index + " " + secondIndex}
+                                value="aproved"
+                                checked={searchedReporters[index].reports[secondIndex].approval === 1}
+                                style={{ opacity: "0" }}
+                            />
+                            <div className="newRadio" style={{ border: "1px solid #a1d47f" }}>
+                                <div className="newRadioCenter" style={{
+                                    backgroundColor: "#a1d47f",
+                                    opacity: opacityOfRadio[1]
+                                }}
+                                >
 
+                                </div>
+                            </div>
+
+                        </div>;
+                    checkDecline =
+                        <div className="newRadionDiv">
+                            <input onChange={this.ChangeReport.bind(this, [reportid], -1)}
+                                className="Radio" type="radio"
+                                name={index + " " + secondIndex}
+                                value="decline"
+                                checked={searchedReporters[index].reports[secondIndex].approval === -1}
+                                style={{ opacity: "0" }}
+                            />
+                            <div className="newRadio" style={{ border: "1px solid #ffa1a1" }}>
+                                <div className="newRadioCenter" style={{
+                                    backgroundColor: "#ffa1a1",
+                                    opacity: opacityOfRadio[0]
+                                }}
+                                >
+
+                                </div>
+                            </div>
+
+                        </div>;
+                    checkWaiting =
+                        <div className="newRadionDiv">
+                            <input onChange={this.ChangeReport.bind(this, [reportid], 0)}
+                                className="Radio" type="radio"
+                                name={index + " " + secondIndex}
+                                value="wait"
+                                checked={searchedReporters[index].reports[secondIndex].approval === 0}
+                                style={{ opacity: "0" }}
+                            />
+                            <div className="newRadio" style={{ border: "1px solid #ffd300" }}>
+                                <div className="newRadioCenter" style={{
+                                    backgroundColor: "#ffd300",
+                                    opacity: opacityOfRadio[2]
+                                }}
+                                >
+
+                                </div>
+                            </div>
+
+                        </div>;
                     reporterReportsRows.push(
                         <div key={searchedReporters[index].reports[secondIndex].reportid} className="hoursLeg">
                             <Row>
@@ -436,7 +495,7 @@ class HoursApprovePage extends Component {
 
                 accordionRows.push(
                     <Card key={index}>
-                        <Card.Header style={{border:"none"}}>
+                        <Card.Header style={{ border: "none" }}>
                             <Row>
                                 <Col xs="4">
                                     <h5>{searchedReporters[index].lastname} {searchedReporters[index].firstname}</h5>
@@ -446,7 +505,7 @@ class HoursApprovePage extends Component {
                                 </Col>
                                 <Col xs="2">
                                     <Accordion.Toggle as={Button} variant="link" eventKey={index}>
-                                    {myColapse1}
+                                        {myColapse1}
                                     </Accordion.Toggle>
                                 </Col>
                             </Row>
@@ -467,7 +526,7 @@ class HoursApprovePage extends Component {
                 {/* enableBack */}
                 <PortalNavbar header="אישור שעות" />
                 <SelectMonth changeMonthYear={this.changeMonthYear} />
-                <SearchBar handleSearch={this.changeSearch} updateSearch={this.changePage} currentPage={this.state.page+1} pages={this.state.pages} searchLabel="חיפוש עובד" />
+                <SearchBar handleSearch={this.changeSearch} updateSearch={this.changePage} currentPage={this.state.page + 1} pages={this.state.pages} searchLabel="חיפוש עובד" />
                 <Accordion>
                     {accordionRows}
                 </Accordion>

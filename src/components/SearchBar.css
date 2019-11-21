@@ -1,0 +1,42 @@
+.search-bar {
+    display:  flex;
+    justify-content: space-between;
+    background-color: #bcbcbc;
+    font-size: 20px;
+    height: 45px;
+    border-radius: 23px;
+    margin: 22px 12px 20px 12px
+}
+.search-bar > form > input {
+    background-color: inherit;
+    outline: none;
+    border: none;
+    margin-right: 26px;
+    margin-top: 7px;
+    color: #707070;
+    flex-grow: 1;
+}
+.search-bar > div {
+    margin-left: 10px;
+    margin-top: 7px;
+    color: #808080;
+    width: 65px;
+}
+.search-bar .disactive {
+    opacity: 0.2;
+    display: inline-block;
+    
+   
+}
+.search-bar .active {
+    display: inline-block;
+  
+}
+.search-bar .invis {
+    display: none;
+}
+.search-bar .page-num {
+    display: inline-block;
+    width: 25px;
+    text-align: center;
+}

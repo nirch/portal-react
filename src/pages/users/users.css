@@ -1,0 +1,12 @@
+.users-Navbar {
+    height: 50px;
+}
+.users-activeFilter {
+    margin-top:16px;
+    position: fixed;
+    bottom:0;
+    width:100%;
+}
+.users-table {
+    margin-bottom: 80px;
+}

@@ -1,0 +1,21 @@
+.itemsTable-title {
+    font-family: Assistant-SemiBold;
+    font-size: 12px;
+    text-align: center;
+   
+}
+
+.itemsTable-data {
+    padding-top:16px; 
+}
+
+.itemsTable-row {
+    font-family: Assistant-Regular;
+    font-size: 12px;
+    text-align: center;    
+    height: 58px;    
+    box-shadow: 0px 5px 3px -3px rgb(230,230,230);
+}
+.itemsTable-table {
+    width: 100%;  
+}

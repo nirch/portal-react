@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="14.142" height="14.142" viewBox="0 0 14.142 14.142">
+    <defs>
+        <style>
+            .cls-1{fill:#5d5d5d}
+        </style>
+    </defs>
+    <g id="arrow_down" transform="translate(-160 -15)">
+        <path id="chevron" d="M8 10V2H0V0h10v10z" class="cls-1" transform="rotate(45 65.429 209.173)"/>
+    </g>
+</svg>

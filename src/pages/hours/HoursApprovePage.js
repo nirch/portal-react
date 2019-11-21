@@ -7,6 +7,7 @@ import SelectMonth from '../../components/hoursApprove/selectMonth'
 import { Accordion, Card, Button, Row, Col, Spinner } from 'react-bootstrap'
 import server from '../../shared/server'
 import SearchBar from '../../components/SearchBar'
+import Check from '../../components/hoursApprove/inputCheck'
 
 function getDetails(field, reportersArray, index1, index2) {
     switch (field) {
@@ -364,66 +365,27 @@ class HoursApprovePage extends Component {
                             opacityOfRadio = [0, 0, 1];
                         // waiting
                     }
-                    checkAproved =
-                        <div className="newRadionDiv">
-                            <input onChange={this.ChangeReport.bind(this, [reportid], 1)}
-                                className="Radio" type="radio"
-                                name={index + " " + secondIndex}
-                                value="aproved"
-                                checked={searchedReporters[index].reports[secondIndex].approval === 1}
-                                style={{ opacity: "0" }}
-                            />
-                            <div className="newRadio" style={{ border: "1px solid #a1d47f" }}>
-                                <div className="newRadioCenter" style={{
-                                    backgroundColor: "#a1d47f",
-                                    opacity: opacityOfRadio[1]
-                                }}
-                                >
 
-                                </div>
-                            </div>
+                    checkAproved=<Check 
+                                        onChange={this.ChangeReport.bind(this, [reportid], 1)} 
+                                        name={index + " " + secondIndex} 
+                                        value="aproved" 
+                                        checked={searchedReporters[index].reports[secondIndex].approval === 1} 
+                                        color="#a1d47f"/>
+                    checkDecline =<Check 
+                                        onChange={this.ChangeReport.bind(this, [reportid], -1)} 
+                                        name={index + " " + secondIndex} 
+                                        value="decline" 
+                                        checked={searchedReporters[index].reports[secondIndex].approval === -1} 
+                                        color="#ffa1a1"/>                    
+ 
+                    checkWaiting =<Check 
+                                        onChange={this.ChangeReport.bind(this, [reportid], 0)} 
+                                        name={index + " " + secondIndex} 
+                                        value="wait" 
+                                        checked={searchedReporters[index].reports[secondIndex].approval === 0} 
+                                        color="#ffd300"/>                    
 
-                        </div>;
-                    checkDecline =
-                        <div className="newRadionDiv">
-                            <input onChange={this.ChangeReport.bind(this, [reportid], -1)}
-                                className="Radio" type="radio"
-                                name={index + " " + secondIndex}
-                                value="decline"
-                                checked={searchedReporters[index].reports[secondIndex].approval === -1}
-                                style={{ opacity: "0" }}
-                            />
-                            <div className="newRadio" style={{ border: "1px solid #ffa1a1" }}>
-                                <div className="newRadioCenter" style={{
-                                    backgroundColor: "#ffa1a1",
-                                    opacity: opacityOfRadio[0]
-                                }}
-                                >
-
-                                </div>
-                            </div>
-
-                        </div>;
-                    checkWaiting =
-                        <div className="newRadionDiv">
-                            <input onChange={this.ChangeReport.bind(this, [reportid], 0)}
-                                className="Radio" type="radio"
-                                name={index + " " + secondIndex}
-                                value="wait"
-                                checked={searchedReporters[index].reports[secondIndex].approval === 0}
-                                style={{ opacity: "0" }}
-                            />
-                            <div className="newRadio" style={{ border: "1px solid #ffd300" }}>
-                                <div className="newRadioCenter" style={{
-                                    backgroundColor: "#ffd300",
-                                    opacity: opacityOfRadio[2]
-                                }}
-                                >
-
-                                </div>
-                            </div>
-
-                        </div>;
                     reporterReportsRows.push(
                         <div key={searchedReporters[index].reports[secondIndex].reportid} className="hoursLeg">
                             <Row>

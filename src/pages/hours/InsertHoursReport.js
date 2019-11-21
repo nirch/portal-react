@@ -92,7 +92,7 @@ class InsertHoursReport extends Component {
             console.error(err);
         }) 
        
-     // this.getDataFromServer(this.state.month,this.state.year);
+      this.getDataFromServer(this.state.month,this.state.year);
         
      }
 
@@ -127,12 +127,7 @@ class InsertHoursReport extends Component {
        let totalhours = this.diff(selectedReport.starthour, selectedReport.finishhour)
        let date = selectedReport.date.split("/")
        console.log(date)
-       if(selectedReport.carkm!==null)
-            var insertedKm = selectedReport.carkm
-       if(selectedReport.cost!==null)
-            var insertedNis=selectedReport.cost  
-       if(selectedReport.comment!=="")
-           var insertedRemark=  selectedReport.comment
+      
        this.setState({
             selectedProject:  project.projectName,
             selectedCourse: coursename,
@@ -141,14 +136,16 @@ class InsertHoursReport extends Component {
             selectedEndHour: selectedReport.finishhour,
             status: selectedReport.approval,
             totalHours: totalhours,
-            insertedKm:insertedKm,
-            insertedNis:insertedNis,
-            insertedRemark:insertedRemark,
             date:date[0],
             month:date[1],
             year: date[2],
         })
-        
+        if(selectedReport.carkm!==null)
+           this.setState({insertedKm : selectedReport.carkm}) 
+        if(selectedReport.cost!==null)
+           this.setState({ insertedNis:selectedReport.cost})   
+        if(selectedReport.comment!=="")
+           this.setState({ insertedRemark:  selectedReport.comment}) 
     }
     getDate(dayObject){   // get values from selectDate component . month and year for server call, date for new report 
         let month = dayObject.getMonth()+1

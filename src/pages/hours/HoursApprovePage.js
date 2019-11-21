@@ -361,43 +361,43 @@ class HoursApprovePage extends Component {
                                         name={index + " " + secondIndex} 
                                         value="aproved" 
                                         checked={searchedReporters[index].reports[secondIndex].approval === 1} 
-                                        color="#a1d47f"/>
+                                        color="#a1d47f"
+                                        tag="אשר"/>
                     checkDecline =<Check 
                                         onChange={this.ChangeReport.bind(this, [reportid], -1)} 
                                         name={index + " " + secondIndex} 
                                         value="decline" 
                                         checked={searchedReporters[index].reports[secondIndex].approval === -1} 
-                                        color="#ffa1a1"/>                    
+                                        color="#ffa1a1"
+                                        tag="דחה"/>                    
  
                     checkWaiting =<Check 
                                         onChange={this.ChangeReport.bind(this, [reportid], 0)} 
                                         name={index + " " + secondIndex} 
                                         value="wait" 
                                         checked={searchedReporters[index].reports[secondIndex].approval === 0} 
-                                        color="#ffd300"/>   
+                                        color="#ffd300"
+                                        tag="ממתין"/>   
                     reporterReportsRows.push(
                         <div key={searchedReporters[index].reports[secondIndex].reportid} className="hoursLeg">
                             <Row>
                                 <Col xs="6"></Col>
                                 <Col xs="2">
-                                    <p className="radioTag redTag">דחה</p>
-                                    <div className="radiocontainer">
+ 
                                         {checkDecline}
 
-                                    </div>
+
                                 </Col>
                                 <Col xs="2">
-                                    <p className="radioTag yellowTag">ממתין</p>
-                                    <div className="radiocontainer">
+ 
                                         {checkWaiting}
 
-                                    </div>
+                        
                                 </Col>
                                 <Col xs="2">
-                                    <p className="radioTag greenTag">אשר</p>
-                                    <div className="radiocontainer">
+ 
                                         {checkAproved}
-                                    </div>
+ 
                                 </Col>
                             </Row>
                             <div className="hoursContainer" style={{ backgroundColor: blockColor }}>

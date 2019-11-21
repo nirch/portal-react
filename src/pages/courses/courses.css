@@ -5,3 +5,11 @@
     width:100%;
 
 }
+.syllabus-header {
+    font-family: Assistant-SemiBold;
+    text-align: center;
+    margin: 30px;
+}
+.syllabus-course {
+    text-align: center;
+}

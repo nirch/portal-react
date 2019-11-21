@@ -38,7 +38,7 @@ text-align:center ;
 .buttonTag{
     display: inline;
     padding-right: 5px;
-    font-size: 11px;
+    font-size: 16px;
   
 }
 .card-header{
@@ -86,30 +86,51 @@ text-align:center ;
     height:20px;
 }
 .textInHoursLegBold{
-    font-size:12px;
+    font-size:14px;
     font-weight: bold;
 }
 .textInHours{
-    font-size:11px;
+    font-size:14px;
     font-weight: bold;
-    margin-right: 10px;
+    margin-right: 12px;
 }
 .textInHoursHead{
-    font-size:11px;
+    font-size:14px;
     margin-bottom: 5px;
     margin-right: 10px;
 }
 .hoursNavBar{
     width:100px;
-    height:200px;
+    height:50px;
     background-color: white;
     display:none;
     border:1px solid black;
     position :absolute;
     left:20px;
     top :30px;
+    z-index: 2;
 }
 .spinner{
     margin-top:200px;
     margin-Right:90px;
+}
+.newRadio{
+    border-radius: 50%;
+    /* border:1px solid red; */
+    width:18px;
+    height:18px;
+    position:absolute;
+    pointer-events: none;
+}
+.newRadioCenter{
+    border-radius: 50%;
+    background-color: red;
+    width:10px;  
+    height:10px;
+    margin: 3px;
+
+}
+.newRadionDiv{
+    position :relative;
+   
 }

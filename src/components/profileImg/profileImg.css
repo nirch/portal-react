@@ -1,0 +1,23 @@
+.header-icons-profile {
+    margin-top: 22.4px;
+} 
+.header-profile-img {
+    position: relative;
+    margin-right: 69.5px;
+}
+.header-compose-img { 
+    position: absolute;
+    bottom: 3px;
+    right:3px;
+}
+.header-compose-outline {
+    position: absolute;
+    bottom: -5px;
+    right:75px;
+    background-color: white;
+    border: 1px solid #5d5d5d;
+    border-radius: 50%;
+    height: 23px;
+    width: 23px;
+    display: inline-block;
+}

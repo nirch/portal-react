@@ -41,6 +41,8 @@
 }
 .report-menu-text{
     position: absolute;
+    padding-right: 20px;
+    padding-left: 20x;
 }
 .positionAbs{
     position: absolute;
@@ -49,6 +51,7 @@
 }
 
 .report-dropdown-content {
+
     min-width: 160px;
     z-index: 1;
     width: 100%;

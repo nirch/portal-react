@@ -30,7 +30,8 @@
     color: #ffffff;
     border: 1px,#ffffff;
     font-family: 'Assistant-Regular',sans-serif;
-    
+    text-align: left;
+    direction: ltr;
     
 
 }

@@ -206,7 +206,7 @@ class HoursReportPage extends Component {
         return (
            <div>
         
-           <Container  >
+           <Container className=" px-3" >
            
            <Row className="sticky-top bg-white shadow">
              <Col>

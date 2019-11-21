@@ -56,6 +56,7 @@ class InsertHoursReport extends Component {
             date: new Date().getDate(),
            
             day: new Date(),
+            showDateComponent: false,
             status: "0", // waiting by default 0 - new report (for change 1 - success, -1 - decline)
             totalHours: 0  // total hours for report - for new report defaut is 0
         }
@@ -79,10 +80,13 @@ class InsertHoursReport extends Component {
                 console.log(this.props.match.params.id)
                 console.log(this.state.selectedProject)
                 let timesArray = this.getTimes();
-                this.setState({projectsArrayData:projectsArrayData, timesArray: timesArray})
-                if (this.props.match.params.id!="null"&&!isNaN(this.props.match.params.id)){ // if the new report 
-                   this.insertReportDetails(projectsArrayData)
-                }   
+                let reportId = parseInt(this.props.match.params.id)
+                
+                // if (reportId!=="null" && !isNaN(reportId)){ //   // if the new report 
+                if (!isNaN(reportId)){ 
+                     this.insertReportDetails(projectsArrayData)
+                } 
+                this.setState({projectsArrayData:projectsArrayData, timesArray: timesArray, showDateComponent:true})
             }
         }, err => {
             console.error(err);
@@ -123,7 +127,12 @@ class InsertHoursReport extends Component {
        let totalhours = this.diff(selectedReport.starthour, selectedReport.finishhour)
        let date = selectedReport.date.split("/")
        console.log(date)
-       
+       if(selectedReport.carkm!==null)
+            var insertedKm = selectedReport.carkm
+       if(selectedReport.cost!==null)
+            var insertedNis=selectedReport.cost  
+       if(selectedReport.comment!=="")
+           var insertedRemark=  selectedReport.comment
        this.setState({
             selectedProject:  project.projectName,
             selectedCourse: coursename,
@@ -132,16 +141,14 @@ class InsertHoursReport extends Component {
             selectedEndHour: selectedReport.finishhour,
             status: selectedReport.approval,
             totalHours: totalhours,
+            insertedKm:insertedKm,
+            insertedNis:insertedNis,
+            insertedRemark:insertedRemark,
             date:date[0],
             month:date[1],
             year: date[2],
         })
-        if(selectedReport.carkm!==null)
-            this.setState({insertedKm: selectedReport.carkm})
-        if(selectedReport.cost!==null)
-            this.setState({  insertedNis:selectedReport.cost,})   
-        if(selectedReport.comment!=="")
-            this.setState({ insertedRemark: selectedReport.comment,})
+        
     }
     getDate(dayObject){   // get values from selectDate component . month and year for server call, date for new report 
         let month = dayObject.getMonth()+1
@@ -478,16 +485,7 @@ class InsertHoursReport extends Component {
     data.reports = reports
    
     console.log(data)
-    // data.reports=$scope.reports;
-    // // console.log("hour reports:");
-    // // console.log(data.reports);
-    // server.requestPhp(data, 'SaveReports').then(function (data) {
-    //     alert("saved");
-    //     this.setState({isSavedReport:true})
-    // });
-   
-   // data.reports
-   
+     
    server(data, "SaveReports").then(res => {
         console.log(res);
         // if (res.data.error) {
@@ -553,7 +551,7 @@ class InsertHoursReport extends Component {
     render() {
 
         const {projectsArrayData,coursesOfProject, subjectsOfProject, visibleStartHourList, visibleEndHourList, 
-            visibleKmInput,visibleNisInput,visibleRemarkInput, visibleProjectList, visibleCoursesList, 
+            visibleKmInput,visibleNisInput,visibleRemarkInput, visibleProjectList, visibleCoursesList, showDateComponent,
             visibleSubjectsList, timesArray, selectedStartHour, selectedEndHour, status , isSavedReport, 
             totalHours, selectedSubject, selectedProject, selectedCourse, visibleErrorHoursRemark, date, month, year,
             errorProject, errorSubject, errorCourse, errorStartHour, errorEndHour, errorKm , errorNis } = this.state;
@@ -624,10 +622,14 @@ class InsertHoursReport extends Component {
                    )}
          </div>
        }
+       let hoursComponent 
+       if(showDateComponent){
+           hoursComponent = <SelectDate reportDate={reportDate} changeDate={this.getDate} status={status} totalHours={totalHours}/> 
+       }
 
     return (
         <div className=" report-font-size " >
-       <Container className="insert-container report-font-size " >     
+       <Container className="insert-container report-font-size px-3 " >     
            
            <Row className="sticky-top bg-white px-0">
              <Col>
@@ -635,8 +637,8 @@ class InsertHoursReport extends Component {
               <PortalNavbar header="דיווח שעות" enableBack={this.enableBack}/>
                {/* getDate(month,year,date) date - full date , status -1 - denied, 0 - await, 1 - success, totalHours - total hours of current report  */}
               
-              <SelectDate reportDate={reportDate} changeDate={this.getDate} status={status} totalHours={totalHours}/> 
-             
+               {/* <SelectDate reportDate={reportDate} changeDate={this.getDate} status={status} totalHours={totalHours}/>  */}
+               { hoursComponent }
              </Col>
            </Row>
           

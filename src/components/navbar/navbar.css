@@ -43,6 +43,8 @@
 	background-color: #FAFAFA;
 	height: 100%;
 	width: 100%;
+	display: flex;
+	flex-direction: column;
 }
 .sidebar-header {
 	background-color: #1b166e;
@@ -87,6 +89,7 @@
 	-o-transition: -o-transform 0.5s ease;
 	position:relative;
 	z-index: 2;
+	margin-right: 6px;
 }
 .sidebar-open .profile-image{
 	transform: Scale(1, 1);
@@ -136,6 +139,9 @@
 	-ms-transition-delay: 0.3s;
 	-webkit-transition-delay: 0.3s;
 	-o-transition-delay: 0.3s;
+	flex-grow: 1;
+	display: flex;
+	align-items: center;
 }
 .sidebar-open .sidebar-options .menu-information{
 	transform: translateX(0);
@@ -255,6 +261,12 @@ display: none;
 
 .sidebar-options .menu-information .dropdown-content .menu-information{
 padding-top: 25px;
+}
+
+.sidebar-options{
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
 }
 
 .sidebar-options .revert{

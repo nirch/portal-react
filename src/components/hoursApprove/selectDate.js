@@ -19,14 +19,21 @@ export default class SelectDate extends React.Component {
         }
         
     }
-        componentDidMount(){
+ componentDidMount(){
+           const{changeDate} = this.props;
             const{ year, month, date} = this.props.reportDate;
             var dateObject = new Date(+parseInt(year), parseInt(month) - 1, +parseInt(date)); 
             //  newDate = newDate.getDate() + "/" + (newDate.getMonth()+1) + "/" + newDate.getFullYear()
+            changeDate(dateObject)
             this.setState({newDate:dateObject});
         }
         
- 
+//  componentDidUpdate (prevState){
+//     const{ year, month, date} = this.props.reportDate;
+//     var dateObject = new Date(+parseInt(year), parseInt(month) - 1, +parseInt(date)); 
+//     if (prevState.newDate !== this.state.newDate)
+//         this.setState({newDate:dateObject})
+//   }
      
     plusDate=()=>{
       

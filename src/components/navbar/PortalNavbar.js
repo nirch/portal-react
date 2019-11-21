@@ -52,6 +52,7 @@ class PortalNavbar extends Component {
         this.openSidebar = this.openSidebar.bind(this);
         this.goToCoursesPage = this.goToCoursesPage.bind(this);
         this.goToStaffPage = this.goToStaffPage.bind(this);
+        this.profileClick = this.profileClick.bind(this);
         this.goToStudentsPage = this.goToStudentsPage.bind(this);
         this.goToNewUsersPage = this.goToNewUsersPage.bind(this);
         this.openDropDown = this.openDropDown.bind(this);
@@ -129,6 +130,14 @@ class PortalNavbar extends Component {
         this.setState({ redirectTo })
         this.closeSidebar();
     }
+
+    profileClick() {
+        let { redirectTo } = this.state;
+        redirectTo = "/users/" + this.state.currentUser.userid;
+        this.setState({ redirectTo })
+        this.closeSidebar();
+    }
+
     componentDidUpdate() {
         let { redirectTo } = this.state;
         if (redirectTo != "") {
@@ -146,7 +155,7 @@ class PortalNavbar extends Component {
                 console.error(res.data.error);
             } else {
                 currentUser = res.data;
-                currentUser.image= "https://pil1.appleseeds.org.il/dcnir/"+currentUser.image;
+                currentUser.image = "https://pil1.appleseeds.org.il/dcnir/" + currentUser.image;
                 this.setState({ currentUser });
             }
         }, err => {

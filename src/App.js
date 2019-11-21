@@ -20,7 +20,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
    if (localStorage.activeUser){
-     console.log(JSON.parse(localStorage.activeUser))
+     
     this.props.loginAction(JSON.parse(localStorage.activeUser))
    }
     
@@ -42,11 +42,11 @@ class App extends React.Component {
         <Route path="/users/:id">
           <UserDetailsPage/>
         </Route>
-        <Route path="/hours-report">
+        <Route path="/hours-report/">
           <HoursReportPage/>
         </Route>
-        <Route path="/add-hours-report">
-          <InsertHoursReport/>
+        <Route path="/add-hours-report/:id" component={InsertHoursReport}>  
+          {/* <InsertHoursReport/> */}
         </Route>
         <Route path="/hours-approve">
           <HoursApprovePage/>

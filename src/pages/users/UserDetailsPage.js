@@ -6,6 +6,7 @@ import { Redirect } from 'react-router-dom';
 import server from '../../shared/server';
 import DetailsHeader from '../../components/detailsHeader/detailsHeader';
 import InPageNavbar from '../../components/inPageNavbar/inPageNavbar';
+import UserProfile from '../../components/userProfile'
 import UserSubordinates from '../../components/userSubordinates';
 import UserCourses from '../../components/userCourses';
 
@@ -47,16 +48,10 @@ class UserDetailsPage extends Component {
             return <Redirect to='/' />
         }
         const tabsData = [
-            { key: 1, title: "פרופיל", component: <div></div> },
+            { key: 1, title: "פרופיל", component: <UserProfile/>},
             { key: 2, title: "קורסים", component: <UserCourses/>},
             { key: 3, title: "עובדים", component: <UserSubordinates/> },
             { key: 4, title: "דיווח", component: <div></div> }
-        ]
-        const optionsData = [
-            { key: 1, value: "פרופיל" },
-            { key: 2, value: "קורסים" },
-            { key: 3, value: "עובדים" },
-            { key: 4, value: "דיווח" }
         ]
 
         const cardTitle =

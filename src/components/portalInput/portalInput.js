@@ -20,14 +20,14 @@ class PortalInput extends Component {
 
     render() {
 
-        const title = this.props.title
+        const {title,value} = this.props
         const type = this.props.type
 
         return (
             
             <div className="inputDetails" >
                 <h6 className="hederField" >{title}</h6>
-                <input className="inputField" type={type} placeholder={title} onChange={this.onChangeValue}></input>
+        <input className="inputField" value={value} type={type} placeholder={title} onChange={this.onChangeValue}></input>
             </div>
         );
     }

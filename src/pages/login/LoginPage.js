@@ -15,13 +15,19 @@ class LoginPage extends Component {
 
         this.state = {
             email: "",
-            pwd: ""
+            pwd: "",
+            showDiv:false,
+            message:""
+        
         }
 
         this.handleInputChange = this.handleInputChange.bind(this);
         this.login = this.login.bind(this);
+        this.closeErrorHandler = this.closeErrorHandler.bind(this)
     }
-
+    closeErrorHandler (){
+        this.setState({showDiv:false})
+    }
     handleInputChange(ev) {
         const name = ev.target.name;
         const value = ev.target.value;
@@ -35,7 +41,10 @@ class LoginPage extends Component {
         const { email, pwd } = this.state;
 
         if (!email || !pwd) {
-            alert("נא להזין פרטי משתמש");
+           this.setState({
+            message:"נא להזין פרטי משתמש",
+            showDiv:true
+           })
             return;
         }
 
@@ -44,12 +53,17 @@ class LoginPage extends Component {
         server(data, "login").then(res => {
             console.log(res);
             if (res.data.error) {
-                alert("error in login");
+                this.setState({
+                    message:"סיסמא שגויה",
+                    showDiv:true
+                })
             } else {
                 this.props.loginAction(res.data);
                 localStorage.activeUser = JSON.stringify(res.data);
             }
         }, err => {
+            
+            
             console.error(err);
         })
     }
@@ -61,28 +75,33 @@ class LoginPage extends Component {
         if (activeUser) {
             return <Redirect to='/courses' />
         }
-
-
+        
         return (
-
+            <div className="LogIn">
             <Container>
-                <h1>התחברות</h1>
-                <Form>
-                    <Form.Group controlId="formBasicEmail">
-                        <Form.Label></Form.Label>
-                        <Form.Control value={email} name="email" type="email" placeholder="אימייל" onChange={this.handleInputChange} />
-                    </Form.Group>
-
-                    <Form.Group controlId="formBasicPassword">
-                        <Form.Label></Form.Label>
-                        <Form.Control value={pwd} name="pwd" type="password" placeholder="סיסמה" onChange={this.handleInputChange} />
-                    </Form.Group>
-
-                    <Button variant="primary" type="button" onClick={this.login}>
-                        התחבר
-                    </Button>
-                </Form>
-            </Container>
+                <img className="imgLOGO"
+                src='images/Login/01.png'
+                alt="tapuach logo"
+                 />
+                
+                <div className="loginForm">
+                    <input className="loginInput emailInput" type="email" name="email" onChange={this.handleInputChange} placeholder="אימייל"/>
+                    <input className="loginInput" type="password" name="pwd" onChange={this.handleInputChange} placeholder="סיסמה"/>
+                    <button className="loginBtn" type="button" onClick={this.login}>התחברות</button>
+                    <div className={(this.state.showDiv)?"logInpwd hidden":"logInpwd"}>
+                    </div>
+                    </div>
+                    </Container>
+                    <div className={(this.state.showDiv)?"loginWrongPWD":"loginWrongPWD  hidden"}>
+                        <div className="loginInline">
+                        <img  src='images/Login/danger.svg' alt="danger"/>
+                        <p className="loginInline" > {this.state.message}</p>
+                        </div>
+                        <div className="loginSpan loginInline "><button onClick={this.closeErrorHandler} className="loginClose">&times;</button></div>
+                    </div>
+                    
+                </div>
+            
         );
     }
 }

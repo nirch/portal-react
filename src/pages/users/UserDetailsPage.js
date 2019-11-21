@@ -6,7 +6,8 @@ import { Redirect } from 'react-router-dom';
 import server from '../../shared/server';
 import DetailsHeader from '../../components/detailsHeader/detailsHeader';
 import InPageNavbar from '../../components/inPageNavbar/inPageNavbar';
-
+import UserSubordinates from '../../components/userSubordinates';
+import UserCourses from '../../components/userCourses';
 
 class UserDetailsPage extends Component {
     constructor(props) {
@@ -35,7 +36,9 @@ class UserDetailsPage extends Component {
         })
     }
 
-
+    // enableBack = () => {
+    //     window.history.back()
+    // };
 
     render() {
 
@@ -45,8 +48,8 @@ class UserDetailsPage extends Component {
         }
         const tabsData = [
             { key: 1, title: "פרופיל", component: <div></div> },
-            { key: 2, title: "קורסים", component: <div></div> },
-            { key: 3, title: "עובדים", component: <div></div> },
+            { key: 2, title: "קורסים", component: <UserCourses/>},
+            { key: 3, title: "עובדים", component: <UserSubordinates/> },
             { key: 4, title: "דיווח", component: <div></div> }
         ]
         const optionsData = [
@@ -56,16 +59,39 @@ class UserDetailsPage extends Component {
             { key: 4, value: "דיווח" }
         ]
 
+        const cardTitle =
+            <div>
+                <div className="user-cardTitle">{user.firstname}</div>
+                <div className="user-cardTitle">{user.lastname}</div>
+            </div>
+
+        const cardSubtitle =
+            <div>
+                <div className="user-cardSubtitle">
+                    <label className="checkboxLabel">
+                        <input type="checkbox" />
+                        <span className="checkboxCustom"></span>
+                    </label>
+                    <p className="checkboxText">שינוי סיסמה</p>
+                </div>
+            </div>
+
+        const cardText =
+            <span className="user-cardText">{`נרשם ב: ${user.registerdate}`}</span>
+
         if (!this.state.user) {
             return false;
         } else {
             return (
                 <div>
-                    <PortalNavbar className="users-Navbar" header="עובדים" />
+                    <PortalNavbar className="users-Navbar"
+                        header="עובדים"
+                    // enableBack={this.enableBack} 
+                    />
 
-                    <div>
-                        <DetailsHeader line1={user.firstname} line2={user.lastname}
-                            line3="שינוי סיסמה" line4={`נרשם ב: ${user.registerdate}`} />
+                    <div className="detaislHeader">
+                        <DetailsHeader cardTitle={cardTitle} cardSubtitle={cardSubtitle} cardText={cardText}
+                            profileImg={true} />
                     </div>
 
                     <InPageNavbar tabs={tabsData} />

@@ -281,14 +281,6 @@ class HoursApprovePage extends Component {
 
         console.log("searchedreporters");
         console.log(searchedReporters);
-        console.log("pages");
-        console.log(pages);
-        console.log("page");
-        console.log(page);
-        console.log("search");
-        console.log(search);
-        console.log("rowsperpage");
-        console.log(rowsPerPage);
 
         if (page === "") page = "0";
 
@@ -338,7 +330,6 @@ class HoursApprovePage extends Component {
                     var isChecked = false;
                     if (this.state.checked.includes(reportid)) { isChecked = true } else { isChecked = false };
 
-                    let opacityOfRadio = [];
                     switch (searchedReporters[index].reports[secondIndex].approval) {
 
                         case -1: blockColor = "#ffa1a1";
@@ -346,7 +337,7 @@ class HoursApprovePage extends Component {
                             declineTime = declineTime.hours + ":" + declineTime.minutes;
                             totalTime = this.addTime(totalTime, timeLeg.hours + ":" + timeLeg.minutes);
                             totalTime = totalTime.hours + ":" + totalTime.minutes;
-                            opacityOfRadio = [1, 0, 0];
+                      
                             // Decline
                             break;
                         case 1: blockColor = "#a1d47f";
@@ -354,7 +345,7 @@ class HoursApprovePage extends Component {
                             approvedTime = approvedTime.hours + ":" + approvedTime.minutes;
                             totalTime = this.addTime(totalTime, timeLeg.hours + ":" + timeLeg.minutes);
                             totalTime = totalTime.hours + ":" + totalTime.minutes;
-                            opacityOfRadio = [0, 1, 0];
+                           
                             // aproved
                             break;
                         default: blockColor = "#ffd300";
@@ -362,7 +353,7 @@ class HoursApprovePage extends Component {
                             waitingTime = waitingTime.hours + ":" + waitingTime.minutes;
                             totalTime = this.addTime(totalTime, timeLeg.hours + ":" + timeLeg.minutes);
                             totalTime = totalTime.hours + ":" + totalTime.minutes;
-                            opacityOfRadio = [0, 0, 1];
+                           
                         // waiting
                     }
                     checkAproved=<Check 
@@ -370,43 +361,43 @@ class HoursApprovePage extends Component {
                                         name={index + " " + secondIndex} 
                                         value="aproved" 
                                         checked={searchedReporters[index].reports[secondIndex].approval === 1} 
-                                        color="#a1d47f"/>
+                                        color="#a1d47f"
+                                        tag="אשר"/>
                     checkDecline =<Check 
                                         onChange={this.ChangeReport.bind(this, [reportid], -1)} 
                                         name={index + " " + secondIndex} 
                                         value="decline" 
                                         checked={searchedReporters[index].reports[secondIndex].approval === -1} 
-                                        color="#ffa1a1"/>                    
+                                        color="#ffa1a1"
+                                        tag="דחה"/>                    
  
                     checkWaiting =<Check 
                                         onChange={this.ChangeReport.bind(this, [reportid], 0)} 
                                         name={index + " " + secondIndex} 
                                         value="wait" 
                                         checked={searchedReporters[index].reports[secondIndex].approval === 0} 
-                                        color="#ffd300"/>   
+                                        color="#ffd300"
+                                        tag="ממתין"/>   
                     reporterReportsRows.push(
                         <div key={searchedReporters[index].reports[secondIndex].reportid} className="hoursLeg">
                             <Row>
                                 <Col xs="6"></Col>
                                 <Col xs="2">
-                                    <p className="radioTag redTag">דחה</p>
-                                    <div className="radiocontainer">
+ 
                                         {checkDecline}
 
-                                    </div>
+
                                 </Col>
                                 <Col xs="2">
-                                    <p className="radioTag yellowTag">ממתין</p>
-                                    <div className="radiocontainer">
+ 
                                         {checkWaiting}
 
-                                    </div>
+                        
                                 </Col>
                                 <Col xs="2">
-                                    <p className="radioTag greenTag">אשר</p>
-                                    <div className="radiocontainer">
+ 
                                         {checkAproved}
-                                    </div>
+ 
                                 </Col>
                             </Row>
                             <div className="hoursContainer" style={{ backgroundColor: blockColor }}>

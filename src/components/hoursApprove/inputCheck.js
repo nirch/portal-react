@@ -27,6 +27,8 @@ export default class Check extends React.Component {
     
     render() {
              return     ( <div className="newRadionDiv">
+                            <p style={{color:this.props.color,margin:"0"}}>{this.props.tag}</p>
+                            <div style={{marginRight:"5px"}}>
                             <input onChange={this.props.onChange}
                                 className="Radio" type="radio"
                                 name={this.props.name}
@@ -43,7 +45,7 @@ export default class Check extends React.Component {
 
                                 </div>
                             </div>
-
+                            </div>
                         </div>);
     }
 

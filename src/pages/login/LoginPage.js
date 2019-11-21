@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Form, Button } from 'react-bootstrap'
+import { Container } from 'react-bootstrap'
 import './login.css'
 import server from '../../shared/server'
 import { Redirect } from 'react-router-dom'

@@ -304,7 +304,7 @@ class HoursApprovePage extends Component {
             for (var index = page * rowsPerPage; (index < searchedReporters.length && index < (parseInt(page) + 1) * rowsPerPage); index++) {
                 let srcLink;
                 var reports = searchedReporters[index].reports;
-                if (this.state.open === index) { srcLink = "/images/ArrowUp/drawable-xxhdpi/arrow_down.png" } else { srcLink = "/images/ArrowDown/drawable-xxhdpi/arrow_down.png" }
+                if (this.state.open === index) { srcLink = "images/ArrowUp/drawable-xxhdpi/arrow_down.png" } else { srcLink = "images/ArrowDown/drawable-xxhdpi/arrow_down.png" }
                 if (searchedReporters[index].reports.length) {
                     myColapse2 =
                     <Row>

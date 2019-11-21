@@ -3,15 +3,19 @@ import server from '../../shared/server';
 import '../../pages/courses/courses.css';
 
 class CourseSyllabus extends React.Component {
-constructor(props){
-    super(props);
-    this.state = {}
-}
+    constructor(props) {
+        super(props);
+        this.state = {
 
-    render(){
-        return(
+        }
+    }
+
+    render() {
+        const { courseDetails } = this.props;
+        return (
             <div>
-                CourseSyllabus
+                <div className = "syllabus-header">קורס</div>
+                <div className = "syllabus-course">{courseDetails.courseName}</div>
             </div>
         )
     }

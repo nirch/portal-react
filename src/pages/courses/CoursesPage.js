@@ -7,7 +7,6 @@ import ButtonSet from '../../components/ButtonSet';
 import server from '../../shared/server';
 import { Container } from 'react-bootstrap'
 import SearchBar from '../../components/SearchBar'
-import itemsTable from '../../components/itemsTable/itemsTable'
 import ItemsTable from '../../components/itemsTable/itemsTable';
 import { rejects } from 'assert';
 
@@ -15,8 +14,6 @@ class CoursesPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            
-            
             coursestatus: 1,
             desc: false,
             page: 1,
@@ -30,7 +27,7 @@ class CoursesPage extends Component {
     }
     componentDidMount() {
         const { coursestatus, desc, page, search, sorting, searchPages } = this.state;
-        const data = { coursestatus, desc, page : page - 1, search, sorting, searchPages };
+        const data = { coursestatus, desc, page: page - 1, search, sorting, searchPages };
         server(data, "SearchCourses").then(res => {
             if (res.data.error) {
                 console.error(res.data.error)
@@ -47,9 +44,9 @@ class CoursesPage extends Component {
         )
     }
     componentDidUpdate(prevProp, prevState) {
-        if (prevState.coursestatus !== this.state.coursestatus  || prevState.page !== this.state.page || prevState.search !== this.state.search) {
+        if (prevState.coursestatus !== this.state.coursestatus || prevState.page !== this.state.page || prevState.search !== this.state.search) {
             const { coursestatus, desc, page, search, sorting, searchPages } = this.state;
-            const data = { coursestatus, desc, page : page - 1, search, sorting, searchPages };
+            const data = { coursestatus, desc, page: page - 1, search, sorting, searchPages };
             server(data, "SearchCourses").then(res => {
                 if (res.data.error) {
                     console.error(res.data.error)
@@ -66,17 +63,22 @@ class CoursesPage extends Component {
         }
     }
     getFilteredData = (key) => {
-        this.setState({ coursestatus: key })
+        this.setState({
+            coursestatus: key,
+            page: 1
+        })
     }
     handleSearch = (val) => {
-        this.setState({ search: val })
+        this.setState({
+             search: val,
+            page: 1 })
     }
     updatePage = (page) => {
-        this.setState({ page: page})
+        this.setState({ page: page })
     }
     courseDetails = (id) => {
-        this.setState({ showCourseDetails: "id" })
-    }
+        this.setState({ showCourseDetails: id })
+            }
     render() {
         const { courses, showCourseDetails } = this.state;
         if (!this.props.activeUser) {
@@ -98,12 +100,12 @@ class CoursesPage extends Component {
             { key: 1, title: "קורסים פעילים" },
             { key: 0, title: "לא פעילים" }
         ]
-        
+
 
         return (
             <div>
                 <PortalNavbar header="קורסים" />
-                <SearchBar searchLabel="חיפוש קורס" handleSearch={this.handleSearch} updatePage={this.updatePage} pages={this.state.searchPages} currentPage={this.state.page } />
+                <SearchBar searchLabel="חיפוש קורס" handleSearch={this.handleSearch} updatePage={this.updatePage} pages={this.state.searchPages} currentPage={this.state.page} />
                 <ItemsTable titles={this.titles} items={courseDisplay} handleClick={this.courseDetails} />
                 <div className="courses-activeFilter">
                     <ButtonSet makeChoice={this.getFilteredData} buttons={buttonsData} />

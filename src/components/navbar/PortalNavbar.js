@@ -4,6 +4,7 @@ import { Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { logoutAction } from "../../store/reducers/ActiveUser/actions";
 import server from '../../shared/server'
+import { getImageDomain } from '../../shared/server'
 
 class Hamburger extends React.Component {
     constructor(props) {
@@ -58,8 +59,6 @@ class PortalNavbar extends Component {
         this.openDropDown = this.openDropDown.bind(this);
         this.goToHoursApprovePage = this.goToHoursApprovePage.bind(this);
         this.goToHoursReportPage = this.goToHoursReportPage.bind(this);
-
-
 
     }
     logout() {
@@ -155,7 +154,7 @@ class PortalNavbar extends Component {
                 console.error(res.data.error);
             } else {
                 currentUser = res.data;
-                currentUser.image = "https://pil1.appleseeds.org.il/dcnir/" + currentUser.image;
+                currentUser.image = getImageDomain() + currentUser.image;
                 this.setState({ currentUser });
             }
         }, err => {

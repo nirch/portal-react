@@ -36,4 +36,9 @@ async function server(data, type) {
     // }
 }
 
+export function getImageDomain() {
+    return 'https://pil1.appleseeds.org.il/dcnir/'
+}
+
 export default server;
+

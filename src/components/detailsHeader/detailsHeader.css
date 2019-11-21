@@ -1,40 +1,42 @@
 
 .header-Row {
-    display: flex;  
-    height:166;  
+    height:166px; 
+    width:360px; 
+    margin-top: 2px;
+    margin-right: 18px;
+    margin-left: 14px;
 }
-
 .header-Col {
-    display:inline-block;
-    width:50%;
-   
-    
+    padding: 0;  
+}
+.header-Card {
+    border:none;   
+}
+.user-cardTitle {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 0;
+    height:37px;
 }
 
-.header-icons-Row {
+.user-cardText {
+    font-size: 10px;
+}
+
+ .header-icons-Row {
     display: flex;
-flex-direction: column;
-justify-content: space-around;
+    flex-direction: column;
+    margin-right: 0;
 }
-
 .header-icons-Col {
-    width:100%;
+    padding:0;
 }
-.header-iconGroup {
-    display:flex;
-    
-   
-}
+.header-iconGroup { 
+    height: 37px;  
+} 
 .header-icons-actions {
-    height: 16px;
-   
+    margin-right: 29px; 
 }
-.header-iconGroup > img{
-    padding: 0 14px;
-}
-.header-icons-profile {
-    height: 78px;
-    margin-top: 28.7px;
-    margin-bottom: 22.6px;
-    
+.header-iconGroup > img {
+    padding-left: 17px;
 }

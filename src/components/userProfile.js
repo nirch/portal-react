@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ItemsTable from './../components/itemsTable/itemsTable';
-import { Col, Row, Spinner } from 'react-bootstrap';
+import { Col, Row, Spinner ,Container} from 'react-bootstrap';
 import server from './../shared/server';
 import './../pages/users/users.css'
 import PortalInput from '../components/portalInput/portalInput'
@@ -12,49 +12,50 @@ class UserProfile extends React.Component {
         super(props);
 
         this.state = {
-            // page: 1,
-            roleid: "2",
-            // search: "",
             userId: "",
-
-            courses: [],
-            // numberOfPages: 1,
+            profileData: "",
+            cityList: "",
 
         };
         // this.titles = ["קורס", "פרויקט"];
         this.isLoading = false;
     }
 
-    // componentDidMount() {
-    //     const pagePath = window.location.href.split("/");
-    //     const userId = pagePath[pagePath.length - 1];
+    componentDidMount() {
+        const pagePath = window.location.href.split("/");
+        const userId = pagePath[pagePath.length - 1];
+        const cities = [];
 
-    //     // const { page, roleid, search, } = this.state;
-    //     const data = { userId };
+        //     // const { page, roleid, search, } = this.state;
+        const data = { userId, cities };
 
-    //     server(data, "GetUserProfileById").then(res => {
-    //         console.log("temp")
-        //     if (res.data.error) {
-        //         console.error(res.data.error);
-        //     } else {
-        //         this.isLoading = false;
-        //         this.setState({ courses: res.data.enrolled, numberOfPages: res.data.pages });
-        //     }
-        // }, err => {
-        //     console.error(err);
-    //     })
-    // }
-    // courseSearch = (val) => {
-    //     this.isLoading = true;
-    //     this.setState({ search: val, page: 1 });
-    // }
-    // courseCurrentPage = (page) => {
-    //     this.isLoading = true;
-    //     this.setState({ page });
-    // }
+        server(data, "GetUserProfileById").then(res => {
+            if (res.data.error) {
+                console.error(res.data.error);
+            } else {
+                this.isLoading = false;
+                this.setState({ profileData: res.data.profile });
+            }
+        }, err => {
+            console.error(err);
+        })
+
+        // server(data, "GetCities").then(res => {
+        //     console.log(res.data)
+        //     //     if (res.data.error) {
+        //     //         console.error(res.data.error);
+        //     //     } else {
+        //     //         this.isLoading = false;
+        //     //         console.log(res.data.profile)
+        //     //         this.setState({ profileData: res.data.profile });
+        //     //     }
+        //     // }, err => {
+        //     //     console.error(err);
+        // })
+    }
 
     render() {
-        const { courses } = this.state;
+        const { profileData } = this.state;
 
         const cityList = [
             { key: 1, value: "תל-אביב" },
@@ -74,16 +75,11 @@ class UserProfile extends React.Component {
             { key: 2, value: "נקבה" },
 
         ]
-// ADD component the handle change should be there
-// city
-// 
+        // ADD component the handle change should be there
+        // city
+        // 
 
-        const tabsData = [
-            { key: 1, title: "פרופיל", component: <UserProfile/>},
-            { key: 2, title: "קורסים", component: <div></div> },
-            { key: 3, title: "עובדים", component: <div></div> },
-            { key: 4, title: "דיווח", component: <div></div> }
-        ]
+
         const optionsData = [
             { key: 1, value: "פרופיל" },
             { key: 2, value: "קורסים" },
@@ -101,48 +97,48 @@ class UserProfile extends React.Component {
 
         var displayItemsTable = this.isLoading ? <div className="user-spinner">טוען נתונים, אנא המתן  <Spinner animation="border" variant="primary" /></div> :
 
-            <div>
+            <Container fluid={true}>
                 <Row >
                     <Col >
-                        <PortalInput title="שם פרטי בעברית" type="text" onChange={this.handleChange} />
+                        <PortalInput title="שם פרטי בעברית" value={profileData.firstname} type="text" onChange={this.handleChange} />
                     </Col>
                     <Col >
-                        <PortalInput title="שם משפחה בעברית" type="text" onChange={this.handleChange} />
+                        <PortalInput title="שם משפחה בעברית" value={profileData.lastname} type="text" onChange={this.handleChange} />
                     </Col>
                 </Row>
                 <Row>
                     <Col >
-                        <PortalInput title="שם פרטי בערבית" type="text" onChange={this.handleChange} />
+                        <PortalInput title="שם פרטי בערבית" value={profileData.firstnameinarabic} type="text" onChange={this.handleChange} />
                     </Col >
                     <Col >
-                        <PortalInput title="שם משפחה בערבית" type="text" onChange={this.handleChange} />
+                        <PortalInput title="שם משפחה בערבית" value={profileData.lastnameinarabic} type="text" onChange={this.handleChange} />
                     </Col>
                 </Row>
                 <Row>
                     <Col>
-                        <PortalInput title="מספר טלפון" type="text" onChange={this.handleChange} />
+                        <PortalInput title="מספר טלפון" value={profileData.phone} type="text" onChange={this.handleChange} />
                     </Col>       <Col>
-                        <PortalInput title=" מספר טלפון נוסף" type="text" onChange={this.handleChange} />
+                        <PortalInput title=" מספר טלפון נוסף" value={profileData.phone2} type="text" onChange={this.handleChange} />
                     </Col>
                 </Row>
                 <Row>
                     <Col>
-                        <PortalInput title=" שייך ל" type="text" onChange={this.handleChange} />
+                        <PortalInput title="שייך ל" type="text" onChange={this.handleChange} />
                     </Col>       <Col>
-                        <PortalInput title="   תאריך לידה" type="text" onChange={this.handleChange} />
+                        <PortalInput title="תאריך לידה" value={profileData.birthday} type="text" onChange={this.handleChange} />
                     </Col>
                 </Row>
 
                 <Row>
                     <Col>
-                        <PortalInput title="מספר תעודת זהות" type="text" onChange={this.handleChange} />
+                        <PortalInput title="מספר תעודת זהות" value={profileData.tznumber} type="text" onChange={this.handleChange} />
                     </Col>       <Col>
-                        <PortalInput title="כתובת" type="text" onChange={this.handleChange} />
+                        <PortalInput title="כתובת" value={profileData.address} type="text" onChange={this.handleChange} />
                     </Col>
                 </Row>
                 <Row>
                     <Col>
-                        <PortalSelect title="  עיר" options={cityList} onChange={this.handleChange} />
+                        <PortalSelect title="עיר" options={cityList} onChange={this.handleChange} />
                     </Col>       <Col>
                         <PortalSelect title="מגזר" options={sector} onChange={this.handleChange} />
                     </Col>
@@ -151,19 +147,19 @@ class UserProfile extends React.Component {
                     <Col>
                         <PortalSelect title="מגדר" options={gender} onChange={this.handleChange} />
                     </Col>       <Col>
-                        <PortalInput title="אימייל" type="email" onChange={this.handleChange} />
+                        <PortalInput title="אימייל" value={profileData.email} type="email" onChange={this.handleChange} />
                     </Col>
                 </Row>
 
-                <PortalInput title="מנהל ישיר" type="text" onChange={this.handleChange} />
+                <PortalInput title="מנהל ישיר" value={profileData.superstaffname} type="text" onChange={this.handleChange} />
 
 
 
-            </div>
+            </Container>
         return (
             <div>
 
-                    {displayItemsTable}
+                {displayItemsTable}
             </div>
         );
     }

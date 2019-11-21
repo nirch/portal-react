@@ -152,8 +152,8 @@ class HoursReportPage extends Component {
         if(selectedReportId!==null){
             return <Redirect to={newTo}/>
         }
-        console.log(GetCourses)  
-        console.log(GetReports)  
+       // console.log(GetCourses)  
+       // console.log(GetReports)  
         if(isLoading == ""){
             var rows = <Loading isLoading={isLoading} />
          }

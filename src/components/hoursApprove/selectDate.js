@@ -10,9 +10,9 @@ export default class SelectDate extends React.Component {
     constructor(props) {
         super(props);
         this.state={
-            year: new Date().getFullYear(),
-            month: new Date().getMonth()+1,
-            date: new Date().getDate(),
+            // year: new Date().getFullYear(),
+            // month: new Date().getMonth()+1,
+            // date: new Date().getDate(),
             newDate: new Date(),
             totalHours: 0, 
 
@@ -20,41 +20,47 @@ export default class SelectDate extends React.Component {
         
     }
         componentDidMount(){
-            let newDate = new Date();
+            const{ year, month, date} = this.props.reportDate;
+            var dateObject = new Date(+parseInt(year), parseInt(month) - 1, +parseInt(date)); 
             //  newDate = newDate.getDate() + "/" + (newDate.getMonth()+1) + "/" + newDate.getFullYear()
-            this.setState({newDate});
+            this.setState({newDate:dateObject});
         }
         
  
      
     plusDate=()=>{
-       const{newDate, year, month } = this.state;
+      
        const{changeDate} = this.props;
+       const{ year, month, date} = this.props.reportDate;
        // let newDate = new Date();
+       // month is 0-based, that's why we need dataParts[1] - 1
+       var dateObject = new Date(+year, month - 1, +date); 
        let numberOfDaysToAdd = 1; // const of shiping dates from suppliers
-       newDate.setDate(newDate.getDate() + numberOfDaysToAdd); 
+       dateObject.setDate(dateObject.getDate() + numberOfDaysToAdd); 
        //let showDate = newDate.getFullYear() + "-" + (newDate.getMonth()+1) + "-" + newDate.getDate()
-       this.setState({newDate});
-       changeDate(month, year,  newDate)
-       return newDate;
+       this.setState({newDate: dateObject}); // make date object and set to state newDate 
+       changeDate(dateObject)
+       return dateObject;
     }
   
     minusDate=()=>{
-        const{newDate, year, month } = this.state;
+      
         const{changeDate} = this.props;
-       //let newDate = new Date();
+        const{ year, month, date} = this.props.reportDate;
+        var dateObject = new Date(+year, month - 1, +date); 
         let numberOfDaysToAdd = -1; // const of shiping dates from suppliers
-        newDate.setDate(newDate.getDate() + numberOfDaysToAdd); 
-       // newDate = newDate.getFullYear() + "-" + (newDate.getMonth()+1) + "-" + newDate.getDate()
-        this.setState({newDate});
-        changeDate(month, year,  newDate)
-        return newDate;
+        dateObject.setDate(dateObject.getDate() + numberOfDaysToAdd); 
+        //let showDate = newDate.getFullYear() + "-" + (newDate.getMonth()+1) + "-" + newDate.getDate()
+        this.setState({newDate: dateObject}); // make date object and set to state newDate 
+        changeDate(dateObject)
+        return dateObject;
      }
   
     render() {
         
         const {newDate} = this.state;
         let {status, totalHours} = this.props;
+      
         let date = newDate.getDate()
         if(newDate.getDate()>0 && newDate.getDate()<10)
             date = "0"+ newDate.getDate()
@@ -62,12 +68,13 @@ export default class SelectDate extends React.Component {
         if((newDate.getMonth()+1)>0 && (newDate.getMonth()+1)<10)
             month = "0"+ (newDate.getMonth()+1)
         let year = newDate.getFullYear() % 100;  
+       
         let currentDay = new Date();
         let currentYear = currentDay.getFullYear() % 100;  
         let currentMonth = (currentDay.getMonth()+1)
         let currentDate = currentDay.getDate()
-        let hour = newDate.getHours();
-        let minute =  newDate.getMinutes();
+        let hour = currentDay.getHours();
+        let minute =  currentDay.getMinutes();
         
         let bgColor;
         switch (status) {

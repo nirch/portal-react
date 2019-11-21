@@ -54,6 +54,7 @@ class InsertHoursReport extends Component {
             year:new Date().getFullYear(),
             month:new Date().getMonth()+1,
             date: new Date().getDate(),
+           
             day: new Date(),
             status: "0", // waiting by default 0 - new report (for change 1 - success, -1 - decline)
             totalHours: 0  // total hours for report - for new report defaut is 0
@@ -79,8 +80,7 @@ class InsertHoursReport extends Component {
                 console.log(this.state.selectedProject)
                 let timesArray = this.getTimes();
                 this.setState({projectsArrayData:projectsArrayData, timesArray: timesArray})
-                const{selectedReport} = this.props.location
-                if (this.props.match.params.id!==null&&selectedReport!==undefined){
+                if (this.props.match.params.id!="null"&&!isNaN(this.props.match.params.id)){ // if the new report 
                    this.insertReportDetails(projectsArrayData)
                 }   
             }
@@ -88,7 +88,7 @@ class InsertHoursReport extends Component {
             console.error(err);
         }) 
        
-      this.getDataFromServer(this.state.month,this.state.year);
+     // this.getDataFromServer(this.state.month,this.state.year);
         
      }
 
@@ -120,20 +120,35 @@ class InsertHoursReport extends Component {
        else
           coursename = project.courses.find((item)=>{if(item.courseid==selectedReport.courseid) return item}).courseName
        let subject = project.subjects.find((item)=>{if(item.reportsubjectid == selectedReport.actionid) return item})
+       let totalhours = this.diff(selectedReport.starthour, selectedReport.finishhour)
+       let date = selectedReport.date.split("/")
+       console.log(date)
+       
        this.setState({
             selectedProject:  project.projectName,
             selectedCourse: coursename,
             selectedSubject: subject.subject,
             selectedStartHour: selectedReport.starthour,
             selectedEndHour: selectedReport.finishhour,
-            insertedKm: selectedReport.carkm,
-            insertedNis:selectedReport.cost,
-            insertedRemark: selectedReport.comment,
+            status: selectedReport.approval,
+            totalHours: totalhours,
+            date:date[0],
+            month:date[1],
+            year: date[2],
         })
+        if(selectedReport.carkm!==null)
+            this.setState({insertedKm: selectedReport.carkm})
+        if(selectedReport.cost!==null)
+            this.setState({  insertedNis:selectedReport.cost,})   
+        if(selectedReport.comment!=="")
+            this.setState({ insertedRemark: selectedReport.comment,})
     }
-    getDate(month,year,day){   // get values from selectDate component . month and year for server call, date for new report 
-        this.setState({month:month,year:year,day:day})
-        this.getDataFromServer(day.getMonth()+1,day.getFullYear()); // if change month - get data from selected month 
+    getDate(dayObject){   // get values from selectDate component . month and year for server call, date for new report 
+        let month = dayObject.getMonth()+1
+        let date = dayObject.getDate()
+        let year = dayObject.getFullYear()
+        this.setState({month:month,year:year,date:date,day:dayObject})
+        this.getDataFromServer(dayObject.getMonth()+1,dayObject.getFullYear()); // if change month - get data from selected month 
         //console.log(month,year,day)
         //console.log(day.getMonth(),day.getFullYear())
     }
@@ -320,6 +335,7 @@ class InsertHoursReport extends Component {
 
    saveDataToServer = (e) =>{
     //************************************************ */
+    
     const{GetReports, projectsArrayData, selectedProject, selectedSubject,selectedCourse, 
           selectedStartHour, selectedEndHour,totalHours, insertedKm, insertedNis, insertedRemark,
           errorProject, errorSubject,errorCourse, errorStartHour, errorEndHour, errorKm , errorNis,
@@ -366,8 +382,14 @@ class InsertHoursReport extends Component {
     // projectid: "7"
     dataToSend.automatic = 0
    //     automatic: 0
-    let currentDate = day.getDate() + "/" + (day.getMonth()+1) + "/" + day.getFullYear()
-    dataToSend.date = currentDate
+   let date = day.getDate()
+   if(day.getDate()>0 && day.getDate()<10)
+       date = "0"+ day.getDate()
+   let month = (day.getMonth()+1)
+   if((day.getMonth()+1)>0 && (day.getMonth()+1)<10)
+       month = "0"+ (day.getMonth()+1)
+    let reportDate = date + "/" + month + "/" + day.getFullYear()
+    dataToSend.date = reportDate
      // date: "15/11/2019"
     
     if(selectedStartHour == "שעת התחלה") { // check if start hour selected 
@@ -400,7 +422,7 @@ class InsertHoursReport extends Component {
     // noInterstion: true -- check 
     let project = GetReports.find((proj)=>{if(proj.date==dataToSend.date)return proj}) // search for exists report in previus reports
     if(project !== undefined) {   // if we find the same project
-       let projstart = (+project.starthour.split(":")[0]) * 60 * 60 + (+project.starthour.split(":")[1]) * 60 ; //get tine in seconds 
+       let projstart = (+project.starthour.split(":")[0]) * 60 * 60 + (+project.starthour.split(":")[1]) * 60 ; //get time in seconds 
        let projend =  (+project.finishhour.split(":")[0]) * 60 * 60 + (+project.finishhour.split(":")[1]) * 60 ; 
        let repstart = (+dataToSend.starthour.split(":")[0]) * 60 * 60 + (+dataToSend.starthour.split(":")[1]) * 60 ; 
        let repend = (+dataToSend.finishhour.split(":")[0]) * 60 * 60 + (+dataToSend.finishhour.split(":")[1]) * 60 ;
@@ -448,6 +470,7 @@ class InsertHoursReport extends Component {
           dataToSend.comment=insertedRemark
           dataToSend.copyreport.comment=insertedRemark
     }
+    console.log("dataToSend")
     console.log(dataToSend)
         //*********************************************** */
     var data = {};
@@ -466,7 +489,8 @@ class InsertHoursReport extends Component {
     // });
    
    // data.reports
-    server(data, "SaveReports").then(res => {
+   
+   server(data, "SaveReports").then(res => {
         console.log(res);
         // if (res.data.error) {
         //     alert("error to add data to server");
@@ -523,26 +547,26 @@ class InsertHoursReport extends Component {
     goBack =()=>{
         this.setState({isSavedReport:true})
     }
+ 
+ 
     render() {
 
         const {projectsArrayData,coursesOfProject, subjectsOfProject, visibleStartHourList, visibleEndHourList, 
             visibleKmInput,visibleNisInput,visibleRemarkInput, visibleProjectList, visibleCoursesList, 
             visibleSubjectsList, timesArray, selectedStartHour, selectedEndHour, status , isSavedReport, 
-            totalHours, selectedSubject, selectedProject, selectedCourse, visibleErrorHoursRemark,
+            totalHours, selectedSubject, selectedProject, selectedCourse, visibleErrorHoursRemark, date, month, year,
             errorProject, errorSubject, errorCourse, errorStartHour, errorEndHour, errorKm , errorNis } = this.state;
        
-            console.log(this.props.activeUser)
+        console.log(this.props.activeUser)
+       
         if (!this.props.activeUser) {
             return <Redirect to='/' />
         }
-      // console.log(this.props.match.params.reportId)
-       console.log(this.props)
-      // console.log(this.props.location.param1)
-        // this is 595212758daa6810cbba4104 
- // this is Par1
+     
         if (isSavedReport) {
-            return <Redirect to='/hours-report' />
+            return <Redirect to='/hours-report'/>
         }
+        let reportDate = {date:date,month:month,year:year}
         let styleMenuField = "report-menu-field "
         let style = "report-dropdown "
         let  projectsList = <div className={(visibleProjectList)? style + "d-inline": style + "d-none"} >
@@ -607,9 +631,9 @@ class InsertHoursReport extends Component {
            <Row className="sticky-top bg-white px-0">
              <Col>
              
-              <PortalNavbar header="דיווח שעות"/>
+              <PortalNavbar header="דיווח שעות"/ >
                {/* getDate(month,year,date) date - full date , status -1 - denied, 0 - await, 1 - success, totalHours - total hours of current report  */}
-              <SelectDate changeDate={this.getDate} status={status} totalHours={totalHours}/> 
+              <SelectDate reportDate={reportDate} changeDate={this.getDate} status={status} totalHours={totalHours}/> 
              
              </Col>
            </Row>

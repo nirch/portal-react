@@ -27,6 +27,9 @@ class ArrowBack extends React.Component {
     render() {
         return <div>
             <div className="arrow-back" onClick={this.props.returnToPreviousPage}>
+                <div className="arrow1"></div>
+                <div className="arrow2"></div>
+                <div className="arrow3"></div>
             </div>
         </div>
     }

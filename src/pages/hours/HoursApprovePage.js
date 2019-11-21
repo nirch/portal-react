@@ -365,7 +365,6 @@ class HoursApprovePage extends Component {
                             opacityOfRadio = [0, 0, 1];
                         // waiting
                     }
-
                     checkAproved=<Check 
                                         onChange={this.ChangeReport.bind(this, [reportid], 1)} 
                                         name={index + " " + secondIndex} 
@@ -384,8 +383,7 @@ class HoursApprovePage extends Component {
                                         name={index + " " + secondIndex} 
                                         value="wait" 
                                         checked={searchedReporters[index].reports[secondIndex].approval === 0} 
-                                        color="#ffd300"/>                    
-
+                                        color="#ffd300"/>   
                     reporterReportsRows.push(
                         <div key={searchedReporters[index].reports[secondIndex].reportid} className="hoursLeg">
                             <Row>

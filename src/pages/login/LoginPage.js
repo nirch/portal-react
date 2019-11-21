@@ -16,7 +16,8 @@ class LoginPage extends Component {
         this.state = {
             email: "",
             pwd: "",
-            showDiv:false
+            showDiv:false,
+            message:""
         
         }
 
@@ -40,7 +41,10 @@ class LoginPage extends Component {
         const { email, pwd } = this.state;
 
         if (!email || !pwd) {
-            alert("נא להזין פרטי משתמש");
+           this.setState({
+            message:"נא להזין פרטי משתמש",
+            showDiv:true
+           })
             return;
         }
 
@@ -50,6 +54,7 @@ class LoginPage extends Component {
             console.log(res);
             if (res.data.error) {
                 this.setState({
+                    message:"סיסמא שגויה",
                     showDiv:true
                 })
             } else {
@@ -72,45 +77,31 @@ class LoginPage extends Component {
         }
         
         return (
-
-            <Container className="LogIn">
+            <div className="LogIn">
+            <Container>
                 <img className="imgLOGO"
-                src={require ('./01.png')}
+                src='images/Login/01.png'
                 alt="tapuach logo"
                  />
                 
-                <form className="loginForm">
+                <div className="loginForm">
                     <input className="loginInput emailInput" type="email" name="email" onChange={this.handleInputChange} placeholder="אימייל"/>
                     <input className="loginInput" type="password" name="pwd" onChange={this.handleInputChange} placeholder="סיסמה"/>
                     <button className="loginBtn" type="button" onClick={this.login}>התחברות</button>
                     <div className={(this.state.showDiv)?"logInpwd hidden":"logInpwd"}>
-                    <h5>שכחתי סיסמא</h5>
                     </div>
+                    </div>
+                    </Container>
                     <div className={(this.state.showDiv)?"loginWrongPWD":"loginWrongPWD  hidden"}>
                         <div className="loginInline">
-                        <img  src={require('./danger.svg')} alt="danger"/>
-                        <p className="loginInline" > סיסמא שגויה</p>
+                        <img  src='images/Login/danger.svg' alt="danger"/>
+                        <p className="loginInline" > {this.state.message}</p>
                         </div>
-                        <div className="loginInline loginSpan"><button onClick={this.closeErrorHandler} className="loginClose">X</button></div>
+                        <div className="loginSpan loginInline "><button onClick={this.closeErrorHandler} className="loginClose">&times;</button></div>
                     </div>
-                </form>
-                
-                {/* <Form>
-                    <Form.Group controlId="formBasicEmail">
-                        <Form.Label></Form.Label>
-                        <Form.Control value={email} name="email" type="email" placeholder="אימייל" onChange={this.handleInputChange} />
-                    </Form.Group>
-
-                    <Form.Group controlId="formBasicPassword">
-                        <Form.Label></Form.Label>
-                        <Form.Control value={pwd} name="pwd" type="password" placeholder="סיסמה" onChange={this.handleInputChange} />
-                    </Form.Group>
-
-                    <Button variant="primary" type="button" onClick={this.login}>
-                        התחבר
-                    </Button>
-                </Form> */}
-            </Container>
+                    
+                </div>
+            
         );
     }
 }

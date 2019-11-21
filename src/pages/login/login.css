@@ -1,13 +1,20 @@
+
 .LogIn .imgLOGO {
     height:70px ;
     width:245px ;
-    margin:39px 57px 0px 58px;
+    margin:39px 27px 0px 27px;
 }
 
 .LogIn {
     background-color: #1b166e;
+    height: 100vh;
+    position: relative;
 }
+.loginForm{
+    display: flex;
+    flex-direction: column;
 
+}
 .emailInput{
     margin-top: 110px;
     margin-bottom: 32px;
@@ -22,6 +29,18 @@
     height: 50px;
     color: #ffffff;
     border: 1px,#ffffff;
+    font-family: 'Assistant-Regular',sans-serif;
+    
+    
+
+}
+.loginInput::placeholder{
+    font-size: 25px;
+    color: #ffffff;
+    font-family: 'Assistant-Regular',sans-serif;
+}
+.loginInput:focus,.loginBtn:focus{
+    outline: none;
 }
 
 .loginInput::placeholder {
@@ -39,6 +58,7 @@
     color: #1b166e;
     height: 50px;
     margin-top: 140px;
+    font-family:'Assistant-SemiBold' ;
 
 }
 .LogIn .logInpwd {
@@ -46,14 +66,18 @@
     color: #ffffff;
     margin-top:66px;
     padding-bottom: 35px;
-    position: relative;
+   
     
     
 }
 .loginWrongPWD {
     background-color: #ffffff;
-    position: absolute;
     border:1px;
+    height:15vh;
+    margin-top: 20px;
+    position: fixed;
+    bottom:0px;
+    width: 100%;
     
 
 }
@@ -64,22 +88,29 @@
     font-size: 20px;
     color: #ffa1a1;
     margin-right:33.5px;
-    margin-left:106px;
+    margin-left:30px;
     
 }
 
 .loginWrongPWD>div:first-child{
-padding: 40px 0px 33px 0px;
+padding: 30px 15px;
+
 }
 .loginClose {
-    font-size:24px;
+    font-size:35px;
     font-weight: bold;
 }
-.loginSpan {
-    height: 35px;
-    width: 35px;
-    
+
+.loginSpan{
+    position: absolute;
+    left:30px
+
 }
+
 .hidden {
     display: none;
+}
+.container {
+    padding-left: 30px;
+    padding-right: 30px;
 }

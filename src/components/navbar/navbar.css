@@ -189,6 +189,8 @@ header{
 
 .hamburger-menu{
 	position: absolute;
+	top: 3px;
+	right: 6px;
 }
 
 .hamburger-menu > div{
@@ -200,13 +202,37 @@ header{
 
 .arrow-back{
 	position: absolute;
-	top:7px;
-	border: solid #5d5d5d;
-	border-width: 0 2px 2px 0;
-	display: inline-block;
-	padding: 5px;
+	top: 8px;
+	right: 6px;
+}
+
+.arrow1, .arrow2, .arrow3{
+	width: 25px;
+	height: 3px;
+	background-color: #5d5d5d;
+	padding: 0;
+}
+
+.arrow1{
+	width: 15px;
+	height: 3px;
+	transform: rotate(45deg);
+	-webkit-transform: rotate(45deg);
+	margin: 1px;
+}
+
+.arrow2{
+	width: 18px;
+	height: 3px;
+	margin-right: 6px;
+}
+
+.arrow3{
+	width: 15px;
+	height: 3px;
 	transform: rotate(-45deg);
 	-webkit-transform: rotate(-45deg);
+	margin: 1px;
 }
 
 .x{
